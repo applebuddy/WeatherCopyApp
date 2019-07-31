@@ -10,6 +10,9 @@ import MapKit
 import UIKit
 
 class WeatherInfoViewController: UIViewController {
+    var headerHeightConstraint: NSLayoutConstraint?
+    let weatherDayInfoCellIdentifier: String = "weatherDayInfoTableViewCell"
+
     let linkBarButton: UIButton = {
         let linkBarButton = UIButton(type: .custom)
         linkBarButton.setTitleColor(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), for: .normal)
@@ -43,11 +46,20 @@ class WeatherInfoViewController: UIViewController {
         return weatherInfoView
     }()
 
+    let weatherInfoTableHeaderView: WeatherInfoTableHeaderView = {
+        let weatherInfoTableHeaderView = WeatherInfoTableHeaderView()
+        return weatherInfoTableHeaderView
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        weatherInfoView.weatherTableView.delegate = self
+        weatherInfoView.weatherTableView.dataSource = self
+        registerCell()
         setButtonTarget()
         setToolBarButtonItem()
+        setTableViewHeader()
     }
 
     override func loadView() {
@@ -59,6 +71,15 @@ class WeatherInfoViewController: UIViewController {
         linkBarButton.addTarget(self, action: #selector(linkButtonPressed(_:)), for: .touchUpInside)
         listBarButton.addTarget(self, action: #selector(presentViewButtonPressed(_:)), for: .touchUpInside)
         presentViewButton.addTarget(self, action: #selector(listButtonPressed(_:)), for: .touchUpInside)
+    }
+
+    func registerCell() {
+        weatherInfoView.weatherTableView.register(WeatherDayInfoTableViewCell.self, forCellReuseIdentifier: weatherDayInfoCellIdentifier)
+    }
+
+    func setTableViewHeader() {
+        headerHeightConstraint = weatherInfoTableHeaderView.heightAnchor.constraint(equalToConstant: weatherSubTitleOriginHeight)
+        headerHeightConstraint?.isActive = true
     }
 
     func setToolBarButtonItem() {
@@ -82,5 +103,37 @@ class WeatherInfoViewController: UIViewController {
 
     @objc func presentViewButtonPressed(_: UIButton) {
         print("presentViewButton Pressed")
+    }
+}
+
+extension WeatherInfoViewController: UITableViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        print(scrollView.contentOffset.y)
+//            weatherInfoTableHeaderView.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: height)
+
+//        weatherInfoTableHeaderView.layoutIfNeeded()
+    }
+
+    func tableView(_: UITableView, heightForHeaderInSection _: Int) -> CGFloat {
+        return weatherSubTitleOriginHeight
+    }
+
+    func tableView(_: UITableView, viewForHeaderInSection _: Int) -> UIView? {
+        return weatherInfoTableHeaderView
+    }
+}
+
+extension WeatherInfoViewController: UITableViewDataSource {
+    func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
+        return 3
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let weatherDayInfoCell = tableView.dequeueReusableCell(withIdentifier: self.weatherDayInfoCellIdentifier, for: indexPath) as? WeatherDayInfoTableViewCell else { return UITableViewCell() }
+
+        switch indexPath.row {
+        case 0: return weatherDayInfoCell
+        default: return UITableViewCell()
+        }
     }
 }

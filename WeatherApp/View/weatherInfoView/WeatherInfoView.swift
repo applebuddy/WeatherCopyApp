@@ -15,10 +15,9 @@ class WeatherInfoView: UIView {
         return weatherTitleView
     }()
 
-    let weatherSubTitleView: WeatherSubTitleView = {
-        let weatherSubTitleView = WeatherSubTitleView()
-        weatherSubTitleView.backgroundColor = UIColor.lightGray
-        return weatherSubTitleView
+    let weatherTableView: WeatherInfoTableView = {
+        let weatherTableView = WeatherInfoTableView(frame: CGRect.zero, style: .grouped)
+        return weatherTableView
     }()
 
     override init(frame: CGRect) {
@@ -34,7 +33,17 @@ class WeatherInfoView: UIView {
 
     func setSubviews() {
         addSubview(weatherTitleView)
-        addSubview(weatherSubTitleView)
+        addSubview(weatherTableView)
+    }
+
+    func setWeatherTableViewConstraint() {
+        weatherTableView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            weatherTableView.topAnchor.constraint(equalTo: weatherTitleView.bottomAnchor),
+            weatherTableView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            weatherTableView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor),
+            weatherTableView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor),
+        ])
     }
 
     func setWeatherTitleViewContraint() {
@@ -45,17 +54,10 @@ class WeatherInfoView: UIView {
             weatherTitleView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: 0),
             weatherTitleView.heightAnchor.constraint(equalToConstant: 100),
         ])
-
-        weatherSubTitleView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            weatherSubTitleView.topAnchor.constraint(equalTo: weatherTitleView.bottomAnchor),
-            weatherSubTitleView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor),
-            weatherSubTitleView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor),
-            weatherSubTitleView.heightAnchor.constraint(equalToConstant: 150),
-        ])
     }
 
     func setConstraints() {
         setWeatherTitleViewContraint()
+        setWeatherTableViewConstraint()
     }
 }

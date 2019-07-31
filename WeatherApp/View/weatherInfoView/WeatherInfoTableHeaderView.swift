@@ -8,7 +8,7 @@
 
 import UIKit
 
-class WeatherSubTitleView: UIView {
+class WeatherInfoTableHeaderView: UIView {
     let mainCelsiusLabel: UILabel = {
         let celsiusLabel = UILabel()
         celsiusLabel.text = "27º"
@@ -60,6 +60,7 @@ class WeatherSubTitleView: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
+        backgroundColor = UIColor.black
         setSubviews()
         setConstraints()
     }
@@ -75,6 +76,10 @@ class WeatherSubTitleView: UIView {
         addSubview(dateLabel)
         addSubview(subDateLabel)
     }
+
+//    func changeHeightConstarint(height: CGFloat) {
+//
+//    }
 
     func setConstraints() {
         mainCelsiusLabel.translatesAutoresizingMaskIntoConstraints = false
