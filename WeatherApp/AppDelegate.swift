@@ -10,19 +10,15 @@ import UIKit
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
     var window: UIWindow?
 
-
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
-        self.window = UIWindow(frame: UIScreen.main.bounds)
+    func application(_: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        window = UIWindow(frame: UIScreen.main.bounds)
         let weatherInfoViewController = WeatherInfoViewController()
         let mainNavigationController = MainNavigationController(rootViewController: weatherInfoViewController)
-        self.window?.rootViewController = mainNavigationController
-        self.window?.makeKeyAndVisible()
-        
-        
+        window?.rootViewController = mainNavigationController
+        window?.makeKeyAndVisible()
+
         return true
     }
 
@@ -48,4 +44,3 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 //    }
 }
-

@@ -6,11 +6,10 @@
 //  Copyright © 2019 MinKyeongTae. All rights reserved.
 //
 
-import UIKit
 import MapKit
+import UIKit
 
 class WeatherInfoViewController: UIViewController {
-
     let linkBarButton: UIButton = {
         let linkBarButton = UIButton(type: .custom)
         linkBarButton.setTitleColor(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), for: .normal)
@@ -20,7 +19,7 @@ class WeatherInfoViewController: UIViewController {
         linkBarButton.isHidden = false
         return linkBarButton
     }()
-    
+
     let listBarButton: UIButton = {
         let listBarButton = UIButton(type: .custom)
         listBarButton.setTitleColor(#colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1), for: .normal)
@@ -29,7 +28,7 @@ class WeatherInfoViewController: UIViewController {
         listBarButton.clipsToBounds = true
         return listBarButton
     }()
-    
+
     let presentViewButton: UIButton = {
         let presentViewButton = UIButton(type: .custom)
         presentViewButton.setTitleColor(#colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1), for: .normal)
@@ -38,24 +37,24 @@ class WeatherInfoViewController: UIViewController {
         presentViewButton.clipsToBounds = true
         return presentViewButton
     }()
-    
+
     let weatherInfoView: WeatherInfoView = {
         let weatherInfoView = WeatherInfoView()
         return weatherInfoView
     }()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        self.setButtonTarget()
+        setButtonTarget()
         setToolBarButtonItem()
     }
 
     override func loadView() {
         super.loadView()
-            self.view = weatherInfoView
+        view = weatherInfoView
     }
-    
+
     func setButtonTarget() {
         linkBarButton.addTarget(self, action: #selector(linkButtonPressed(_:)), for: .touchUpInside)
         listBarButton.addTarget(self, action: #selector(presentViewButtonPressed(_:)), for: .touchUpInside)
@@ -63,29 +62,25 @@ class WeatherInfoViewController: UIViewController {
     }
 
     func setToolBarButtonItem() {
-    
         let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
         let barButtonItem = UIBarButtonItem(customView: linkBarButton)
         let barButtonItem2 = UIBarButtonItem(customView: presentViewButton)
         let barButtonItem3 = UIBarButtonItem(customView: listBarButton)
         let toolBarItems = [barButtonItem, flexibleSpace, barButtonItem3, flexibleSpace, barButtonItem2]
-        self.toolbarItems = toolBarItems
+        toolbarItems = toolBarItems
         navigationController?.setToolbarHidden(false, animated: false)
-        self.hidesBottomBarWhenPushed = false
-        
+        hidesBottomBarWhenPushed = false
     }
-    
-    @objc func linkButtonPressed(_ sender: UIButton) {
+
+    @objc func linkButtonPressed(_: UIButton) {
         print("linkBarButton Pressed")
     }
-    
-    @objc func listButtonPressed(_ sender: UIButton) {
+
+    @objc func listButtonPressed(_: UIButton) {
         print("listBarButton Pressed")
     }
-    
-    @objc func presentViewButtonPressed(_ sender: UIButton) {
+
+    @objc func presentViewButtonPressed(_: UIButton) {
         print("presentViewButton Pressed")
     }
-    
 }
-
