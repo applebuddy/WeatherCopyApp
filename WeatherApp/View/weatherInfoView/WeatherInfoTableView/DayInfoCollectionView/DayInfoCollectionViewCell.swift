@@ -12,6 +12,7 @@ class DayInfoCollectionViewCell: UICollectionViewCell {
     override init(frame: CGRect) {
         super.init(frame: frame)
         setConstraints()
+        backgroundColor = UIColor.red
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -20,7 +21,7 @@ class DayInfoCollectionViewCell: UICollectionViewCell {
     }
 
     func setCellData() {
-        backgroundColor = UIColor.lightGray
+        backgroundColor = UIColor.red
     }
 }
 

@@ -13,10 +13,11 @@ class WeatherDayInfoTableViewCell: UITableViewCell {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
         layout.itemSize = CGSize(width: 100, height: 100)
-        layout.minimumInteritemSpacing = 0
+        layout.minimumInteritemSpacing = 5
 
         // ✓ 컬렉션뷰의 frame을 CGRect.zero 설정하면, cellForItemAt delegate 메서드가 호출되지 않을 수 있다.
-        let dayInfoCollectionView = DayInfoCollectionView(frame: CGRect.zero, collectionViewLayout: layout)
+        let dayInfoCollectionView = DayInfoCollectionView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: WeatherCellHeights.dayInfoCollectionCell), collectionViewLayout: layout)
+        dayInfoCollectionView.isScrollEnabled = true
         dayInfoCollectionView.backgroundColor = UIColor.lightGray
         return dayInfoCollectionView
     }()
@@ -25,7 +26,7 @@ class WeatherDayInfoTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = UIColor.blue
         setSubviews()
-        setConstraints()
+//        setConstraints()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -56,19 +57,13 @@ extension WeatherDayInfoTableViewCell: UIViewSettingProtocol {
 
     func setConstraints() {
         translatesAutoresizingMaskIntoConstraints = false
+        dayInfoCollectionView.translatesAutoresizingMaskIntoConstraints = false
+
         NSLayoutConstraint.activate([
-            self.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 0),
-            self.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: 0),
-            self.heightAnchor.constraint(equalToConstant: WeatherCellHeights.dayInfoTableCell),
-            self.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width),
+            dayInfoCollectionView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 0),
+            dayInfoCollectionView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: 0),
+            dayInfoCollectionView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 0),
+            dayInfoCollectionView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: 0),
         ])
-//
-//        self.dayInfoCollectionView.translatesAutoresizingMaskIntoConstraints = false
-//        NSLayoutConstraint.activate([
-//            dayInfoCollectionView.topAnchor.constraint(equalTo: self.topAnchor, constant: 5),
-//            dayInfoCollectionView.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 0),
-//            dayInfoCollectionView.rightAnchor.constraint(equalTo: self.rightAnchor, constant: 0),
-//            dayInfoCollectionView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -5),
-//            ])
     }
 }

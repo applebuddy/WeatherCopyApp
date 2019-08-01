@@ -11,7 +11,7 @@ import UIKit
 class WeatherWeekInfoTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        backgroundColor = UIColor.green
+        setConstraints()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -23,5 +23,23 @@ class WeatherWeekInfoTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
+    }
+
+    func setCellData() {
+        backgroundColor = UIColor.green
+    }
+}
+
+extension WeatherWeekInfoTableViewCell: UIViewSettingProtocol {
+    func setSubviews() {}
+
+    func setConstraints() {
+        translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            self.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 0),
+            self.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 0),
+            self.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: 0),
+            self.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: 0),
+        ])
     }
 }

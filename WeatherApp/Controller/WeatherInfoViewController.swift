@@ -136,7 +136,7 @@ extension WeatherInfoViewController: UITableViewDelegate {
 
 extension WeatherInfoViewController: UITableViewDataSource {
     func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
-        return 10
+        return 2
     }
 
     func numberOfSections(in _: UITableView) -> Int {
@@ -160,7 +160,10 @@ extension WeatherInfoViewController: UITableViewDataSource {
             weatherDayInfoCell.dayInfoCollectionView.delegate = self
             weatherDayInfoCell.dayInfoCollectionView.dataSource = self
             return weatherDayInfoCell
-        case 1: return weatherWeekInfoCell
+        case 1:
+            // 테이블 뷰 추가 후 확인 필요(아직 컨텐츠뷰 크기설정이 안되어서 안보임
+            weatherWeekInfoCell.setCellData()
+            return weatherWeekInfoCell
         default: return UITableViewCell()
         }
     }
@@ -178,14 +181,15 @@ extension WeatherInfoViewController: UICollectionViewDelegate {
 
 extension WeatherInfoViewController: UICollectionViewDataSource {
     func numberOfSections(in _: UICollectionView) -> Int {
-        return 10
+        return 1
     }
 
     func collectionView(_: UICollectionView, numberOfItemsInSection _: Int) -> Int {
-        return 10
+        return 16
     }
 }
 
+//
 // extension WeatherInfoViewController: UICollectionViewDelegateFlowLayout {
 //    func collectionView(_: UICollectionView, layout _: UICollectionViewLayout, sizeForItemAt _: IndexPath) -> CGSize {
 //        return CGSize(width: 100, height: 100)

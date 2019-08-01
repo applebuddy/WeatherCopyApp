@@ -21,5 +21,6 @@ class WeatherInfoTableView: UITableView {
     func setTableView() {
         allowsSelection = false
         allowsMultipleSelection = false
+        separatorStyle = .none
     }
 }

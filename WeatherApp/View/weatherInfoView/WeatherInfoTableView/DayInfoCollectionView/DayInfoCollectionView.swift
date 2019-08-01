@@ -11,6 +11,7 @@ import UIKit
 class DayInfoCollectionView: UICollectionView {
     override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame, collectionViewLayout: layout)
+        backgroundColor = UIColor.black
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -23,13 +24,12 @@ extension DayInfoCollectionView: UIViewSettingProtocol {
     func setSubviews() {}
 
     func setConstraints() {
-//        translatesAutoresizingMaskIntoConstraints = false
-//        NSLayoutConstraint.activate([
-//            self.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
-//            self.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor),
-//            self.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor),
-//            self.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
-//            self.heightAnchor.constraint(equalToConstant: 200)
-//        ])
+        translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            self.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            self.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor),
+            self.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor),
+            self.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+        ])
     }
 }
