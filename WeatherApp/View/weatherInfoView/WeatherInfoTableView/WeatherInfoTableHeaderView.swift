@@ -69,6 +69,14 @@ class WeatherInfoTableHeaderView: UIView {
         super.init(coder: aDecoder)
     }
 
+    func setTableHeaderViewAlpha(alpha: CGFloat) {
+        for subview in subviews {
+            subview.alpha = alpha
+        }
+    }
+}
+
+extension WeatherInfoTableHeaderView: UIViewSettingProtocol {
     func setSubviews() {
         addSubview(mainCelsiusLabel)
         addSubview(minCelsiusLabel)
@@ -76,10 +84,6 @@ class WeatherInfoTableHeaderView: UIView {
         addSubview(dateLabel)
         addSubview(subDateLabel)
     }
-
-//    func changeHeightConstarint(height: CGFloat) {
-//
-//    }
 
     func setConstraints() {
         mainCelsiusLabel.translatesAutoresizingMaskIntoConstraints = false

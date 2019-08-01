@@ -11,9 +11,15 @@ import UIKit
 class WeatherInfoTableView: UITableView {
     override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
+        setTableView()
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+    }
+
+    func setTableView() {
+        allowsSelection = false
+        allowsMultipleSelection = false
     }
 }

@@ -38,7 +38,9 @@ class WeatherTitleView: UIView {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
+}
 
+extension WeatherTitleView: UIViewSettingProtocol {
     func setSubviews() {
         addSubview(weatherTitleLabel)
         addSubview(weatherSubTitleLabel)

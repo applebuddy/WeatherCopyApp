@@ -17,6 +17,7 @@ class WeatherInfoView: UIView {
 
     let weatherTableView: WeatherInfoTableView = {
         let weatherTableView = WeatherInfoTableView(frame: CGRect.zero, style: .grouped)
+        weatherTableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         return weatherTableView
     }()
 
@@ -29,11 +30,6 @@ class WeatherInfoView: UIView {
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-    }
-
-    func setSubviews() {
-        addSubview(weatherTitleView)
-        addSubview(weatherTableView)
     }
 
     func setWeatherTableViewConstraint() {
@@ -54,6 +50,13 @@ class WeatherInfoView: UIView {
             weatherTitleView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: 0),
             weatherTitleView.heightAnchor.constraint(equalToConstant: 100),
         ])
+    }
+}
+
+extension WeatherInfoView: UIViewSettingProtocol {
+    func setSubviews() {
+        addSubview(weatherTitleView)
+        addSubview(weatherTableView)
     }
 
     func setConstraints() {

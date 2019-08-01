@@ -11,7 +11,10 @@ import UIKit
 
 class WeatherInfoViewController: UIViewController {
     var headerHeightConstraint: NSLayoutConstraint?
+    var headerViewFrame: CGRect?
+
     let weatherDayInfoCellIdentifier: String = "weatherDayInfoTableViewCell"
+    let weatherWeekInfoCellIdentifier: String = "weatherWeekInfoTableViewCell"
 
     let linkBarButton: UIButton = {
         let linkBarButton = UIButton(type: .custom)
@@ -48,6 +51,7 @@ class WeatherInfoViewController: UIViewController {
 
     let weatherInfoTableHeaderView: WeatherInfoTableHeaderView = {
         let weatherInfoTableHeaderView = WeatherInfoTableHeaderView()
+        weatherInfoTableHeaderView.contentMode = .scaleAspectFill
         return weatherInfoTableHeaderView
     }()
 
@@ -59,7 +63,8 @@ class WeatherInfoViewController: UIViewController {
         registerCell()
         setButtonTarget()
         setToolBarButtonItem()
-        setTableViewHeader()
+        setTableHeaderView()
+        headerViewFrame = weatherInfoTableHeaderView.frame
     }
 
     override func loadView() {
@@ -75,9 +80,10 @@ class WeatherInfoViewController: UIViewController {
 
     func registerCell() {
         weatherInfoView.weatherTableView.register(WeatherDayInfoTableViewCell.self, forCellReuseIdentifier: weatherDayInfoCellIdentifier)
+        weatherInfoView.weatherTableView.register(WeatherWeekInfoTableViewCell.self, forCellReuseIdentifier: weatherWeekInfoCellIdentifier)
     }
 
-    func setTableViewHeader() {
+    func setTableHeaderView() {
         headerHeightConstraint = weatherInfoTableHeaderView.heightAnchor.constraint(equalToConstant: weatherSubTitleOriginHeight)
         headerHeightConstraint?.isActive = true
     }
@@ -108,14 +114,18 @@ class WeatherInfoViewController: UIViewController {
 
 extension WeatherInfoViewController: UITableViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        print(scrollView.contentOffset.y)
-//            weatherInfoTableHeaderView.frame = CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: height)
+        let height = CGFloat(max(0, weatherSubTitleOriginHeight - max(0, scrollView.contentOffset.y)))
+        let alphaValue = pow(height / weatherSubTitleOriginHeight, 5)
+        weatherInfoTableHeaderView.setTableHeaderViewAlpha(alpha: alphaValue)
+        weatherInfoTableHeaderView.frame.size.height = height
+    }
 
-//        weatherInfoTableHeaderView.layoutIfNeeded()
+    func tableView(_: UITableView, heightForRowAt _: IndexPath) -> CGFloat {
+        return UITableView.automaticDimension
     }
 
     func tableView(_: UITableView, heightForHeaderInSection _: Int) -> CGFloat {
-        return weatherSubTitleOriginHeight
+        return UITableView.automaticDimension
     }
 
     func tableView(_: UITableView, viewForHeaderInSection _: Int) -> UIView? {
@@ -129,10 +139,11 @@ extension WeatherInfoViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let weatherDayInfoCell = tableView.dequeueReusableCell(withIdentifier: self.weatherDayInfoCellIdentifier, for: indexPath) as? WeatherDayInfoTableViewCell else { return UITableViewCell() }
-
+        guard let weatherDayInfoCell = tableView.dequeueReusableCell(withIdentifier: self.weatherDayInfoCellIdentifier, for: indexPath) as? WeatherDayInfoTableViewCell,
+            let weatherWeekInfoCell = tableView.dequeueReusableCell(withIdentifier: self.weatherWeekInfoCellIdentifier, for: indexPath) as? WeatherWeekInfoTableViewCell else { return UITableViewCell() }
         switch indexPath.row {
         case 0: return weatherDayInfoCell
+        case 1: return weatherWeekInfoCell
         default: return UITableViewCell()
         }
     }
