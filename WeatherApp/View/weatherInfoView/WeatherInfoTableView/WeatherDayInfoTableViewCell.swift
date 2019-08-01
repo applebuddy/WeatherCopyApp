@@ -12,7 +12,8 @@ class WeatherDayInfoTableViewCell: UITableViewCell {
     let dayInfoCollectionView: DayInfoCollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        layout.itemSize = CGSize(width: 80, height: WeatherCellHeights.dayInfoCollectionCell)
+        let cellSize = CGSize(width: 80, height: WeatherCellHeight.dayInfoCollectionCell)
+        layout.itemSize = cellSize
         layout.minimumInteritemSpacing = 5
 
         // ✓ 컬렉션뷰의 frame을 CGRect.zero 설정하면, cellForItemAt delegate 메서드가 호출되지 않을 수 있다.
@@ -57,7 +58,7 @@ extension WeatherDayInfoTableViewCell: UIViewSettingProtocol {
             dayInfoCollectionView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: 0),
             dayInfoCollectionView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 0),
             dayInfoCollectionView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: 0),
-            dayInfoCollectionView.heightAnchor.constraint(equalToConstant: WeatherCellHeights.dayInfoCollectionCell),
+            dayInfoCollectionView.heightAnchor.constraint(equalToConstant: WeatherCellHeight.dayInfoCollectionCell),
         ])
     }
 }

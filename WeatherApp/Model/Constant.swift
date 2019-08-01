@@ -15,16 +15,18 @@ struct CellIdentifier {
     static let weekInfoTableCell: String = "weekInfoTableViewCell"
 }
 
-struct WeatherCellHeights {
+struct WeatherCellHeight {
     static let dayInfoTableCell: CGFloat = 120
     static let infoTableHeaderCell: CGFloat = 150
     static let dayInfoCollectionCell: CGFloat = 100
+    static let weekInfoTableViewCell: CGFloat = 100
 }
 
-enum WeatherSections: Int {
+enum WeatherSection: Int {
     case mainSection = 0
 }
 
-struct WeatherViewHeights {
+struct WeatherViewHeight {
     static let titleViewHeight: CGFloat = 100
+    static let weekInfoTableView: CGFloat = 300
 }

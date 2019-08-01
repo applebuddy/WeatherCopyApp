@@ -8,6 +8,6 @@
 
 import UIKit
 
-protocol UIViewControllerSettingProtocol {
+protocol CellSettingProtocol {
     func registerCell()
 }

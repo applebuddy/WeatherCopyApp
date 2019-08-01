@@ -47,7 +47,7 @@ class WeatherInfoView: UIView {
             weatherTitleView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 0),
             weatherTitleView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 0),
             weatherTitleView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: 0),
-            weatherTitleView.heightAnchor.constraint(equalToConstant: WeatherViewHeights.titleViewHeight),
+            weatherTitleView.heightAnchor.constraint(equalToConstant: WeatherViewHeight.titleViewHeight),
         ])
     }
 }

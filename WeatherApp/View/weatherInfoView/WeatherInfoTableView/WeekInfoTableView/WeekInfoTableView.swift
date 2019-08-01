@@ -12,6 +12,8 @@ class WeekInfoTableView: UITableView {
     override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
         setConstraints()
+        backgroundColor = UIColor.gray
+        separatorStyle = .none
     }
 
     required init?(coder _: NSCoder) {
@@ -29,6 +31,7 @@ extension WeekInfoTableView: UIViewSettingProtocol {
             self.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor),
             self.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor),
             self.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            self.heightAnchor.constraint(equalToConstant: WeatherViewHeight.weekInfoTableView),
         ])
     }
 }

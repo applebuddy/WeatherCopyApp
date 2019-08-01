@@ -81,7 +81,7 @@ class WeatherInfoViewController: UIViewController {
     }
 
     func setTableHeaderView() {
-        headerHeightConstraint = weatherInfoTableHeaderView.heightAnchor.constraint(equalToConstant: WeatherCellHeights.infoTableHeaderCell)
+        headerHeightConstraint = weatherInfoTableHeaderView.heightAnchor.constraint(equalToConstant: WeatherCellHeight.infoTableHeaderCell)
         headerHeightConstraint?.isActive = true
     }
 
@@ -113,10 +113,10 @@ class WeatherInfoViewController: UIViewController {
 
 extension WeatherInfoViewController: UITableViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        print(scrollView.contentOffset.y)
-        let height = CGFloat(max(0, WeatherCellHeights.infoTableHeaderCell - max(0, scrollView.contentOffset.y)))
-        let alphaValue = pow(height / WeatherCellHeights.infoTableHeaderCell, 5)
-        //        let changedFrame = CGRect(x: 0, y: 0, width: 0, height: height)
+        print()
+        if scrollView.contentOffset.y == 0 { return }
+        let height = CGFloat(max(0, WeatherCellHeight.infoTableHeaderCell - max(0, scrollView.contentOffset.y)))
+        let alphaValue = pow(height / WeatherCellHeight.infoTableHeaderCell, 5)
         weatherInfoTableHeaderView.setTableHeaderViewAlpha(alpha: alphaValue)
     }
 
@@ -195,7 +195,7 @@ extension WeatherInfoViewController: UICollectionViewDataSource {
 
 // MARK: - Controller Protocol
 
-extension WeatherInfoViewController: UIViewControllerSettingProtocol {
+extension WeatherInfoViewController: CellSettingProtocol {
     func registerCell() {
         weatherInfoView.weatherTableView.register(WeatherDayInfoTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weatherDayInfoTableCell)
         weatherInfoView.weatherTableView.register(WeatherWeekInfoTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weatherWeekInfoTableCell)

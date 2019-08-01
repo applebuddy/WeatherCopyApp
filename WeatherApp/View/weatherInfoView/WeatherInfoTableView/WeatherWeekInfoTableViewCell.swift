@@ -18,7 +18,9 @@ class WeatherWeekInfoTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setSubviews()
         setConstraints()
-//        weekInfoTableView.register(weekInfoTableView.self, forCellReuseIdentifier: <#T##String#>)
+        registerCell()
+        weekInfoTableView.delegate = self
+        weekInfoTableView.dataSource = self
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -28,7 +30,6 @@ class WeatherWeekInfoTableViewCell: UITableViewCell {
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
         // Configure the view for the selected state
     }
 
@@ -50,5 +51,33 @@ extension WeatherWeekInfoTableViewCell: UIViewSettingProtocol {
             weekInfoTableView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 0),
             weekInfoTableView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: 0),
         ])
+    }
+}
+
+extension WeatherWeekInfoTableViewCell: CellSettingProtocol {
+    func registerCell() {
+        weekInfoTableView.register(WeekInfoTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weekInfoTableCell)
+    }
+}
+
+extension WeatherWeekInfoTableViewCell: UITableViewDelegate {
+    func tableView(_: UITableView, heightForRowAt _: IndexPath) -> CGFloat {
+        return 100
+    }
+}
+
+extension WeatherWeekInfoTableViewCell: UITableViewDataSource {
+    func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
+        return 10
+    }
+
+    func numberOfSections(in _: UITableView) -> Int {
+        return 1
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let weekInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weekInfoTableCell, for: indexPath) as? WeekInfoTableViewCell else { return UITableViewCell() }
+
+        return weekInfoCell
     }
 }
