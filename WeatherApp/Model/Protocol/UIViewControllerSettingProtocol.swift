@@ -1,5 +1,5 @@
 //
-//  UIViewSettingProtocol.swift
+//  UIViewControllerSettingProtocol.swift
 //  WeatherApp
 //
 //  Created by MinKyeongTae on 01/08/2019.
@@ -8,7 +8,6 @@
 
 import UIKit
 
-protocol UIViewSettingProtocol {
-    func setConstraints()
-    func setSubviews()
+protocol UIViewControllerSettingProtocol {
+    func registerCell()
 }

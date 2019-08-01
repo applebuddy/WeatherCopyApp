@@ -11,7 +11,6 @@ import UIKit
 class WeatherDayInfoTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        backgroundColor = UIColor.blue
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -24,4 +23,14 @@ class WeatherDayInfoTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
+
+    func setDayInfoCollectionView() {
+        backgroundColor = UIColor.blue
+    }
+}
+
+extension WeatherDayInfoTableViewCell: UIViewSettingProtocol {
+    func setSubviews() {}
+
+    func setConstraints() {}
 }

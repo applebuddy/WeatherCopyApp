@@ -13,9 +13,6 @@ class WeatherInfoViewController: UIViewController {
     var headerHeightConstraint: NSLayoutConstraint?
     var headerViewFrame: CGRect?
 
-    let weatherDayInfoCellIdentifier: String = "weatherDayInfoTableViewCell"
-    let weatherWeekInfoCellIdentifier: String = "weatherWeekInfoTableViewCell"
-
     let linkBarButton: UIButton = {
         let linkBarButton = UIButton(type: .custom)
         linkBarButton.setTitleColor(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), for: .normal)
@@ -55,11 +52,18 @@ class WeatherInfoViewController: UIViewController {
         return weatherInfoTableHeaderView
     }()
 
+    let dayInfoCollectionView: DayInfoCollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        let dayInfoCollectionView = DayInfoCollectionView(frame: CGRect.zero, collectionViewLayout: layout)
+        dayInfoCollectionView.backgroundColor = UIColor.black
+        return dayInfoCollectionView
+    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        weatherInfoView.weatherTableView.delegate = self
-        weatherInfoView.weatherTableView.dataSource = self
+        setInfoViewController()
         registerCell()
         setButtonTarget()
         setToolBarButtonItem()
@@ -72,19 +76,21 @@ class WeatherInfoViewController: UIViewController {
         view = weatherInfoView
     }
 
+    func setInfoViewController() {
+        weatherInfoView.weatherTableView.dataSource = self
+        weatherInfoView.weatherTableView.delegate = self
+        dayInfoCollectionView.delegate = self
+        dayInfoCollectionView.dataSource = self
+    }
+
     func setButtonTarget() {
         linkBarButton.addTarget(self, action: #selector(linkButtonPressed(_:)), for: .touchUpInside)
         listBarButton.addTarget(self, action: #selector(presentViewButtonPressed(_:)), for: .touchUpInside)
         presentViewButton.addTarget(self, action: #selector(listButtonPressed(_:)), for: .touchUpInside)
     }
 
-    func registerCell() {
-        weatherInfoView.weatherTableView.register(WeatherDayInfoTableViewCell.self, forCellReuseIdentifier: weatherDayInfoCellIdentifier)
-        weatherInfoView.weatherTableView.register(WeatherWeekInfoTableViewCell.self, forCellReuseIdentifier: weatherWeekInfoCellIdentifier)
-    }
-
     func setTableHeaderView() {
-        headerHeightConstraint = weatherInfoTableHeaderView.heightAnchor.constraint(equalToConstant: weatherSubTitleOriginHeight)
+        headerHeightConstraint = weatherInfoTableHeaderView.heightAnchor.constraint(equalToConstant: WeatherCellHeights.infoTableHeaderCell)
         headerHeightConstraint?.isActive = true
     }
 
@@ -112,12 +118,18 @@ class WeatherInfoViewController: UIViewController {
     }
 }
 
+// MARK: - UITableView Protocol
+
 extension WeatherInfoViewController: UITableViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        let height = CGFloat(max(0, weatherSubTitleOriginHeight - max(0, scrollView.contentOffset.y)))
-        let alphaValue = pow(height / weatherSubTitleOriginHeight, 5)
+        print(scrollView.contentOffset.y)
+        let height = CGFloat(max(0, WeatherCellHeights.infoTableHeaderCell - max(0, scrollView.contentOffset.y)))
+        let alphaValue = pow(height / WeatherCellHeights.infoTableHeaderCell, 5)
+//        let changedFrame = CGRect(x: 0, y: 0, width: 0, height: height)
         weatherInfoTableHeaderView.setTableHeaderViewAlpha(alpha: alphaValue)
-        weatherInfoTableHeaderView.frame.size.height = height
+
+//        weatherInfoView.weatherTableView.layer.masksToBounds = true
+//        weatherInfoTableHeaderView.setTableHeaderViewFrame(rect: changedFrame)
     }
 
     func tableView(_: UITableView, heightForRowAt _: IndexPath) -> CGFloat {
@@ -135,16 +147,67 @@ extension WeatherInfoViewController: UITableViewDelegate {
 
 extension WeatherInfoViewController: UITableViewDataSource {
     func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
-        return 3
+        return 2
     }
 
+    func numberOfSections(in _: UITableView) -> Int {
+        return 1
+    }
+
+//    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+//        guard let weatherDayInfoCell = tableView.dequeueReusableCell(withIdentifier: weatherDayInfoTableCellIdentifier, for: indexPath) as? WeatherDayInfoTableViewCell else { return }
+//
+//    }
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let weatherDayInfoCell = tableView.dequeueReusableCell(withIdentifier: self.weatherDayInfoCellIdentifier, for: indexPath) as? WeatherDayInfoTableViewCell,
-            let weatherWeekInfoCell = tableView.dequeueReusableCell(withIdentifier: self.weatherWeekInfoCellIdentifier, for: indexPath) as? WeatherWeekInfoTableViewCell else { return UITableViewCell() }
+        guard let weatherDayInfoCell = tableView.dequeueReusableCell(withIdentifier: weatherDayInfoTableCellIdentifier, for: indexPath) as? WeatherDayInfoTableViewCell,
+            let weatherWeekInfoCell = tableView.dequeueReusableCell(withIdentifier: weatherWeekInfoTableCellIdentifier, for: indexPath) as? WeatherWeekInfoTableViewCell else { return UITableViewCell() }
         switch indexPath.row {
-        case 0: return weatherDayInfoCell
+        case 0:
+            // 테이블셀에 컬렉션뷰를 추가한다.
+            weatherDayInfoCell.addSubview(dayInfoCollectionView)
+            return weatherDayInfoCell
+
         case 1: return weatherWeekInfoCell
         default: return UITableViewCell()
         }
+    }
+}
+
+// MARK: - UICollectionView Protocol
+
+extension WeatherInfoViewController: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: weatherDayInfoCollectionCellIdentifier, for: indexPath) as? DayInfoCollectionViewCell else { return UICollectionViewCell() }
+        cell.backgroundColor = UIColor.black
+
+        return cell
+    }
+}
+
+extension WeatherInfoViewController: UICollectionViewDataSource {
+    func numberOfSections(in _: UICollectionView) -> Int {
+        return 10
+    }
+
+    func collectionView(_: UICollectionView, numberOfItemsInSection _: Int) -> Int {
+        return 10
+    }
+}
+
+extension WeatherInfoViewController: UICollectionViewDelegateFlowLayout {
+    func collectionView(_: UICollectionView, layout _: UICollectionViewLayout, sizeForItemAt _: IndexPath) -> CGSize {
+        return CGSize(width: 100, height: 100)
+    }
+}
+
+// MARK: - Controller Protocol
+
+extension WeatherInfoViewController: UIViewControllerSettingProtocol {
+    func registerCell() {
+        weatherInfoView.weatherTableView.register(WeatherDayInfoTableViewCell.self, forCellReuseIdentifier: weatherDayInfoTableCellIdentifier)
+        weatherInfoView.weatherTableView.register(WeatherWeekInfoTableViewCell.self, forCellReuseIdentifier: weatherWeekInfoTableCellIdentifier)
+
+        dayInfoCollectionView.register(DayInfoCollectionViewCell.self, forCellWithReuseIdentifier: weatherDayInfoCollectionCellIdentifier)
     }
 }
