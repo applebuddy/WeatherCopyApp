@@ -8,9 +8,12 @@
 
 import UIKit
 
-let weatherDayInfoCollectionCellIdentifier: String = "weatherDayInfoCollectionViewCell"
-let weatherDayInfoTableCellIdentifier: String = "weatherDayInfoTableViewCell"
-let weatherWeekInfoTableCellIdentifier: String = "weatherWeekInfoTableViewCell"
+struct CellIdentifier {
+    static let weatherDayInfoTableCell: String = "weatherDayInfoTableViewCell"
+    static let weatherWeekInfoTableCell: String = "weatherWeekInfoTableViewCell"
+    static let dayInfoCollectionCell: String = "dayInfoCollectionViewCell"
+    static let weekInfoTableCell: String = "weekInfoTableViewCell"
+}
 
 struct WeatherCellHeights {
     static let dayInfoTableCell: CGFloat = 120

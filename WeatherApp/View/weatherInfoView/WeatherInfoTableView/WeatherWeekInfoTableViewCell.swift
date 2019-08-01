@@ -9,9 +9,16 @@
 import UIKit
 
 class WeatherWeekInfoTableViewCell: UITableViewCell {
+    let weekInfoTableView: WeekInfoTableView = {
+        let weekInfoTableView = WeekInfoTableView(frame: CGRect.zero, style: .grouped)
+        return weekInfoTableView
+    }()
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        setSubviews()
         setConstraints()
+//        weekInfoTableView.register(weekInfoTableView.self, forCellReuseIdentifier: <#T##String#>)
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -31,15 +38,17 @@ class WeatherWeekInfoTableViewCell: UITableViewCell {
 }
 
 extension WeatherWeekInfoTableViewCell: UIViewSettingProtocol {
-    func setSubviews() {}
+    func setSubviews() {
+        addSubview(weekInfoTableView)
+    }
 
     func setConstraints() {
-        translatesAutoresizingMaskIntoConstraints = false
+        weekInfoTableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            self.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 0),
-            self.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 0),
-            self.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: 0),
-            self.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: 0),
+            weekInfoTableView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 0),
+            weekInfoTableView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: 0),
+            weekInfoTableView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 0),
+            weekInfoTableView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: 0),
         ])
     }
 }

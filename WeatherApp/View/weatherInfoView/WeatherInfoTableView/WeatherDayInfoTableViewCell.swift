@@ -12,11 +12,11 @@ class WeatherDayInfoTableViewCell: UITableViewCell {
     let dayInfoCollectionView: DayInfoCollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        layout.itemSize = CGSize(width: 100, height: 100)
+        layout.itemSize = CGSize(width: 80, height: WeatherCellHeights.dayInfoCollectionCell)
         layout.minimumInteritemSpacing = 5
 
         // ✓ 컬렉션뷰의 frame을 CGRect.zero 설정하면, cellForItemAt delegate 메서드가 호출되지 않을 수 있다.
-        let dayInfoCollectionView = DayInfoCollectionView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: WeatherCellHeights.dayInfoCollectionCell), collectionViewLayout: layout)
+        let dayInfoCollectionView = DayInfoCollectionView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: 0), collectionViewLayout: layout)
         dayInfoCollectionView.isScrollEnabled = true
         dayInfoCollectionView.backgroundColor = UIColor.lightGray
         return dayInfoCollectionView
@@ -26,7 +26,7 @@ class WeatherDayInfoTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = UIColor.blue
         setSubviews()
-//        setConstraints()
+        setConstraints()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -43,11 +43,6 @@ class WeatherDayInfoTableViewCell: UITableViewCell {
     func setCellData() {
         backgroundColor = UIColor.lightGray
     }
-
-    func setDayInfoCollectionView() {
-        backgroundColor = UIColor.blue
-        dayInfoCollectionView.backgroundColor = UIColor.lightGray
-    }
 }
 
 extension WeatherDayInfoTableViewCell: UIViewSettingProtocol {
@@ -56,14 +51,13 @@ extension WeatherDayInfoTableViewCell: UIViewSettingProtocol {
     }
 
     func setConstraints() {
-        translatesAutoresizingMaskIntoConstraints = false
         dayInfoCollectionView.translatesAutoresizingMaskIntoConstraints = false
-
         NSLayoutConstraint.activate([
             dayInfoCollectionView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 0),
             dayInfoCollectionView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: 0),
             dayInfoCollectionView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 0),
             dayInfoCollectionView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: 0),
+            dayInfoCollectionView.heightAnchor.constraint(equalToConstant: WeatherCellHeights.dayInfoCollectionCell),
         ])
     }
 }

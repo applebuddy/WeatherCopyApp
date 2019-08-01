@@ -29,6 +29,7 @@ extension DayInfoCollectionViewCell: UIViewSettingProtocol {
     func setSubviews() {}
 
     func setConstraints() {
+        translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             self.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 0),
             self.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 0),
