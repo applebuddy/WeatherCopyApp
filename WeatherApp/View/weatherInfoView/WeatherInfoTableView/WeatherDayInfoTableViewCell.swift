@@ -16,7 +16,7 @@ class WeatherDayInfoTableViewCell: UITableViewCell {
         layout.itemSize = cellSize
         layout.minimumInteritemSpacing = 5
 
-        // ✓ 컬렉션뷰의 frame을 CGRect.zero 설정하면, cellForItemAt delegate 메서드가 호출되지 않을 수 있다.
+        // ✭ 컬렉션뷰의 frame을 CGRect.zero 설정하면, cellForItemAt delegate 메서드가 호출되지 않을 수 있다.
         let dayInfoCollectionView = DayInfoCollectionView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: 0), collectionViewLayout: layout)
         dayInfoCollectionView.isScrollEnabled = true
         dayInfoCollectionView.backgroundColor = UIColor.lightGray
@@ -37,7 +37,6 @@ class WeatherDayInfoTableViewCell: UITableViewCell {
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-
         // Configure the view for the selected state
     }
 

@@ -13,6 +13,7 @@ struct CellIdentifier {
     static let weatherWeekInfoTableCell: String = "weatherWeekInfoTableViewCell"
     static let dayInfoCollectionCell: String = "dayInfoCollectionViewCell"
     static let weekInfoTableCell: String = "weekInfoTableViewCell"
+    static let weatherMainTableCell: String = "weatherMainTableCell"
 }
 
 struct WeatherCellHeight {

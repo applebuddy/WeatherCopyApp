@@ -13,6 +13,11 @@ class WeatherInfoViewController: UIViewController {
     var headerHeightConstraint: NSLayoutConstraint?
     var headerViewFrame: CGRect?
 
+    lazy var weatherMainViewController: WeatherMainViewController = {
+        let weatherMainViewController = WeatherMainViewController()
+        return weatherMainViewController
+    }()
+
     let linkBarButton: UIButton = {
         let linkBarButton = UIButton(type: .custom)
         linkBarButton.setTitleColor(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), for: .normal)
@@ -97,11 +102,14 @@ class WeatherInfoViewController: UIViewController {
     }
 
     @objc func linkButtonPressed(_: UIButton) {
-        print("linkBarButton Pressed")
+        // ✭ URL 링크주소는 파싱구현 이후 다시 수정한다.
+        guard let url = NSURL(string: "https://weather.com/ko-KR/weather/today/l/37.46,126.88?par=apple_widget&locale=ko_KR") else { return }
+        UIApplication.shared.open(url as URL)
     }
 
     @objc func listButtonPressed(_: UIButton) {
         print("listBarButton Pressed")
+        present(weatherMainViewController, animated: true, completion: nil)
     }
 
     @objc func presentViewButtonPressed(_: UIButton) {
@@ -113,7 +121,6 @@ class WeatherInfoViewController: UIViewController {
 
 extension WeatherInfoViewController: UITableViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        print()
         if scrollView.contentOffset.y == 0 { return }
         let height = CGFloat(max(0, WeatherCellHeight.infoTableHeaderCell - max(0, scrollView.contentOffset.y)))
         let alphaValue = pow(height / WeatherCellHeight.infoTableHeaderCell, 5)
@@ -128,8 +135,12 @@ extension WeatherInfoViewController: UITableViewDelegate {
         }
     }
 
-    func tableView(_: UITableView, heightForRowAt _: IndexPath) -> CGFloat {
-        return UITableView.automaticDimension
+    func tableView(_: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        if indexPath.section == 0 {
+            return UITableView.automaticDimension
+        } else {
+            return CGFloat.leastNonzeroMagnitude
+        }
     }
 
     func tableView(_: UITableView, heightForHeaderInSection _: Int) -> CGFloat {
@@ -184,14 +195,6 @@ extension WeatherInfoViewController: UICollectionViewDataSource {
         return 16
     }
 }
-
-//
-//
-// extension WeatherInfoViewController: UICollectionViewDelegateFlowLayout {
-//    func collectionView(_: UICollectionView, layout _: UICollectionViewLayout, sizeForItemAt _: IndexPath) -> CGSize {
-//        return CGSize(width: 100, height: 300)
-//    }
-// }
 
 // MARK: - Controller Protocol
 

@@ -12,6 +12,7 @@ class WeatherInfoTableView: UITableView {
     override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
         setTableView()
+        bounces = true
     }
 
     required init?(coder aDecoder: NSCoder) {

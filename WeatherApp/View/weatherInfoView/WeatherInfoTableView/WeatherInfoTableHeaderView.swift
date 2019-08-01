@@ -73,6 +73,7 @@ class WeatherInfoTableHeaderView: UIView {
         for subview in subviews {
             subview.alpha = alpha
         }
+        layoutIfNeeded()
     }
 
     func setTableHeaderViewFrame(rect: CGRect) {

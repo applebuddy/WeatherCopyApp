@@ -1,5 +1,5 @@
 //
-//  WeekInfoTableViewCell.swift
+//  WeatherMainTableViewCell.swift
 //  WeatherApp
 //
 //  Created by MinKyeongTae on 02/08/2019.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class WeekInfoTableViewCell: UITableViewCell {
+class WeatherMainTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setSubviews()
@@ -26,7 +26,7 @@ class WeekInfoTableViewCell: UITableViewCell {
     }
 }
 
-extension WeekInfoTableViewCell: UIViewSettingProtocol {
+extension WeatherMainTableViewCell: UIViewSettingProtocol {
     func setSubviews() {}
 
     func setConstraints() {
@@ -36,6 +36,6 @@ extension WeekInfoTableViewCell: UIViewSettingProtocol {
 //            self.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 0),
 //            self.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: 0),
 //            self.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: 0)
-//        ])
+//            ])
     }
 }

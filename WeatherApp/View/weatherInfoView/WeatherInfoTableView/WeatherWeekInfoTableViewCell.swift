@@ -10,7 +10,7 @@ import UIKit
 
 class WeatherWeekInfoTableViewCell: UITableViewCell {
     let weekInfoTableView: WeekInfoTableView = {
-        let weekInfoTableView = WeekInfoTableView(frame: CGRect.zero, style: .grouped)
+        let weekInfoTableView = WeekInfoTableView(frame: CGRect.zero, style: .plain)
         return weekInfoTableView
     }()
 
@@ -64,6 +64,10 @@ extension WeatherWeekInfoTableViewCell: UITableViewDelegate {
     func tableView(_: UITableView, heightForRowAt _: IndexPath) -> CGFloat {
         return 100
     }
+
+//    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+//        return CGFloat.leastNonzeroMagnitude
+//    }
 }
 
 extension WeatherWeekInfoTableViewCell: UITableViewDataSource {

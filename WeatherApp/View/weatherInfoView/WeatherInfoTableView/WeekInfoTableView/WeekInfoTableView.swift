@@ -13,7 +13,6 @@ class WeekInfoTableView: UITableView {
         super.init(frame: frame, style: style)
         setConstraints()
         backgroundColor = UIColor.gray
-        separatorStyle = .none
     }
 
     required init?(coder _: NSCoder) {
