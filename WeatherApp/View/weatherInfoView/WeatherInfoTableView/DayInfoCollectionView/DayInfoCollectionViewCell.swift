@@ -18,6 +18,10 @@ class DayInfoCollectionViewCell: UICollectionViewCell {
         super.init(coder: aDecoder)
         fatalError("init(coder:) has not been implemented")
     }
+
+    func setCellData() {
+        backgroundColor = UIColor.lightGray
+    }
 }
 
 extension DayInfoCollectionViewCell: UIViewSettingProtocol {

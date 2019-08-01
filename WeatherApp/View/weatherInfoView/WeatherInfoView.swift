@@ -17,7 +17,6 @@ class WeatherInfoView: UIView {
 
     let weatherTableView: WeatherInfoTableView = {
         let weatherTableView = WeatherInfoTableView(frame: CGRect.zero, style: .grouped)
-        weatherTableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         return weatherTableView
     }()
 
