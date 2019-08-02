@@ -8,7 +8,7 @@
 
 import UIKit
 
-class WeekInfoTableView: UITableView {
+class WeatherSubInfoTableView: UITableView {
     override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
         setConstraints()
@@ -20,7 +20,7 @@ class WeekInfoTableView: UITableView {
     }
 }
 
-extension WeekInfoTableView: UIViewSettingProtocol {
+extension WeatherSubInfoTableView: UIViewSettingProtocol {
     func setSubviews() {}
 
     func setConstraints() {

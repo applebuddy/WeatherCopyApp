@@ -9,8 +9,8 @@
 import UIKit
 
 class WeatherWeekInfoTableViewCell: UITableViewCell {
-    let weekInfoTableView: WeekInfoTableView = {
-        let weekInfoTableView = WeekInfoTableView(frame: CGRect.zero, style: .plain)
+    let weekInfoTableView: WeatherSubInfoTableView = {
+        let weekInfoTableView = WeatherSubInfoTableView(frame: CGRect.zero, style: .plain)
         return weekInfoTableView
     }()
 

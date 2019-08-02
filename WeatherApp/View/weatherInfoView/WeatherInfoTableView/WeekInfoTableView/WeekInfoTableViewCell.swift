@@ -8,6 +8,7 @@
 
 import UIKit
 
+/// 내일부터 9일간의 날씨예보를 간략하게 보여주는 테이블뷰셀
 class WeekInfoTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)

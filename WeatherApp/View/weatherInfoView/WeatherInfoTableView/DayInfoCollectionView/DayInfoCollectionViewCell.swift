@@ -8,10 +8,49 @@
 
 import UIKit
 
+/// 현재시간 기준 24시간 동안의 날씨예보를 보여주는 컬렉션뷰 셀
 class DayInfoCollectionViewCell: UICollectionViewCell {
+    let cellImageView: UIImageView = {
+        let cellImageView = UIImageView()
+        cellImageView.image = #imageLiteral(resourceName: "cloud")
+        cellImageView.contentMode = .scaleAspectFit
+        return cellImageView
+    }()
+
+    let titleLabel: UILabel = {
+        let firstLabel = UILabel()
+        firstLabel.text = "지금"
+        firstLabel.font = UIFont.systemFont(ofSize: 15)
+        firstLabel.textAlignment = .center
+        return firstLabel
+    }()
+
+    let percentageLabel: UILabel = {
+        let secondLabel = UILabel()
+        secondLabel.text = "70%"
+        secondLabel.font = UIFont.systemFont(ofSize: 10)
+        secondLabel.textAlignment = .center
+        return secondLabel
+    }()
+
+    let celsiusLabel: UILabel = {
+        let thirdLabel = UILabel()
+        thirdLabel.text = "92º"
+        thirdLabel.font = UIFont.systemFont(ofSize: 15)
+        thirdLabel.textAlignment = .center
+        return thirdLabel
+    }()
+
+    let cellStackView: UIStackView = {
+        let cellStackView = UIStackView()
+        cellStackView.axis = .vertical
+        return cellStackView
+    }()
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         setSubviews()
+
         setConstraints()
         backgroundColor = UIColor.red
     }
@@ -22,20 +61,42 @@ class DayInfoCollectionViewCell: UICollectionViewCell {
     }
 
     func setCellData() {
-        backgroundColor = UIColor.red
+        backgroundColor = #colorLiteral(red: 0.9098039269, green: 0.4784313738, blue: 0.6431372762, alpha: 1)
+    }
+
+    func setStackView() {
+        cellStackView.addArrangedSubview(titleLabel)
+        cellStackView.addArrangedSubview(percentageLabel)
+        cellStackView.addArrangedSubview(cellImageView)
+        cellStackView.addArrangedSubview(celsiusLabel)
     }
 }
 
 extension DayInfoCollectionViewCell: UIViewSettingProtocol {
-    func setSubviews() {}
+    func setSubviews() {
+        addSubview(cellStackView)
+        setStackView()
+    }
 
     func setConstraints() {
-//        translatesAutoresizingMaskIntoConstraints = false
-//        NSLayoutConstraint.activate([
-//            self.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 0),
-//            self.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 0),
-//            self.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: 0),
-//            self.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: 0),
-//        ])
+        cellStackView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            cellStackView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 5),
+            cellStackView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 0),
+            cellStackView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: 0),
+            cellStackView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -5),
+        ])
+
+        cellImageView.translatesAutoresizingMaskIntoConstraints = false
+        percentageLabel.translatesAutoresizingMaskIntoConstraints = false
+        celsiusLabel.translatesAutoresizingMaskIntoConstraints = false
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            cellImageView.heightAnchor.constraint(equalTo: percentageLabel.heightAnchor, multiplier: 1.5),
+            cellImageView.heightAnchor.constraint(equalTo: celsiusLabel.heightAnchor, multiplier: 1.0),
+        ])
+        NSLayoutConstraint.activate([
+            percentageLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: -5),
+        ])
     }
 }

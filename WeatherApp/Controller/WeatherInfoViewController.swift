@@ -20,20 +20,13 @@ class WeatherInfoViewController: UIViewController {
 
     let linkBarButton: UIButton = {
         let linkBarButton = UIButton(type: .custom)
-        linkBarButton.setTitleColor(#colorLiteral(red: 0, green: 0, blue: 0, alpha: 1), for: .normal)
-        linkBarButton.backgroundColor = #colorLiteral(red: 1, green: 0, blue: 0, alpha: 1)
-        linkBarButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
-        linkBarButton.clipsToBounds = true
-        linkBarButton.isHidden = false
+        linkBarButton.setImage(#imageLiteral(resourceName: "weatherLinkImage"), for: .normal)
         return linkBarButton
     }()
 
     let listBarButton: UIButton = {
         let listBarButton = UIButton(type: .custom)
-        listBarButton.setTitleColor(#colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1), for: .normal)
-        listBarButton.backgroundColor = #colorLiteral(red: 0.3411764801, green: 0.6235294342, blue: 0.1686274558, alpha: 1)
-        listBarButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
-        listBarButton.clipsToBounds = true
+        listBarButton.setImage(#imageLiteral(resourceName: "weatherListImage"), for: .normal)
         return listBarButton
     }()
 
@@ -41,8 +34,6 @@ class WeatherInfoViewController: UIViewController {
         let presentViewButton = UIButton(type: .custom)
         presentViewButton.setTitleColor(#colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1), for: .normal)
         presentViewButton.backgroundColor = #colorLiteral(red: 0.2196078449, green: 0.007843137719, blue: 0.8549019694, alpha: 1)
-        presentViewButton.frame = CGRect(x: 0, y: 0, width: 30, height: 30)
-        presentViewButton.clipsToBounds = true
         return presentViewButton
     }()
 
@@ -65,6 +56,7 @@ class WeatherInfoViewController: UIViewController {
         setButtonTarget()
         setToolBarButtonItem()
         setTableHeaderView()
+        setConstraints()
     }
 
     override func loadView() {
@@ -75,14 +67,12 @@ class WeatherInfoViewController: UIViewController {
     func setInfoViewController() {
         weatherInfoView.weatherTableView.dataSource = self
         weatherInfoView.weatherTableView.delegate = self
-        //        dayInfoCollectionView.delegate = self
-        //        dayInfoCollectionView.dataSource = self
     }
 
     func setButtonTarget() {
         linkBarButton.addTarget(self, action: #selector(linkButtonPressed(_:)), for: .touchUpInside)
-        listBarButton.addTarget(self, action: #selector(presentViewButtonPressed(_:)), for: .touchUpInside)
-        presentViewButton.addTarget(self, action: #selector(listButtonPressed(_:)), for: .touchUpInside)
+        presentViewButton.addTarget(self, action: #selector(presentViewButtonPressed(_:)), for: .touchUpInside)
+        listBarButton.addTarget(self, action: #selector(listButtonPressed(_:)), for: .touchUpInside)
     }
 
     func setTableHeaderView() {
@@ -95,7 +85,7 @@ class WeatherInfoViewController: UIViewController {
         let barButtonItem = UIBarButtonItem(customView: linkBarButton)
         let barButtonItem2 = UIBarButtonItem(customView: presentViewButton)
         let barButtonItem3 = UIBarButtonItem(customView: listBarButton)
-        let toolBarItems = [barButtonItem, flexibleSpace, barButtonItem3, flexibleSpace, barButtonItem2]
+        let toolBarItems = [barButtonItem, flexibleSpace, barButtonItem2, flexibleSpace, barButtonItem3]
         toolbarItems = toolBarItems
         navigationController?.setToolbarHidden(false, animated: false)
         hidesBottomBarWhenPushed = false
@@ -202,5 +192,22 @@ extension WeatherInfoViewController: CellSettingProtocol {
     func registerCell() {
         weatherInfoView.weatherTableView.register(WeatherDayInfoTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weatherDayInfoTableCell)
         weatherInfoView.weatherTableView.register(WeatherWeekInfoTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weatherWeekInfoTableCell)
+    }
+}
+
+extension WeatherInfoViewController: UIViewSettingProtocol {
+    func setSubviews() {}
+
+    func setConstraints() {
+        linkBarButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            linkBarButton.heightAnchor.constraint(equalToConstant: 30),
+            linkBarButton.widthAnchor.constraint(equalTo: linkBarButton.heightAnchor, multiplier: 1.0),
+        ])
+        listBarButton.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            listBarButton.heightAnchor.constraint(equalToConstant: 30),
+            listBarButton.widthAnchor.constraint(equalTo: listBarButton.heightAnchor, multiplier: 1.0),
+        ])
     }
 }
