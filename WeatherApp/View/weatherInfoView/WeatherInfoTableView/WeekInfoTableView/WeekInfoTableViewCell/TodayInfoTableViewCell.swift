@@ -8,10 +8,62 @@
 
 import UIKit
 
+/// 오늘의 서브날씨정도 테이블뷰 셀
 class TodayInfoTableViewCell: UITableViewCell {
+    let todayInfoStackView: UIStackView = {
+        let todayInfoStackView = UIStackView()
+        todayInfoStackView.axis = .horizontal
+        todayInfoStackView.distribution = .fillEqually
+        return todayInfoStackView
+    }()
+
+    let leftStackView: UIStackView = {
+        let leftStackView = UIStackView()
+        leftStackView.axis = .vertical
+        return leftStackView
+    }()
+
+    let cellBottomBorderView: UIView = {
+        let cellBottomBorderView = UIView()
+        cellBottomBorderView.backgroundColor = CommonColor.separator
+        return cellBottomBorderView
+    }()
+
+    let rightStackView: UIStackView = {
+        let rightStackView = UIStackView()
+        rightStackView.axis = .vertical
+        return rightStackView
+    }()
+
+    let leftInfoTitleLabel: UILabel = {
+        let leftInfoTitleLabel = UILabel()
+        leftInfoTitleLabel.text = "일몰"
+        return leftInfoTitleLabel
+    }()
+
+    let leftInfoTitleSubLabel: UILabel = {
+        let leftInfoTitleSubLabel = UILabel()
+        leftInfoTitleSubLabel.text = "새벽 3:57"
+        return leftInfoTitleSubLabel
+    }()
+
+    let rightInfoTitleLabel: UILabel = {
+        let todayInfoTitleLabel = UILabel()
+        todayInfoTitleLabel.text = "일출"
+        return todayInfoTitleLabel
+    }()
+
+    let rightInfoTitleSubLabel: UILabel = {
+        let todayInfoTitleSubLabel = UILabel()
+        todayInfoTitleSubLabel.text = "오전 5:36"
+        return todayInfoTitleSubLabel
+    }()
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        backgroundColor = UIColor.lightGray
+        backgroundColor = UIColor.white
+        setSubviews()
+        setConstraints()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -21,5 +73,51 @@ class TodayInfoTableViewCell: UITableViewCell {
 
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
+    }
+
+    func setTodayInfoStackView() {
+        leftStackView.addArrangedSubview(leftInfoTitleLabel)
+        leftStackView.addArrangedSubview(leftInfoTitleSubLabel)
+        rightStackView.addArrangedSubview(rightInfoTitleLabel)
+        rightStackView.addArrangedSubview(rightInfoTitleSubLabel)
+        todayInfoStackView.addArrangedSubview(leftStackView)
+        todayInfoStackView.addArrangedSubview(rightStackView)
+        addSubview(todayInfoStackView)
+    }
+}
+
+extension TodayInfoTableViewCell: UIViewSettingProtocol {
+    func setSubviews() {
+        setTodayInfoStackView()
+        addSubview(cellBottomBorderView)
+    }
+
+    func setConstraints() {
+        cellBottomBorderView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            cellBottomBorderView.heightAnchor.constraint(equalToConstant: 1),
+            cellBottomBorderView.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width * 0.9),
+            cellBottomBorderView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: 0),
+            cellBottomBorderView.centerXAnchor.constraint(equalToSystemSpacingAfter: safeAreaLayoutGuide.centerXAnchor, multiplier: 1),
+        ])
+
+        todayInfoStackView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            todayInfoStackView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: CommonInset.topInset / 2),
+            todayInfoStackView.bottomAnchor.constraint(equalTo: cellBottomBorderView.topAnchor, constant: -CommonInset.bottomInset / 2),
+            todayInfoStackView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: CommonInset.leftInset),
+            todayInfoStackView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -CommonInset.rightInset),
+        ])
+
+        leftInfoTitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        leftInfoTitleSubLabel.translatesAutoresizingMaskIntoConstraints = false
+        rightInfoTitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        rightInfoTitleSubLabel.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            leftInfoTitleLabel.heightAnchor.constraint(equalTo: todayInfoStackView.heightAnchor, multiplier: 0.5),
+            leftInfoTitleSubLabel.heightAnchor.constraint(equalTo: leftInfoTitleLabel.heightAnchor),
+            rightInfoTitleLabel.heightAnchor.constraint(equalTo: leftInfoTitleLabel.heightAnchor),
+            rightInfoTitleSubLabel.heightAnchor.constraint(equalTo: leftInfoTitleLabel.heightAnchor),
+        ])
     }
 }

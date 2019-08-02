@@ -21,7 +21,7 @@ class WeatherSubInfoTableView: UITableView {
     }
 
     func setTableView() {
-        backgroundColor = UIColor.gray
+        backgroundColor = UIColor.white
         allowsSelection = false
         allowsMultipleSelection = false
         separatorStyle = .none

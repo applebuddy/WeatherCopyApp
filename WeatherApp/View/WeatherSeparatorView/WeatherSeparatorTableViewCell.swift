@@ -11,7 +11,7 @@ import UIKit
 class WeatherSeparatorTableViewCell: UITableViewCell {
     let separatorView: WeatherSeparatorView = {
         let separatorView = WeatherSeparatorView()
-        separatorView.backgroundColor = UIColor.black
+        separatorView.backgroundColor = CommonColor.separator
         return separatorView
     }()
 

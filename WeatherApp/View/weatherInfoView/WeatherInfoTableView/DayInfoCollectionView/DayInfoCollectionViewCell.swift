@@ -44,7 +44,7 @@ class DayInfoCollectionViewCell: UICollectionViewCell {
     let cellStackView: UIStackView = {
         let cellStackView = UIStackView()
         cellStackView.axis = .vertical
-        cellStackView.spacing = 3
+        cellStackView.spacing = 5
         return cellStackView
     }()
 
@@ -82,10 +82,11 @@ extension DayInfoCollectionViewCell: UIViewSettingProtocol {
     func setConstraints() {
         cellStackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            cellStackView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 5),
-            cellStackView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 0),
-            cellStackView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: 0),
-            cellStackView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -5),
+            cellStackView.topAnchor.constraint(equalTo: topAnchor, constant: 5),
+            cellStackView.leftAnchor.constraint(equalTo: leftAnchor, constant: 0),
+            cellStackView.rightAnchor.constraint(equalTo: rightAnchor, constant: 0),
+            cellStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5),
+            cellStackView.heightAnchor.constraint(equalToConstant: WeatherCellHeight.dayInfoCollectionCell),
         ])
 
         cellImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -93,8 +94,10 @@ extension DayInfoCollectionViewCell: UIViewSettingProtocol {
         celsiusLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            cellImageView.heightAnchor.constraint(equalTo: percentageLabel.heightAnchor, multiplier: 1.5),
-            cellImageView.heightAnchor.constraint(equalTo: celsiusLabel.heightAnchor, multiplier: 0.8),
+            cellImageView.heightAnchor.constraint(equalTo: cellStackView.heightAnchor, multiplier: 0.3),
+            percentageLabel.heightAnchor.constraint(equalTo: cellStackView.heightAnchor, multiplier: 0.1),
+            celsiusLabel.heightAnchor.constraint(equalTo: cellStackView.heightAnchor, multiplier: 0.2),
+            titleLabel.heightAnchor.constraint(equalTo: cellStackView.heightAnchor, multiplier: 0.2),
         ])
     }
 }

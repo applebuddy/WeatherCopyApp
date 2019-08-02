@@ -20,6 +20,8 @@ class TodayInfoTableHeaderView: UIView {
             bottom: todayInfoTextView.textContainer.lineFragmentPadding,
             right: -todayInfoTextView.textContainer.lineFragmentPadding
         )
+        todayInfoTextView.isEditable = false
+        todayInfoTextView.isSelectable = false
         todayInfoTextView.font = UIFont.systemFont(ofSize: 15)
         return todayInfoTextView
     }()

@@ -35,7 +35,7 @@ class WeatherWeekInfoTableViewCell: UITableViewCell {
     }
 
     func setCellData() {
-        backgroundColor = UIColor.green
+        backgroundColor = UIColor.black
     }
 }
 
@@ -63,8 +63,15 @@ extension WeatherWeekInfoTableViewCell: CellSettingProtocol {
 }
 
 extension WeatherWeekInfoTableViewCell: UITableViewDelegate {
-    func tableView(_: UITableView, heightForRowAt _: IndexPath) -> CGFloat {
-        return WeatherCellHeight.weekInfoTableViewCell
+    func tableView(_: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        guard let sectionIndex = WeatherSubInfoTableViewSection(rawValue: indexPath.section) else { return CGFloat.leastNormalMagnitude }
+        if indexPath.row == 0 { return 1 }
+        switch sectionIndex {
+        case .weekInfoSection:
+            return WeatherCellHeight.weekInfoTableViewCell
+        case .todayInfoSection:
+            return WeatherCellHeight.todayInfoTableHeaderView
+        }
     }
 
     func tableView(_: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -77,8 +84,12 @@ extension WeatherWeekInfoTableViewCell: UITableViewDelegate {
         }
     }
 
-    func tableView(_: UITableView, heightForFooterInSection _: Int) -> CGFloat {
-        return 1
+    func tableView(_: UITableView, heightForFooterInSection section: Int) -> CGFloat {
+        guard let sectionIndex = WeatherSubInfoTableViewSection(rawValue: section) else { return CGFloat.leastNormalMagnitude }
+        switch sectionIndex {
+        case .weekInfoSection: return 1
+        case .todayInfoSection: return CGFloat.leastNormalMagnitude
+        }
     }
 
     func tableView(_: UITableView, viewForFooterInSection _: Int) -> UIView? {
@@ -89,7 +100,7 @@ extension WeatherWeekInfoTableViewCell: UITableViewDelegate {
         guard let sectionIndex = WeatherSubInfoTableViewSection(rawValue: section) else { return UIView() }
         switch sectionIndex {
         case .weekInfoSection:
-            return UIView()
+            return WeatherSeparatorView()
         case .todayInfoSection:
             return TodayInfoTableHeaderView()
         }
@@ -101,7 +112,7 @@ extension WeatherWeekInfoTableViewCell: UITableViewDataSource {
         guard let sectionIndex = WeatherSubInfoTableViewSection(rawValue: section) else { return 0 }
         switch sectionIndex {
         case .weekInfoSection: return 9
-        case .todayInfoSection: return 1
+        case .todayInfoSection: return 6
         }
     }
 
@@ -110,14 +121,15 @@ extension WeatherWeekInfoTableViewCell: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let weekInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weekInfoTableCell, for: indexPath) as? WeekInfoTableViewCell,
-            let sectionIndex = WeatherSubInfoTableViewSection(rawValue: indexPath.section) else { return UITableViewCell() }
-
+        guard let sectionIndex = WeatherSubInfoTableViewSection(rawValue: indexPath.section) else { return UITableViewCell() }
         switch sectionIndex {
         case .weekInfoSection:
+            guard let weekInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weekInfoTableCell, for: indexPath) as? WeekInfoTableViewCell else { return UITableViewCell() }
             return weekInfoCell
         case .todayInfoSection:
-            return UITableViewCell()
+            if indexPath.row == 0 { return WeatherSeparatorTableViewCell() }
+            guard let todayInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.todayInfoTableCell, for: indexPath) as? TodayInfoTableViewCell else { return UITableViewCell() }
+            return todayInfoCell
         }
     }
 }

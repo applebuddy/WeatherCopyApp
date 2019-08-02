@@ -12,7 +12,7 @@ import UIKit
 class WeatherSeparatorView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = UIColor.black
+        backgroundColor = CommonColor.separator
     }
 
     required init?(coder _: NSCoder) {
@@ -23,13 +23,5 @@ class WeatherSeparatorView: UIView {
 extension WeatherSeparatorView: UIViewSettingProtocol {
     func setSubviews() {}
 
-    func setConstraints() {
-        translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            self.heightAnchor.constraint(equalToConstant: 1),
-            self.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width),
-            self.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
-            self.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor),
-        ])
-    }
+    func setConstraints() {}
 }

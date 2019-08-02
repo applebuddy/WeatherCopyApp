@@ -12,7 +12,6 @@ class WeatherInfoTableView: UITableView {
     override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
         setTableView()
-        bounces = true
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -20,8 +19,10 @@ class WeatherInfoTableView: UITableView {
     }
 
     func setTableView() {
+        backgroundColor = UIColor.white
         allowsSelection = false
         allowsMultipleSelection = false
         separatorStyle = .none
+        bounces = true
     }
 }

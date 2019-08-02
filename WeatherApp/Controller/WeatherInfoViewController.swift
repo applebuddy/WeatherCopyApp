@@ -32,8 +32,8 @@ class WeatherInfoViewController: UIViewController {
 
     let presentViewButton: UIButton = {
         let presentViewButton = UIButton(type: .custom)
-        presentViewButton.setTitleColor(#colorLiteral(red: 0.2549019754, green: 0.2745098174, blue: 0.3019607961, alpha: 1), for: .normal)
-        presentViewButton.backgroundColor = #colorLiteral(red: 0.2196078449, green: 0.007843137719, blue: 0.8549019694, alpha: 1)
+        presentViewButton.setTitleColor(UIColor.lightGray, for: .normal)
+        presentViewButton.backgroundColor = UIColor.white
         return presentViewButton
     }()
 
@@ -51,6 +51,7 @@ class WeatherInfoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
+        view.backgroundColor = UIColor.white
         registerCell()
         setInfoViewController()
         setButtonTarget()
@@ -134,6 +135,10 @@ extension WeatherInfoViewController: UITableViewDelegate {
         } else {
             return CGFloat.leastNonzeroMagnitude
         }
+    }
+
+    func tableView(_: UITableView, heightForFooterInSection _: Int) -> CGFloat {
+        return CGFloat.leastNormalMagnitude
     }
 }
 

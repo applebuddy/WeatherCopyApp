@@ -48,6 +48,10 @@ struct CommonInset {
     static let bottomInset: CGFloat = 5
 }
 
+struct CommonColor {
+    static let separator = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+}
+
 enum WeatherSection: Int {
     case mainSection = 0
 }

@@ -11,7 +11,7 @@ import UIKit
 class WeatherMainTableView: UITableView {
     override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
-        backgroundColor = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+        backgroundColor = UIColor.black
     }
 
     required init?(coder _: NSCoder) {

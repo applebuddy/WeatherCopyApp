@@ -191,6 +191,15 @@
 			path = WeekInfoTableViewCell;
 			sourceTree = "<group>";
 		};
+		07E8F19C22F46C0600B5F8DE /* WeatherSeparatorView */ = {
+			isa = PBXGroup;
+			children = (
+				07E8F19822F44EDC00B5F8DE /* WeatherSeparatorView.swift */,
+				07E8F19A22F4553200B5F8DE /* WeatherSeparatorTableViewCell.swift */,
+			);
+			path = WeatherSeparatorView;
+			sourceTree = "<group>";
+		};
 		07ED29EF22F18F44003FB9C6 = {
 			isa = PBXGroup;
 			children = (
@@ -266,10 +275,9 @@
 		07ED2A2F22F198FA003FB9C6 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				07E8F19822F44EDC00B5F8DE /* WeatherSeparatorView.swift */,
-				07E8F19A22F4553200B5F8DE /* WeatherSeparatorTableViewCell.swift */,
 				07E4345D22F347AF00C0E246 /* WeatherMainView */,
 				075976E122F1B53700D56361 /* weatherInfoView */,
+				07E8F19C22F46C0600B5F8DE /* WeatherSeparatorView */,
 			);
 			path = View;
 			sourceTree = "<group>";
