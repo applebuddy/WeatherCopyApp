@@ -9,32 +9,25 @@
 import UIKit
 
 class MainNavigationController: UINavigationController {
-
     override init(rootViewController: UIViewController) {
         super.init(rootViewController: rootViewController)
-        self.setNavigationBar()
-        self.setToolBar()
+        setNavigationBar()
+        setToolBar()
     }
-    
+
     func setToolBar() {
-        self.toolbar.barStyle = .black
+        toolbar.barStyle = .black
     }
-    
+
     func setNavigationBar() {
-        self.isNavigationBarHidden = true
+        isNavigationBarHidden = true
     }
-    
+
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
-    
-    required init?(coder aDecoder: NSCoder) {
+
+    required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-    
-
-    
-    
-    
-    
 }

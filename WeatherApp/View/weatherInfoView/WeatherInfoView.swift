@@ -9,54 +9,57 @@
 import UIKit
 
 class WeatherInfoView: UIView {
-    
     let weatherTitleView: WeatherTitleView = {
         let weatherTitleView = WeatherTitleView()
-        weatherTitleView.backgroundColor = UIColor.gray
+        weatherTitleView.backgroundColor = UIColor.black
         return weatherTitleView
     }()
-    
-    let weatherSubTitleView: WeatherSubTitleView = {
-        let weatherSubTitleView = WeatherSubTitleView()
-        weatherSubTitleView.backgroundColor = UIColor.lightGray
-        return weatherSubTitleView
+
+    let weatherInfoTableView: WeatherInfoTableView = {
+        let weatherTableView = WeatherInfoTableView(frame: CGRect.zero, style: .grouped)
+        return weatherTableView
     }()
-    
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.backgroundColor = UIColor.white
-        self.setSubviews()
-        self.setConstraints()
+        backgroundColor = UIColor.white
+        setSubviews()
+        setConstraints()
     }
-    
+
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-    
-    func setSubviews() {
-        self.addSubview(weatherTitleView)
-        self.addSubview(weatherSubTitleView)
+
+    func setWeatherTableViewConstraint() {
+        weatherInfoTableView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            weatherInfoTableView.topAnchor.constraint(equalTo: weatherTitleView.bottomAnchor),
+            weatherInfoTableView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            weatherInfoTableView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor),
+            weatherInfoTableView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor),
+        ])
     }
-    
+
     func setWeatherTitleViewContraint() {
-        self.weatherTitleView.translatesAutoresizingMaskIntoConstraints = false
+        weatherTitleView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             weatherTitleView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 0),
             weatherTitleView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 0),
             weatherTitleView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: 0),
-            weatherTitleView.heightAnchor.constraint(equalToConstant: 100)
-            ])
-        
-        self.weatherSubTitleView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            weatherSubTitleView.topAnchor.constraint(equalTo: weatherTitleView.bottomAnchor),
-            weatherSubTitleView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor),
-            weatherSubTitleView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor),
-            weatherSubTitleView.heightAnchor.constraint(equalToConstant: 150)
-            ])
+            weatherTitleView.heightAnchor.constraint(equalToConstant: WeatherViewHeight.titleViewHeight),
+        ])
     }
-    
+}
+
+extension WeatherInfoView: UIViewSettingProtocol {
+    func setSubviews() {
+        addSubview(weatherTitleView)
+        addSubview(weatherInfoTableView)
+    }
+
     func setConstraints() {
-        self.setWeatherTitleViewContraint()
+        setWeatherTitleViewContraint()
+        setWeatherTableViewConstraint()
     }
 }
