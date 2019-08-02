@@ -65,8 +65,8 @@ class WeatherInfoViewController: UIViewController {
     }
 
     func setInfoViewController() {
-        weatherInfoView.weatherTableView.dataSource = self
-        weatherInfoView.weatherTableView.delegate = self
+        weatherInfoView.weatherInfoTableView.dataSource = self
+        weatherInfoView.weatherInfoTableView.delegate = self
     }
 
     func setButtonTarget() {
@@ -118,11 +118,14 @@ extension WeatherInfoViewController: UITableViewDelegate {
     }
 
     func tableView(_: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        if section == 0 {
-            return weatherInfoTableHeaderView
-        } else {
-            return UIView()
+        guard let sectionIndex = WeatherInfoTableViewSection(rawValue: section) else { return UIView() }
+        switch sectionIndex {
+        case .mainSection: return weatherInfoTableHeaderView
         }
+    }
+
+    func tableView(_: UITableView, viewForFooterInSection _: Int) -> UIView? {
+        return WeatherSeparatorView()
     }
 
     func tableView(_: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -132,15 +135,11 @@ extension WeatherInfoViewController: UITableViewDelegate {
             return CGFloat.leastNonzeroMagnitude
         }
     }
-
-    func tableView(_: UITableView, heightForHeaderInSection _: Int) -> CGFloat {
-        return UITableView.automaticDimension
-    }
 }
 
 extension WeatherInfoViewController: UITableViewDataSource {
     func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
-        return 2
+        return 3
     }
 
     func numberOfSections(in _: UITableView) -> Int {
@@ -149,19 +148,19 @@ extension WeatherInfoViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let weatherDayInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherDayInfoTableCell, for: indexPath) as? WeatherDayInfoTableViewCell,
-            let weatherWeekInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherWeekInfoTableCell, for: indexPath) as? WeatherWeekInfoTableViewCell else { return UITableViewCell() }
-        switch indexPath.row {
-        case 0:
+            let weatherWeekInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherWeekInfoTableCell, for: indexPath) as? WeatherWeekInfoTableViewCell,
+            let rowIndex = WeatherInfoTableViewRow(rawValue: indexPath.row) else { return UITableViewCell() }
+
+        switch rowIndex {
+        case .dayInfoCell:
             weatherDayInfoCell.setCellData()
             weatherDayInfoCell.dayInfoCollectionView.register(DayInfoCollectionViewCell.self, forCellWithReuseIdentifier: CellIdentifier.dayInfoCollectionCell)
             weatherDayInfoCell.dayInfoCollectionView.delegate = self
             weatherDayInfoCell.dayInfoCollectionView.dataSource = self
             return weatherDayInfoCell
-        case 1:
-            // 테이블 뷰 추가 후 확인 필요(아직 컨텐츠뷰 크기설정이 안되어서 안보임
-            weatherWeekInfoCell.setCellData()
+        case .separatorCell: return WeatherSeparatorTableViewCell()
+        case .weekInfoCell:
             return weatherWeekInfoCell
-        default: return UITableViewCell()
         }
     }
 }
@@ -182,7 +181,7 @@ extension WeatherInfoViewController: UICollectionViewDataSource {
     }
 
     func collectionView(_: UICollectionView, numberOfItemsInSection _: Int) -> Int {
-        return 16
+        return 24
     }
 }
 
@@ -190,8 +189,8 @@ extension WeatherInfoViewController: UICollectionViewDataSource {
 
 extension WeatherInfoViewController: CellSettingProtocol {
     func registerCell() {
-        weatherInfoView.weatherTableView.register(WeatherDayInfoTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weatherDayInfoTableCell)
-        weatherInfoView.weatherTableView.register(WeatherWeekInfoTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weatherWeekInfoTableCell)
+        weatherInfoView.weatherInfoTableView.register(WeatherDayInfoTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weatherDayInfoTableCell)
+        weatherInfoView.weatherInfoTableView.register(WeatherWeekInfoTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weatherWeekInfoTableCell)
     }
 }
 

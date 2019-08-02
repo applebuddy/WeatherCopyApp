@@ -32,17 +32,6 @@ extension WeatherMainViewController: UITableViewDelegate {
         return 100
     }
 
-    func tableView(_: UITableView, heightForFooterInSection _: Int) -> CGFloat {
-        return UITableView.automaticDimension
-    }
-
-    func tableView(_: UITableView, viewForFooterInSection _: Int) -> UIView? {
-        return UIView()
-    }
-
-//    func tableView(_ tableView: UITableView, willSelectRowAt indexPath: IndexPath) -> IndexPath? {
-//    }
-
     func tableView(_: UITableView, didSelectRowAt _: IndexPath) {
         dismiss(animated: true, completion: nil)
     }

@@ -8,9 +8,10 @@
 
 import UIKit
 
+/// 주간 날씨정보 테이블뷰 셀
 class WeatherWeekInfoTableViewCell: UITableViewCell {
-    let weekInfoTableView: WeatherSubInfoTableView = {
-        let weekInfoTableView = WeatherSubInfoTableView(frame: CGRect.zero, style: .plain)
+    let weatherSubInfoTableView: WeatherSubInfoTableView = {
+        let weekInfoTableView = WeatherSubInfoTableView(frame: CGRect.zero, style: .grouped)
         return weekInfoTableView
     }()
 
@@ -19,8 +20,8 @@ class WeatherWeekInfoTableViewCell: UITableViewCell {
         setSubviews()
         setConstraints()
         registerCell()
-        weekInfoTableView.delegate = self
-        weekInfoTableView.dataSource = self
+        weatherSubInfoTableView.delegate = self
+        weatherSubInfoTableView.dataSource = self
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -40,23 +41,24 @@ class WeatherWeekInfoTableViewCell: UITableViewCell {
 
 extension WeatherWeekInfoTableViewCell: UIViewSettingProtocol {
     func setSubviews() {
-        addSubview(weekInfoTableView)
+        addSubview(weatherSubInfoTableView)
     }
 
     func setConstraints() {
-        weekInfoTableView.translatesAutoresizingMaskIntoConstraints = false
+        weatherSubInfoTableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            weekInfoTableView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 0),
-            weekInfoTableView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: 0),
-            weekInfoTableView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 0),
-            weekInfoTableView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: 0),
+            weatherSubInfoTableView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 0),
+            weatherSubInfoTableView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: 0),
+            weatherSubInfoTableView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 0),
+            weatherSubInfoTableView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: 0),
         ])
     }
 }
 
 extension WeatherWeekInfoTableViewCell: CellSettingProtocol {
     func registerCell() {
-        weekInfoTableView.register(WeekInfoTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weekInfoTableCell)
+        weatherSubInfoTableView.register(WeekInfoTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weekInfoTableCell)
+        weatherSubInfoTableView.register(TodayInfoTableViewCell.self, forCellReuseIdentifier: CellIdentifier.todayInfoTableCell)
     }
 }
 
@@ -65,17 +67,41 @@ extension WeatherWeekInfoTableViewCell: UITableViewDelegate {
         return WeatherCellHeight.weekInfoTableViewCell
     }
 
-//    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
-//        return CGFloat.leastNonzeroMagnitude
-//    }
+    func tableView(_: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        guard let sectionIndex = WeatherSubInfoTableViewSection(rawValue: section) else { return CGFloat.leastNormalMagnitude }
+        switch sectionIndex {
+        case .weekInfoSection:
+            return 1
+        case .todayInfoSection:
+            return WeatherCellHeight.todayInfoTableHeaderView
+        }
+    }
+
+    func tableView(_: UITableView, heightForFooterInSection _: Int) -> CGFloat {
+        return 1
+    }
+
+    func tableView(_: UITableView, viewForFooterInSection _: Int) -> UIView? {
+        return WeatherSeparatorView()
+    }
+
+    func tableView(_: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard let sectionIndex = WeatherSubInfoTableViewSection(rawValue: section) else { return UIView() }
+        switch sectionIndex {
+        case .weekInfoSection:
+            return UIView()
+        case .todayInfoSection:
+            return TodayInfoTableHeaderView()
+        }
+    }
 }
 
 extension WeatherWeekInfoTableViewCell: UITableViewDataSource {
     func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
-            return 9
-        } else {
-            return 0
+        guard let sectionIndex = WeatherSubInfoTableViewSection(rawValue: section) else { return 0 }
+        switch sectionIndex {
+        case .weekInfoSection: return 9
+        case .todayInfoSection: return 1
         }
     }
 
@@ -84,10 +110,13 @@ extension WeatherWeekInfoTableViewCell: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let weekInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weekInfoTableCell, for: indexPath) as? WeekInfoTableViewCell else { return UITableViewCell() }
-        if indexPath.section == 0 {
+        guard let weekInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weekInfoTableCell, for: indexPath) as? WeekInfoTableViewCell,
+            let sectionIndex = WeatherSubInfoTableViewSection(rawValue: indexPath.section) else { return UITableViewCell() }
+
+        switch sectionIndex {
+        case .weekInfoSection:
             return weekInfoCell
-        } else {
+        case .todayInfoSection:
             return UITableViewCell()
         }
     }

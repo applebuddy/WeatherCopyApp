@@ -102,7 +102,7 @@ extension WeatherInfoTableHeaderView: UIViewSettingProtocol {
 
         dateLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            dateLabel.leftAnchor.constraint(equalTo: self.leftAnchor, constant: 20),
+            dateLabel.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: CommonInset.leftInset),
             dateLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10),
             dateLabel.heightAnchor.constraint(equalToConstant: 30),
             dateLabel.widthAnchor.constraint(equalToConstant: 50),

@@ -11,8 +11,8 @@ import UIKit
 class WeekSubInfoView: UIView {
     let dateLabel: UILabel = {
         let dateLabel = UILabel()
-        dateLabel.text = "토요일"
-        dateLabel.textAlignment = .center
+        dateLabel.text = "금요일"
+        dateLabel.textAlignment = .left
         return dateLabel
     }()
 

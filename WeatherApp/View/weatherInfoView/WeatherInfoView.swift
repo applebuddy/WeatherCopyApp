@@ -15,7 +15,7 @@ class WeatherInfoView: UIView {
         return weatherTitleView
     }()
 
-    let weatherTableView: WeatherInfoTableView = {
+    let weatherInfoTableView: WeatherInfoTableView = {
         let weatherTableView = WeatherInfoTableView(frame: CGRect.zero, style: .grouped)
         return weatherTableView
     }()
@@ -32,12 +32,12 @@ class WeatherInfoView: UIView {
     }
 
     func setWeatherTableViewConstraint() {
-        weatherTableView.translatesAutoresizingMaskIntoConstraints = false
+        weatherInfoTableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            weatherTableView.topAnchor.constraint(equalTo: weatherTitleView.bottomAnchor),
-            weatherTableView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
-            weatherTableView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor),
-            weatherTableView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor),
+            weatherInfoTableView.topAnchor.constraint(equalTo: weatherTitleView.bottomAnchor),
+            weatherInfoTableView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            weatherInfoTableView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor),
+            weatherInfoTableView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor),
         ])
     }
 
@@ -55,7 +55,7 @@ class WeatherInfoView: UIView {
 extension WeatherInfoView: UIViewSettingProtocol {
     func setSubviews() {
         addSubview(weatherTitleView)
-        addSubview(weatherTableView)
+        addSubview(weatherInfoTableView)
     }
 
     func setConstraints() {

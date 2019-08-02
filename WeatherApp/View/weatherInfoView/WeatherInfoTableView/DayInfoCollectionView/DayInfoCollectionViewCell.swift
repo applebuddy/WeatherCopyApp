@@ -8,7 +8,7 @@
 
 import UIKit
 
-/// 현재시간 기준 24시간 동안의 날씨예보를 보여주는 컬렉션뷰 셀
+/// 현재시간 기준 24시간 동안의 날씨예보 컬렉션뷰 셀
 class DayInfoCollectionViewCell: UICollectionViewCell {
     let cellImageView: UIImageView = {
         let cellImageView = UIImageView()
