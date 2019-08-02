@@ -8,6 +8,7 @@
 
 import UIKit
 
+/// 시간 별 날씨정보 컬렉션뷰 셀을 표현하는 테이블뷰 셀
 class WeatherDayInfoTableViewCell: UITableViewCell {
     let dayInfoCollectionView: DayInfoCollectionView = {
         let layout = UICollectionViewFlowLayout()

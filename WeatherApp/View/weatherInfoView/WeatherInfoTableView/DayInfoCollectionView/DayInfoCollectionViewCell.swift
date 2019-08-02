@@ -44,6 +44,7 @@ class DayInfoCollectionViewCell: UICollectionViewCell {
     let cellStackView: UIStackView = {
         let cellStackView = UIStackView()
         cellStackView.axis = .vertical
+        cellStackView.spacing = 3
         return cellStackView
     }()
 
@@ -93,7 +94,7 @@ extension DayInfoCollectionViewCell: UIViewSettingProtocol {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             cellImageView.heightAnchor.constraint(equalTo: percentageLabel.heightAnchor, multiplier: 1.5),
-            cellImageView.heightAnchor.constraint(equalTo: celsiusLabel.heightAnchor, multiplier: 1.0),
+            cellImageView.heightAnchor.constraint(equalTo: celsiusLabel.heightAnchor, multiplier: 0.8),
         ])
     }
 }

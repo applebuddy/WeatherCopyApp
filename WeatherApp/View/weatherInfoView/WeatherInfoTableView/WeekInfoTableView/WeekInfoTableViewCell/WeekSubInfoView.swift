@@ -72,10 +72,10 @@ extension WeekSubInfoView: UIViewSettingProtocol {
     func setConstraints() {
         subWeekInfoStackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            subWeekInfoStackView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 5),
+            subWeekInfoStackView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 0),
             subWeekInfoStackView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 0),
             subWeekInfoStackView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: 0),
-            subWeekInfoStackView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -5),
+            subWeekInfoStackView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: 0),
 
         ])
 
