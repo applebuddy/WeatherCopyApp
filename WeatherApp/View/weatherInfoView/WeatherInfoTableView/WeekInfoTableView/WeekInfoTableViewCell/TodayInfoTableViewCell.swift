@@ -38,24 +38,32 @@ class TodayInfoTableViewCell: UITableViewCell {
     let leftInfoTitleLabel: UILabel = {
         let leftInfoTitleLabel = UILabel()
         leftInfoTitleLabel.text = "일몰"
+        leftInfoTitleLabel.alpha = 0.7
+        leftInfoTitleLabel.textColor = UIColor.gray
+        leftInfoTitleLabel.font = UIFont.systemFont(ofSize: 12)
         return leftInfoTitleLabel
     }()
 
     let leftInfoTitleSubLabel: UILabel = {
         let leftInfoTitleSubLabel = UILabel()
         leftInfoTitleSubLabel.text = "새벽 3:57"
+        leftInfoTitleSubLabel.font = UIFont.boldSystemFont(ofSize: 25)
         return leftInfoTitleSubLabel
     }()
 
     let rightInfoTitleLabel: UILabel = {
         let todayInfoTitleLabel = UILabel()
         todayInfoTitleLabel.text = "일출"
+        todayInfoTitleLabel.alpha = 0.7
+        todayInfoTitleLabel.textColor = UIColor.gray
+        todayInfoTitleLabel.font = UIFont.systemFont(ofSize: 12)
         return todayInfoTitleLabel
     }()
 
     let rightInfoTitleSubLabel: UILabel = {
         let todayInfoTitleSubLabel = UILabel()
         todayInfoTitleSubLabel.text = "오전 5:36"
+        todayInfoTitleSubLabel.font = UIFont.boldSystemFont(ofSize: 25)
         return todayInfoTitleSubLabel
     }()
 
@@ -103,8 +111,8 @@ extension TodayInfoTableViewCell: UIViewSettingProtocol {
 
         todayInfoStackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            todayInfoStackView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: CommonInset.topInset / 2),
-            todayInfoStackView.bottomAnchor.constraint(equalTo: cellBottomBorderView.topAnchor, constant: -CommonInset.bottomInset / 2),
+            todayInfoStackView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: CommonInset.topInset),
+            todayInfoStackView.bottomAnchor.constraint(equalTo: cellBottomBorderView.topAnchor, constant: -CommonInset.bottomInset),
             todayInfoStackView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: CommonInset.leftInset),
             todayInfoStackView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -CommonInset.rightInset),
         ])

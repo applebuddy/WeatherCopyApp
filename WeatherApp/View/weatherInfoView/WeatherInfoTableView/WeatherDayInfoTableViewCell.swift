@@ -29,6 +29,10 @@ class WeatherDayInfoTableViewCell: UITableViewCell {
         backgroundColor = UIColor.blue
         setSubviews()
         setConstraints()
+
+        dayInfoCollectionView.register(DayInfoCollectionViewCell.self, forCellWithReuseIdentifier: CellIdentifier.dayInfoCollectionCell)
+        dayInfoCollectionView.delegate = self
+        dayInfoCollectionView.dataSource = self
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -43,6 +47,35 @@ class WeatherDayInfoTableViewCell: UITableViewCell {
 
     func setCellData() {
         backgroundColor = UIColor.lightGray
+    }
+}
+
+// MARK: - UICollectionView Protocol
+
+extension WeatherDayInfoTableViewCell: UICollectionViewDelegate {
+    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifier.dayInfoCollectionCell, for: indexPath) as? DayInfoCollectionViewCell else { return UICollectionViewCell() }
+        cell.setCellData()
+        return cell
+    }
+}
+
+extension WeatherDayInfoTableViewCell: UICollectionViewDataSource {
+    func numberOfSections(in _: UICollectionView) -> Int {
+        return 1
+    }
+
+    func collectionView(_: UICollectionView, numberOfItemsInSection _: Int) -> Int {
+        return 24
+    }
+}
+
+// MARK: - Controller Protocol
+
+extension WeatherInfoViewController: CellSettingProtocol {
+    func registerCell() {
+        weatherInfoView.weatherInfoTableView.register(WeatherDayInfoTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weatherDayInfoTableCell)
+        weatherInfoView.weatherInfoTableView.register(WeatherWeekInfoTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weatherWeekInfoTableCell)
     }
 }
 

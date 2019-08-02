@@ -20,7 +20,7 @@ class DayInfoCollectionViewCell: UICollectionViewCell {
     let titleLabel: UILabel = {
         let firstLabel = UILabel()
         firstLabel.text = "지금"
-        firstLabel.font = UIFont.systemFont(ofSize: 15)
+        firstLabel.font = UIFont.boldSystemFont(ofSize: 15)
         firstLabel.textAlignment = .center
         return firstLabel
     }()
@@ -36,7 +36,7 @@ class DayInfoCollectionViewCell: UICollectionViewCell {
     let celsiusLabel: UILabel = {
         let thirdLabel = UILabel()
         thirdLabel.text = "92º"
-        thirdLabel.font = UIFont.systemFont(ofSize: 15)
+        thirdLabel.font = UIFont.boldSystemFont(ofSize: 15)
         thirdLabel.textAlignment = .center
         return thirdLabel
     }()
@@ -82,11 +82,10 @@ extension DayInfoCollectionViewCell: UIViewSettingProtocol {
     func setConstraints() {
         cellStackView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
-            cellStackView.topAnchor.constraint(equalTo: topAnchor, constant: 5),
+            cellStackView.topAnchor.constraint(equalTo: topAnchor, constant: CommonInset.topInset * 2),
             cellStackView.leftAnchor.constraint(equalTo: leftAnchor, constant: 0),
             cellStackView.rightAnchor.constraint(equalTo: rightAnchor, constant: 0),
-            cellStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -5),
-            cellStackView.heightAnchor.constraint(equalToConstant: WeatherCellHeight.dayInfoCollectionCell),
+            cellStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -CommonInset.bottomInset * 2),
         ])
 
         cellImageView.translatesAutoresizingMaskIntoConstraints = false

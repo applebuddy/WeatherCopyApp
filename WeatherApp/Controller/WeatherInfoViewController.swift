@@ -112,10 +112,12 @@ class WeatherInfoViewController: UIViewController {
 
 extension WeatherInfoViewController: UITableViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView.contentOffset.y == 0 { return }
+        if scrollView.contentOffset.y <= 0 {
+            scrollView.contentOffset.y = CGFloat.zero
+        }
         let height = CGFloat(max(0, WeatherCellHeight.infoTableHeaderCell - max(0, scrollView.contentOffset.y)))
-        let alphaValue = pow(height / WeatherCellHeight.infoTableHeaderCell, 5)
-        weatherInfoTableHeaderView.setTableHeaderViewAlpha(alpha: alphaValue)
+        let alphaValue = pow(height / WeatherCellHeight.infoTableHeaderCell, 10)
+        weatherInfoTableHeaderView.setTableHeaderViewAlpha(alpha: CGFloat(alphaValue))
     }
 
     func tableView(_: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -159,43 +161,12 @@ extension WeatherInfoViewController: UITableViewDataSource {
         switch rowIndex {
         case .dayInfoCell:
             weatherDayInfoCell.setCellData()
-            weatherDayInfoCell.dayInfoCollectionView.register(DayInfoCollectionViewCell.self, forCellWithReuseIdentifier: CellIdentifier.dayInfoCollectionCell)
-            weatherDayInfoCell.dayInfoCollectionView.delegate = self
-            weatherDayInfoCell.dayInfoCollectionView.dataSource = self
+
             return weatherDayInfoCell
         case .separatorCell: return WeatherSeparatorTableViewCell()
         case .weekInfoCell:
             return weatherWeekInfoCell
         }
-    }
-}
-
-// MARK: - UICollectionView Protocol
-
-extension WeatherInfoViewController: UICollectionViewDelegate {
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifier.dayInfoCollectionCell, for: indexPath) as? DayInfoCollectionViewCell else { return UICollectionViewCell() }
-        cell.setCellData()
-        return cell
-    }
-}
-
-extension WeatherInfoViewController: UICollectionViewDataSource {
-    func numberOfSections(in _: UICollectionView) -> Int {
-        return 1
-    }
-
-    func collectionView(_: UICollectionView, numberOfItemsInSection _: Int) -> Int {
-        return 24
-    }
-}
-
-// MARK: - Controller Protocol
-
-extension WeatherInfoViewController: CellSettingProtocol {
-    func registerCell() {
-        weatherInfoView.weatherInfoTableView.register(WeatherDayInfoTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weatherDayInfoTableCell)
-        weatherInfoView.weatherInfoTableView.register(WeatherWeekInfoTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weatherWeekInfoTableCell)
     }
 }
 

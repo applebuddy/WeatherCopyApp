@@ -62,7 +62,15 @@ extension WeatherWeekInfoTableViewCell: CellSettingProtocol {
     }
 }
 
+// MARK: - TableViewDelegate
+
 extension WeatherWeekInfoTableViewCell: UITableViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        if scrollView.contentOffset.y <= 0 {
+            scrollView.contentOffset.y = CGFloat.zero
+        }
+    }
+
     func tableView(_: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         guard let sectionIndex = WeatherSubInfoTableViewSection(rawValue: indexPath.section) else { return CGFloat.leastNormalMagnitude }
         if indexPath.row == 0 { return 1 }
@@ -70,7 +78,7 @@ extension WeatherWeekInfoTableViewCell: UITableViewDelegate {
         case .weekInfoSection:
             return WeatherCellHeight.weekInfoTableViewCell
         case .todayInfoSection:
-            return WeatherCellHeight.todayInfoTableHeaderView
+            return WeatherCellHeight.todayInfoTableViewCell
         }
     }
 
@@ -78,7 +86,7 @@ extension WeatherWeekInfoTableViewCell: UITableViewDelegate {
         guard let sectionIndex = WeatherSubInfoTableViewSection(rawValue: section) else { return CGFloat.leastNormalMagnitude }
         switch sectionIndex {
         case .weekInfoSection:
-            return 1
+            return CGFloat.leastNormalMagnitude
         case .todayInfoSection:
             return WeatherCellHeight.todayInfoTableHeaderView
         }

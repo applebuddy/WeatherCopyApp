@@ -23,6 +23,7 @@ class TodayInfoTableHeaderView: UIView {
         todayInfoTextView.isEditable = false
         todayInfoTextView.isSelectable = false
         todayInfoTextView.font = UIFont.systemFont(ofSize: 15)
+        todayInfoTextView.contentMode = .scaleToFill
         return todayInfoTextView
     }()
 

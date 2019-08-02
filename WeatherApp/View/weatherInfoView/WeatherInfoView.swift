@@ -11,7 +11,7 @@ import UIKit
 class WeatherInfoView: UIView {
     let weatherTitleView: WeatherTitleView = {
         let weatherTitleView = WeatherTitleView()
-        weatherTitleView.backgroundColor = UIColor.gray
+        weatherTitleView.backgroundColor = UIColor.black
         return weatherTitleView
     }()
 

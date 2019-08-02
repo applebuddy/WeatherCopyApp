@@ -27,6 +27,8 @@ class WeekSubInfoView: UIView {
         let minCelsiusLabel = UILabel()
         minCelsiusLabel.text = "77"
         minCelsiusLabel.textAlignment = .center
+        minCelsiusLabel.textColor = UIColor.gray
+        minCelsiusLabel.alpha = 0.7
         return minCelsiusLabel
     }()
 

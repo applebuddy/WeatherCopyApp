@@ -24,8 +24,9 @@ class WeatherInfoTableHeaderView: UIView {
         minCelsiusLabel.text = "18"
         minCelsiusLabel.font = UIFont.systemFont(ofSize: 20)
         minCelsiusLabel.textAlignment = .center
-        minCelsiusLabel.textColor = UIColor.white
+        minCelsiusLabel.textColor = UIColor.gray
         minCelsiusLabel.adjustsFontSizeToFitWidth = true
+        minCelsiusLabel.alpha = 0.7
         return minCelsiusLabel
     }()
 
