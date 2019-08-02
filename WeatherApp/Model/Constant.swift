@@ -20,7 +20,7 @@ struct WeatherCellHeight {
     static let dayInfoTableCell: CGFloat = 120
     static let infoTableHeaderCell: CGFloat = 150
     static let dayInfoCollectionCell: CGFloat = 100
-    static let weekInfoTableViewCell: CGFloat = 100
+    static let weekInfoTableViewCell: CGFloat = 50
 }
 
 enum WeatherSection: Int {
@@ -31,3 +31,5 @@ struct WeatherViewHeight {
     static let titleViewHeight: CGFloat = 100
     static let weekInfoTableView: CGFloat = 300
 }
+
+let weekInfoStackViewCount = 9

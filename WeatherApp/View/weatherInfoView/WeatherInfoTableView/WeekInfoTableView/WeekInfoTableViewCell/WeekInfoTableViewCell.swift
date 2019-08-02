@@ -10,6 +10,11 @@ import UIKit
 
 /// 내일부터 9일간의 날씨예보를 간략하게 보여주는 테이블뷰셀
 class WeekInfoTableViewCell: UITableViewCell {
+    let weekInfoView: WeekSubInfoView = {
+        let weekInfoView = WeekSubInfoView()
+        return weekInfoView
+    }()
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setSubviews()
@@ -28,15 +33,17 @@ class WeekInfoTableViewCell: UITableViewCell {
 }
 
 extension WeekInfoTableViewCell: UIViewSettingProtocol {
-    func setSubviews() {}
+    func setSubviews() {
+        addSubview(weekInfoView)
+    }
 
     func setConstraints() {
-//        translatesAutoresizingMaskIntoConstraints = false
-//        NSLayoutConstraint.activate([
-//            self.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 0),
-//            self.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 0),
-//            self.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: 0),
-//            self.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: 0)
-//        ])
+        weekInfoView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            weekInfoView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 5),
+            weekInfoView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 5),
+            weekInfoView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -5),
+            weekInfoView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -5),
+        ])
     }
 }

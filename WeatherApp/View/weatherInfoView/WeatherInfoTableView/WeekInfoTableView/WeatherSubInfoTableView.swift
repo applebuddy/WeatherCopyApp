@@ -8,15 +8,23 @@
 
 import UIKit
 
+/// 타이틀 하단 서브 날씨정보 테이블뷰
 class WeatherSubInfoTableView: UITableView {
     override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
         setConstraints()
-        backgroundColor = UIColor.gray
+        setTableView()
     }
 
     required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    func setTableView() {
+        backgroundColor = UIColor.gray
+        allowsSelection = false
+        allowsMultipleSelection = false
+        separatorStyle = .none
     }
 }
 

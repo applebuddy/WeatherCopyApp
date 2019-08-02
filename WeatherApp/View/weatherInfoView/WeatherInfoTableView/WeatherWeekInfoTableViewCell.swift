@@ -62,7 +62,7 @@ extension WeatherWeekInfoTableViewCell: CellSettingProtocol {
 
 extension WeatherWeekInfoTableViewCell: UITableViewDelegate {
     func tableView(_: UITableView, heightForRowAt _: IndexPath) -> CGFloat {
-        return 100
+        return WeatherCellHeight.weekInfoTableViewCell
     }
 
 //    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -71,17 +71,24 @@ extension WeatherWeekInfoTableViewCell: UITableViewDelegate {
 }
 
 extension WeatherWeekInfoTableViewCell: UITableViewDataSource {
-    func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
-        return 10
+    func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if section == 0 {
+            return 9
+        } else {
+            return 0
+        }
     }
 
     func numberOfSections(in _: UITableView) -> Int {
-        return 1
+        return 2
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let weekInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weekInfoTableCell, for: indexPath) as? WeekInfoTableViewCell else { return UITableViewCell() }
-
-        return weekInfoCell
+        if indexPath.section == 0 {
+            return weekInfoCell
+        } else {
+            return UITableViewCell()
+        }
     }
 }

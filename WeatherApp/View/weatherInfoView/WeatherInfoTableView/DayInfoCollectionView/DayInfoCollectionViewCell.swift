@@ -61,7 +61,7 @@ class DayInfoCollectionViewCell: UICollectionViewCell {
     }
 
     func setCellData() {
-        backgroundColor = #colorLiteral(red: 0.9098039269, green: 0.4784313738, blue: 0.6431372762, alpha: 1)
+        backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
     }
 
     func setStackView() {
@@ -94,9 +94,6 @@ extension DayInfoCollectionViewCell: UIViewSettingProtocol {
         NSLayoutConstraint.activate([
             cellImageView.heightAnchor.constraint(equalTo: percentageLabel.heightAnchor, multiplier: 1.5),
             cellImageView.heightAnchor.constraint(equalTo: celsiusLabel.heightAnchor, multiplier: 1.0),
-        ])
-        NSLayoutConstraint.activate([
-            percentageLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: -5),
         ])
     }
 }
