@@ -21,8 +21,7 @@ class WeatherMainTableFooterView: UIView {
     let celsiusToggleButton: UIButton = {
         let celsiusToggleButton = UIButton(type: .custom)
         celsiusToggleButton.setImage(#imageLiteral(resourceName: "toggleButton_C"), for: .normal)
-
-        celsiusToggleButton.contentMode = .scaleAspectFit
+        celsiusToggleButton.contentMode = .center
         return celsiusToggleButton
     }()
 
@@ -35,6 +34,7 @@ class WeatherMainTableFooterView: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
+        contentMode = .scaleAspectFit
         makeSubviews()
         makeConstraints()
     }
@@ -52,14 +52,6 @@ extension WeatherMainTableFooterView: UIViewSettingProtocol {
     }
 
     func makeConstraints() {
-        celsiusToggleButton.activateAnchors()
-        NSLayoutConstraint.activate([
-            celsiusToggleButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: CommonInset.topInset),
-            celsiusToggleButton.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: CommonInset.leftInset / 2),
-            celsiusToggleButton.heightAnchor.constraint(equalToConstant: CommonSize.defaultButtonSize.height),
-            celsiusToggleButton.widthAnchor.constraint(equalToConstant: CommonSize.defaultButtonSize.width * 2),
-        ])
-
         addCityButton.activateAnchors()
         NSLayoutConstraint.activate([
             addCityButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: CommonInset.topInset),
@@ -74,6 +66,14 @@ extension WeatherMainTableFooterView: UIViewSettingProtocol {
             weatherLinkButton.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
             weatherLinkButton.heightAnchor.constraint(equalToConstant: CommonSize.defaultButtonSize.height),
             weatherLinkButton.widthAnchor.constraint(equalToConstant: CommonSize.defaultButtonSize.width),
+        ])
+
+        celsiusToggleButton.activateAnchors()
+        NSLayoutConstraint.activate([
+            celsiusToggleButton.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: CommonInset.topInset),
+            celsiusToggleButton.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: CommonInset.leftInset / 2),
+            celsiusToggleButton.heightAnchor.constraint(equalTo: addCityButton.heightAnchor),
+            celsiusToggleButton.widthAnchor.constraint(equalTo: celsiusToggleButton.heightAnchor, multiplier: 2.5),
         ])
     }
 }

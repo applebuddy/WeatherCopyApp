@@ -10,8 +10,11 @@ import MapKit
 import UIKit
 
 class WeatherInfoViewController: UIViewController {
+    // MARK: - Property
+
     var headerHeightConstraint: NSLayoutConstraint?
-    var headerViewFrame: CGRect?
+
+    // MARK: - UI
 
     lazy var weatherMainViewController: WeatherMainViewController = {
         let weatherMainViewController = WeatherMainViewController()
@@ -48,12 +51,13 @@ class WeatherInfoViewController: UIViewController {
         return weatherInfoTableHeaderView
     }()
 
+    // MARK: - Life Cycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
-        view.backgroundColor = CommonColor.weatherInfoView
-        registerCell()
         setInfoViewController()
+        registerCell()
+        setInfoView()
         setButtonTarget()
         setToolBarButtonItem()
         setTableHeaderView()
@@ -65,7 +69,13 @@ class WeatherInfoViewController: UIViewController {
         view = weatherInfoView
     }
 
+    // MARK: - Set Method
+
     func setInfoViewController() {
+        view.backgroundColor = CommonColor.weatherInfoView
+    }
+
+    func setInfoView() {
         weatherInfoView.weatherInfoTableView.dataSource = self
         weatherInfoView.weatherInfoTableView.delegate = self
     }
@@ -100,6 +110,8 @@ class WeatherInfoViewController: UIViewController {
         let alphaValue = pow(height / WeatherCellHeight.infoTableHeaderCell, 10)
         weatherInfoTableHeaderView.setTableHeaderViewAlpha(alpha: CGFloat(alphaValue))
     }
+
+    // MARK: - Button Event
 
     @objc func linkButtonPressed(_: UIButton) {
         // ✭ URL 링크주소는 파싱구현 이후 다시 수정한다.

@@ -13,7 +13,6 @@
         <!--View Controller-->
         <scene sceneID="tCq-HQ-dEE">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="MaM-zu-tCG" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <viewController id="R4m-dE-ICT" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="IQy-8I-VwJ">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="736"/>
@@ -64,19 +63,25 @@
                                     </tableViewCell>
                                 </prototypes>
                             </tableView>
+                            <searchBar contentMode="redraw" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="S4c-D2-G1c">
+                                <rect key="frame" x="0.0" y="144" width="414" height="44"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </searchBar>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="6RT-Tv-fZR"/>
                     </view>
                 </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="MaM-zu-tCG" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-272.46376811594206" y="10.597826086956523"/>
         </scene>
         <!--Page View Controller-->
         <scene sceneID="Aso-0N-RyE">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="NIs-aW-kkW" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="pageCurl" navigationOrientation="horizontal" spineLocation="min" id="mJ0-lb-Bc9" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="NIs-aW-kkW" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-1101" y="24"/>
         </scene>

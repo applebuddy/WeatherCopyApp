@@ -9,19 +9,12 @@
 import UIKit
 
 class MainNavigationController: UINavigationController {
+    // MARK: - Lift Cycle
+
     override init(rootViewController: UIViewController) {
         super.init(rootViewController: rootViewController)
         setNavigationBar()
         setToolBar()
-    }
-
-    func setToolBar() {
-        toolbar.barStyle = .blackTranslucent
-        toolbar.backgroundColor = .black
-    }
-
-    func setNavigationBar() {
-        isNavigationBarHidden = true
     }
 
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -30,5 +23,16 @@ class MainNavigationController: UINavigationController {
 
     required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    // MARK: - Set Method
+
+    func setToolBar() {
+        toolbar.barStyle = .blackTranslucent
+        toolbar.backgroundColor = .black
+    }
+
+    func setNavigationBar() {
+        isNavigationBarHidden = true
     }
 }
