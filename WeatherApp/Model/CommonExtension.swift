@@ -9,7 +9,6 @@
 import UIKit
 
 /// WeatherApp 범용 extension
-
 extension UIView {
     func activateAnchors() {
         translatesAutoresizingMaskIntoConstraints = false
