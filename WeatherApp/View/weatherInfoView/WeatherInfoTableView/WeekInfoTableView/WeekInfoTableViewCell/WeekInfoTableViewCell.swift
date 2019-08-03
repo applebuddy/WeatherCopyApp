@@ -8,7 +8,7 @@
 
 import UIKit
 
-/// 내일부터 9일간의 날씨예보를 간략하게 보여주는 테이블뷰셀
+/// 9일간의 날씨예보를 간략하게 보여주는 테이블뷰셀
 class WeekInfoTableViewCell: UITableViewCell {
     let weekSubInfoView: WeekSubInfoView = {
         let weekInfoView = WeekSubInfoView()
@@ -17,8 +17,8 @@ class WeekInfoTableViewCell: UITableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setSubviews()
-        setConstraints()
+        makeSubviews()
+        makeConstraints()
     }
 
     required init?(coder _: NSCoder) {
@@ -33,18 +33,18 @@ class WeekInfoTableViewCell: UITableViewCell {
 }
 
 extension WeekInfoTableViewCell: UIViewSettingProtocol {
-    func setSubviews() {
+    func makeSubviews() {
         addSubview(weekSubInfoView)
     }
 
-    func setConstraints() {
-        weekSubInfoView.translatesAutoresizingMaskIntoConstraints = false
+    func makeConstraints() {
+        weekSubInfoView.activateAnchors()
         NSLayoutConstraint.activate([
             weekSubInfoView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 0),
             weekSubInfoView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: 0),
             weekSubInfoView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 0),
             weekSubInfoView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: 0),
-            weekSubInfoView.heightAnchor.constraint(equalToConstant: WeatherCellHeight.weekInfoTableViewCell),
+            weekSubInfoView.heightAnchor.constraint(equalToConstant: WeatherCellHeight.subInfoTableViewCell),
         ])
     }
 }

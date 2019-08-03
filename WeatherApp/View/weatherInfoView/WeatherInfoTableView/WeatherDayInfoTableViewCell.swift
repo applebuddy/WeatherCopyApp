@@ -8,7 +8,7 @@
 
 import UIKit
 
-/// 시간 별 날씨정보 컬렉션뷰 셀을 표현하는 테이블뷰 셀
+/// 시간 별 날씨정보 컬렉션뷰를 서브뷰로 갖는 테이블뷰 셀
 class WeatherDayInfoTableViewCell: UITableViewCell {
     let dayInfoCollectionView: DayInfoCollectionView = {
         let layout = UICollectionViewFlowLayout()
@@ -20,15 +20,15 @@ class WeatherDayInfoTableViewCell: UITableViewCell {
         // ✭ 컬렉션뷰의 frame을 CGRect.zero 설정하면, cellForItemAt delegate 메서드가 호출되지 않을 수 있다.
         let dayInfoCollectionView = DayInfoCollectionView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: 0), collectionViewLayout: layout)
         dayInfoCollectionView.isScrollEnabled = true
-        dayInfoCollectionView.backgroundColor = UIColor.lightGray
+        dayInfoCollectionView.backgroundColor = .lightGray
         return dayInfoCollectionView
     }()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        backgroundColor = UIColor.blue
-        setSubviews()
-        setConstraints()
+        backgroundColor = .blue
+        makeSubviews()
+        makeConstraints()
 
         dayInfoCollectionView.register(DayInfoCollectionViewCell.self, forCellWithReuseIdentifier: CellIdentifier.dayInfoCollectionCell)
         dayInfoCollectionView.delegate = self
@@ -46,7 +46,7 @@ class WeatherDayInfoTableViewCell: UITableViewCell {
     }
 
     func setCellData() {
-        backgroundColor = UIColor.lightGray
+        backgroundColor = .lightGray
     }
 }
 
@@ -75,17 +75,17 @@ extension WeatherDayInfoTableViewCell: UICollectionViewDataSource {
 extension WeatherInfoViewController: CellSettingProtocol {
     func registerCell() {
         weatherInfoView.weatherInfoTableView.register(WeatherDayInfoTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weatherDayInfoTableCell)
-        weatherInfoView.weatherInfoTableView.register(WeatherWeekInfoTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weatherWeekInfoTableCell)
+        weatherInfoView.weatherInfoTableView.register(WeatherSubInfoTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weatherWeekInfoTableCell)
     }
 }
 
 extension WeatherDayInfoTableViewCell: UIViewSettingProtocol {
-    func setSubviews() {
+    func makeSubviews() {
         addSubview(dayInfoCollectionView)
     }
 
-    func setConstraints() {
-        dayInfoCollectionView.translatesAutoresizingMaskIntoConstraints = false
+    func makeConstraints() {
+        dayInfoCollectionView.activateAnchors()
         NSLayoutConstraint.activate([
             dayInfoCollectionView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 0),
             dayInfoCollectionView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: 0),

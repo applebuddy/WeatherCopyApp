@@ -20,20 +20,20 @@ class WeatherInfoViewController: UIViewController {
 
     let linkBarButton: UIButton = {
         let linkBarButton = UIButton(type: .custom)
-        linkBarButton.setImage(#imageLiteral(resourceName: "weatherLinkImage"), for: .normal)
+        linkBarButton.setImage(#imageLiteral(resourceName: "weatherLink"), for: .normal)
         return linkBarButton
     }()
 
     let listBarButton: UIButton = {
         let listBarButton = UIButton(type: .custom)
-        listBarButton.setImage(#imageLiteral(resourceName: "weatherListImage"), for: .normal)
+        listBarButton.setImage(#imageLiteral(resourceName: "weatherList"), for: .normal)
         return listBarButton
     }()
 
     let presentViewButton: UIButton = {
         let presentViewButton = UIButton(type: .custom)
-        presentViewButton.setTitleColor(UIColor.lightGray, for: .normal)
-        presentViewButton.backgroundColor = UIColor.white
+        presentViewButton.setTitleColor(.lightGray, for: .normal)
+        presentViewButton.backgroundColor = .white
         return presentViewButton
     }()
 
@@ -51,13 +51,13 @@ class WeatherInfoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        view.backgroundColor = UIColor.white
+        view.backgroundColor = CommonColor.weatherInfoView
         registerCell()
         setInfoViewController()
         setButtonTarget()
         setToolBarButtonItem()
         setTableHeaderView()
-        setConstraints()
+        makeConstraints()
     }
 
     override func loadView() {
@@ -92,6 +92,15 @@ class WeatherInfoViewController: UIViewController {
         hidesBottomBarWhenPushed = false
     }
 
+    func makeWeatherInfoTableHeaderViewScrollEvent(_ scrollView: UIScrollView, offsetY _: CGFloat) {
+        if scrollView.contentOffset.y <= 0 {
+            scrollView.contentOffset.y = CGFloat.zero
+        }
+        let height = CGFloat(max(0, WeatherCellHeight.infoTableHeaderCell - max(0, scrollView.contentOffset.y)))
+        let alphaValue = pow(height / WeatherCellHeight.infoTableHeaderCell, 10)
+        weatherInfoTableHeaderView.setTableHeaderViewAlpha(alpha: CGFloat(alphaValue))
+    }
+
     @objc func linkButtonPressed(_: UIButton) {
         // ✭ URL 링크주소는 파싱구현 이후 다시 수정한다.
         guard let url = NSURL(string: "https://weather.com/ko-KR/weather/today/l/37.46,126.88?par=apple_widget&locale=ko_KR") else { return }
@@ -99,25 +108,17 @@ class WeatherInfoViewController: UIViewController {
     }
 
     @objc func listButtonPressed(_: UIButton) {
-        print("listBarButton Pressed")
         present(weatherMainViewController, animated: true, completion: nil)
     }
 
-    @objc func presentViewButtonPressed(_: UIButton) {
-        print("presentViewButton Pressed")
-    }
+    @objc func presentViewButtonPressed(_: UIButton) {}
 }
 
 // MARK: - UITableView Protocol
 
 extension WeatherInfoViewController: UITableViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        if scrollView.contentOffset.y <= 0 {
-            scrollView.contentOffset.y = CGFloat.zero
-        }
-        let height = CGFloat(max(0, WeatherCellHeight.infoTableHeaderCell - max(0, scrollView.contentOffset.y)))
-        let alphaValue = pow(height / WeatherCellHeight.infoTableHeaderCell, 10)
-        weatherInfoTableHeaderView.setTableHeaderViewAlpha(alpha: CGFloat(alphaValue))
+        makeWeatherInfoTableHeaderViewScrollEvent(scrollView, offsetY: scrollView.contentOffset.y)
     }
 
     func tableView(_: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -155,33 +156,33 @@ extension WeatherInfoViewController: UITableViewDataSource {
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let weatherDayInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherDayInfoTableCell, for: indexPath) as? WeatherDayInfoTableViewCell,
-            let weatherWeekInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherWeekInfoTableCell, for: indexPath) as? WeatherWeekInfoTableViewCell,
+            let weatherWeekInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherWeekInfoTableCell, for: indexPath) as? WeatherSubInfoTableViewCell,
             let rowIndex = WeatherInfoTableViewRow(rawValue: indexPath.row) else { return UITableViewCell() }
 
         switch rowIndex {
-        case .dayInfoCell:
+        case .dayInfoRow:
             weatherDayInfoCell.setCellData()
 
             return weatherDayInfoCell
-        case .separatorCell: return WeatherSeparatorTableViewCell()
-        case .weekInfoCell:
+        case .separatorRow: return WeatherSeparatorTableViewCell()
+        case .weekInfoRow:
             return weatherWeekInfoCell
         }
     }
 }
 
 extension WeatherInfoViewController: UIViewSettingProtocol {
-    func setSubviews() {}
+    func makeSubviews() {}
 
-    func setConstraints() {
-        linkBarButton.translatesAutoresizingMaskIntoConstraints = false
+    func makeConstraints() {
+        linkBarButton.activateAnchors()
         NSLayoutConstraint.activate([
-            linkBarButton.heightAnchor.constraint(equalToConstant: 30),
+            linkBarButton.heightAnchor.constraint(equalToConstant: CommonSize.defaultButtonSize.height),
             linkBarButton.widthAnchor.constraint(equalTo: linkBarButton.heightAnchor, multiplier: 1.0),
         ])
-        listBarButton.translatesAutoresizingMaskIntoConstraints = false
+        listBarButton.activateAnchors()
         NSLayoutConstraint.activate([
-            listBarButton.heightAnchor.constraint(equalToConstant: 30),
+            listBarButton.heightAnchor.constraint(equalToConstant: CommonSize.defaultButtonSize.height),
             listBarButton.widthAnchor.constraint(equalTo: listBarButton.heightAnchor, multiplier: 1.0),
         ])
     }

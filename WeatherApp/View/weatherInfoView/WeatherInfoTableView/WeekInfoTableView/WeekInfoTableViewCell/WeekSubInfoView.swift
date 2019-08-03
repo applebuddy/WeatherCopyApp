@@ -8,6 +8,7 @@
 
 import UIKit
 
+/// WeekSubInfoTableViewCell 메인 뷰
 class WeekSubInfoView: UIView {
     let dateLabel: UILabel = {
         let dateLabel = UILabel()
@@ -27,7 +28,7 @@ class WeekSubInfoView: UIView {
         let minCelsiusLabel = UILabel()
         minCelsiusLabel.text = "77"
         minCelsiusLabel.textAlignment = .center
-        minCelsiusLabel.textColor = UIColor.gray
+        minCelsiusLabel.textColor = .gray
         minCelsiusLabel.alpha = 0.7
         return minCelsiusLabel
     }()
@@ -54,9 +55,9 @@ class WeekSubInfoView: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = UIColor.white
-        setSubviews()
-        setConstraints()
+        backgroundColor = .white
+        makeSubviews()
+        makeConstraints()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -66,13 +67,13 @@ class WeekSubInfoView: UIView {
 }
 
 extension WeekSubInfoView: UIViewSettingProtocol {
-    func setSubviews() {
+    func makeSubviews() {
         setSubWeekInfoStackView()
         addSubview(subWeekInfoStackView)
     }
 
-    func setConstraints() {
-        subWeekInfoStackView.translatesAutoresizingMaskIntoConstraints = false
+    func makeConstraints() {
+        subWeekInfoStackView.activateAnchors()
         NSLayoutConstraint.activate([
             subWeekInfoStackView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: CommonInset.topInset / 2),
             subWeekInfoStackView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: CommonInset.leftInset),
@@ -81,10 +82,10 @@ extension WeekSubInfoView: UIViewSettingProtocol {
             subWeekInfoStackView.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 1),
         ])
 
-        dateLabel.translatesAutoresizingMaskIntoConstraints = false
-        weatherImageView.translatesAutoresizingMaskIntoConstraints = false
-        maxCelsiusLabel.translatesAutoresizingMaskIntoConstraints = false
-        minCelsiusLabel.translatesAutoresizingMaskIntoConstraints = false
+        dateLabel.activateAnchors()
+        weatherImageView.activateAnchors()
+        maxCelsiusLabel.activateAnchors()
+        minCelsiusLabel.activateAnchors()
 
         NSLayoutConstraint.activate([
             dateLabel.widthAnchor.constraint(equalTo: subWeekInfoStackView.widthAnchor, multiplier: 0.3),

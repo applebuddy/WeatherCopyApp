@@ -22,16 +22,22 @@ class TodayInfoTableHeaderView: UIView {
         )
         todayInfoTextView.isEditable = false
         todayInfoTextView.isSelectable = false
-        todayInfoTextView.font = UIFont.systemFont(ofSize: 15)
+        todayInfoTextView.font = .systemFont(ofSize: 15)
         todayInfoTextView.contentMode = .scaleToFill
         return todayInfoTextView
     }()
 
+    let headerBottomBorderView: UIView = {
+        let headerBottomBorderView = UIView()
+        headerBottomBorderView.backgroundColor = CommonColor.separator
+        return headerBottomBorderView
+    }()
+
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = UIColor.white
-        setSubviews()
-        setConstraints()
+        backgroundColor = .white
+        makeSubviews()
+        makeConstraints()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -41,16 +47,25 @@ class TodayInfoTableHeaderView: UIView {
 }
 
 extension TodayInfoTableHeaderView: UIViewSettingProtocol {
-    func setSubviews() {
+    func makeSubviews() {
+        addSubview(headerBottomBorderView)
         addSubview(todayInfoTextView)
     }
 
-    func setConstraints() {
-        todayInfoTextView.translatesAutoresizingMaskIntoConstraints = false
+    func makeConstraints() {
+        headerBottomBorderView.activateAnchors()
+        NSLayoutConstraint.activate([
+            headerBottomBorderView.heightAnchor.constraint(equalToConstant: 1),
+            headerBottomBorderView.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width),
+            headerBottomBorderView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: 0),
+            headerBottomBorderView.centerXAnchor.constraint(equalToSystemSpacingAfter: safeAreaLayoutGuide.centerXAnchor, multiplier: 1),
+        ])
+
+        todayInfoTextView.activateAnchors()
         NSLayoutConstraint.activate([
             todayInfoTextView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: CommonInset.leftInset),
             todayInfoTextView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: CommonInset.topInset),
-            todayInfoTextView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -CommonInset.bottomInset),
+            todayInfoTextView.bottomAnchor.constraint(equalTo: headerBottomBorderView.topAnchor, constant: -CommonInset.bottomInset),
             todayInfoTextView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -CommonInset.rightInset),
         ])
     }

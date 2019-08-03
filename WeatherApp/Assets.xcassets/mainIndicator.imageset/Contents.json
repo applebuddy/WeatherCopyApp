@@ -2,7 +2,7 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "cloud.png",
+      "filename" : "mainIndicator.png",
       "scale" : "1x"
     },
     {

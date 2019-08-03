@@ -2,7 +2,7 @@
   "images" : [
     {
       "idiom" : "universal",
-      "filename" : "cloud.png",
+      "filename" : "weatherListImage.png",
       "scale" : "1x"
     },
     {

@@ -17,8 +17,8 @@ class WeatherSeparatorTableViewCell: UITableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setSubviews()
-        setConstraints()
+        makeSubviews()
+        makeConstraints()
     }
 
     required init?(coder _: NSCoder) {
@@ -27,12 +27,12 @@ class WeatherSeparatorTableViewCell: UITableViewCell {
 }
 
 extension WeatherSeparatorTableViewCell: UIViewSettingProtocol {
-    func setSubviews() {
+    func makeSubviews() {
         addSubview(separatorView)
     }
 
-    func setConstraints() {
-        separatorView.translatesAutoresizingMaskIntoConstraints = false
+    func makeConstraints() {
+        separatorView.activateAnchors()
         NSLayoutConstraint.activate([
             separatorView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
             separatorView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),

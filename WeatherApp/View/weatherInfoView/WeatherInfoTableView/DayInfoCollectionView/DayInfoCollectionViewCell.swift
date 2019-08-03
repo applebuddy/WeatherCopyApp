@@ -8,7 +8,7 @@
 
 import UIKit
 
-/// 현재시간 기준 24시간 동안의 날씨예보 컬렉션뷰 셀
+/// 24시간 날씨예보 정보 컬렉션뷰 셀
 class DayInfoCollectionViewCell: UICollectionViewCell {
     let cellImageView: UIImageView = {
         let cellImageView = UIImageView()
@@ -20,7 +20,7 @@ class DayInfoCollectionViewCell: UICollectionViewCell {
     let titleLabel: UILabel = {
         let firstLabel = UILabel()
         firstLabel.text = "지금"
-        firstLabel.font = UIFont.boldSystemFont(ofSize: 15)
+        firstLabel.font = .boldSystemFont(ofSize: 15)
         firstLabel.textAlignment = .center
         return firstLabel
     }()
@@ -28,7 +28,7 @@ class DayInfoCollectionViewCell: UICollectionViewCell {
     let percentageLabel: UILabel = {
         let secondLabel = UILabel()
         secondLabel.text = "70%"
-        secondLabel.font = UIFont.systemFont(ofSize: 10)
+        secondLabel.font = .systemFont(ofSize: 10)
         secondLabel.textAlignment = .center
         return secondLabel
     }()
@@ -36,7 +36,7 @@ class DayInfoCollectionViewCell: UICollectionViewCell {
     let celsiusLabel: UILabel = {
         let thirdLabel = UILabel()
         thirdLabel.text = "92º"
-        thirdLabel.font = UIFont.boldSystemFont(ofSize: 15)
+        thirdLabel.font = .boldSystemFont(ofSize: 15)
         thirdLabel.textAlignment = .center
         return thirdLabel
     }()
@@ -50,10 +50,10 @@ class DayInfoCollectionViewCell: UICollectionViewCell {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setSubviews()
+        makeSubviews()
 
-        setConstraints()
-        backgroundColor = UIColor.red
+        makeConstraints()
+        backgroundColor = .red
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -74,24 +74,31 @@ class DayInfoCollectionViewCell: UICollectionViewCell {
 }
 
 extension DayInfoCollectionViewCell: UIViewSettingProtocol {
-    func setSubviews() {
+    func makeSubviews() {
         addSubview(cellStackView)
         setStackView()
     }
 
-    func setConstraints() {
-        cellStackView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            cellStackView.topAnchor.constraint(equalTo: topAnchor, constant: CommonInset.topInset * 2),
-            cellStackView.leftAnchor.constraint(equalTo: leftAnchor, constant: 0),
-            cellStackView.rightAnchor.constraint(equalTo: rightAnchor, constant: 0),
-            cellStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -CommonInset.bottomInset * 2),
-        ])
+    func makeConstraints() {
+        cellStackView.activateAnchors()
 
-        cellImageView.translatesAutoresizingMaskIntoConstraints = false
-        percentageLabel.translatesAutoresizingMaskIntoConstraints = false
-        celsiusLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        cellStackView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
+        NSLayoutConstraint(item: cellStackView,
+                           attribute: .centerY,
+                           relatedBy: .equal,
+                           toItem: self,
+                           attribute: .centerY,
+                           multiplier: 1.0,
+                           constant: 0.0).isActive = true
+        cellStackView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 0).isActive = true
+        cellStackView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: 0).isActive = true
+        cellStackView.topAnchor.constraint(equalTo: topAnchor, constant: CommonInset.topInset * 2).isActive = true
+        cellStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -CommonInset.bottomInset * 2).isActive = true
+
+        cellImageView.activateAnchors()
+        percentageLabel.activateAnchors()
+        celsiusLabel.activateAnchors()
+        titleLabel.activateAnchors()
         NSLayoutConstraint.activate([
             cellImageView.heightAnchor.constraint(equalTo: cellStackView.heightAnchor, multiplier: 0.3),
             percentageLabel.heightAnchor.constraint(equalTo: cellStackView.heightAnchor, multiplier: 0.1),

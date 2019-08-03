@@ -8,11 +8,11 @@
 
 import UIKit
 
-/// 하루 기준의 날씨정보 컬렉션뷰
+/// 하루 기준 날씨정보 컬렉션뷰
 class DayInfoCollectionView: UICollectionView {
     override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame, collectionViewLayout: layout)
-        backgroundColor = UIColor.black
+        backgroundColor = .black
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -22,15 +22,7 @@ class DayInfoCollectionView: UICollectionView {
 }
 
 extension DayInfoCollectionView: UIViewSettingProtocol {
-    func setSubviews() {}
+    func makeSubviews() {}
 
-    func setConstraints() {
-        translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            self.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
-            self.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor),
-            self.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor),
-            self.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
-        ])
-    }
+    func makeConstraints() {}
 }

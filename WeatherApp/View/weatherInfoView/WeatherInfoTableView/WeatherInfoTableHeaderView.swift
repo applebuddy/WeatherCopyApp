@@ -8,13 +8,14 @@
 
 import UIKit
 
+/// 메인타이틀 하단의 테이블 헤더 뷰
 class WeatherInfoTableHeaderView: UIView {
     let mainCelsiusLabel: UILabel = {
         let celsiusLabel = UILabel()
         celsiusLabel.text = "27º"
-        celsiusLabel.font = UIFont.systemFont(ofSize: 80)
+        celsiusLabel.font = .systemFont(ofSize: 80)
         celsiusLabel.textAlignment = .center
-        celsiusLabel.textColor = UIColor.white
+        celsiusLabel.textColor = .white
         celsiusLabel.adjustsFontSizeToFitWidth = true
         return celsiusLabel
     }()
@@ -22,9 +23,9 @@ class WeatherInfoTableHeaderView: UIView {
     let minCelsiusLabel: UILabel = {
         let minCelsiusLabel = UILabel()
         minCelsiusLabel.text = "18"
-        minCelsiusLabel.font = UIFont.systemFont(ofSize: 20)
+        minCelsiusLabel.font = .systemFont(ofSize: 20)
         minCelsiusLabel.textAlignment = .center
-        minCelsiusLabel.textColor = UIColor.gray
+        minCelsiusLabel.textColor = .gray
         minCelsiusLabel.adjustsFontSizeToFitWidth = true
         minCelsiusLabel.alpha = 0.7
         return minCelsiusLabel
@@ -33,9 +34,9 @@ class WeatherInfoTableHeaderView: UIView {
     let maxCelsiusLabel: UILabel = {
         let maxCelsiusLabel = UILabel()
         maxCelsiusLabel.text = "36"
-        maxCelsiusLabel.font = UIFont.systemFont(ofSize: 20)
+        maxCelsiusLabel.font = .systemFont(ofSize: 20)
         maxCelsiusLabel.textAlignment = .center
-        maxCelsiusLabel.textColor = UIColor.white
+        maxCelsiusLabel.textColor = .white
         maxCelsiusLabel.adjustsFontSizeToFitWidth = true
         return maxCelsiusLabel
     }()
@@ -43,9 +44,9 @@ class WeatherInfoTableHeaderView: UIView {
     let dateLabel: UILabel = {
         let dateLabel = UILabel()
         dateLabel.text = "수요일"
-        dateLabel.font = UIFont.systemFont(ofSize: 30)
+        dateLabel.font = .systemFont(ofSize: 30)
         dateLabel.textAlignment = .center
-        dateLabel.textColor = UIColor.white
+        dateLabel.textColor = .white
         dateLabel.adjustsFontSizeToFitWidth = true
         return dateLabel
     }()
@@ -53,17 +54,17 @@ class WeatherInfoTableHeaderView: UIView {
     let subDateLabel: UILabel = {
         let subDateLabel = UILabel()
         subDateLabel.text = "오늘"
-        subDateLabel.font = UIFont.systemFont(ofSize: 15)
+        subDateLabel.font = .systemFont(ofSize: 15)
         subDateLabel.textAlignment = .left
-        subDateLabel.textColor = UIColor.white
+        subDateLabel.textColor = .white
         return subDateLabel
     }()
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = UIColor.black
-        setSubviews()
-        setConstraints()
+        backgroundColor = .black
+        makeSubviews()
+        makeConstraints()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -84,7 +85,7 @@ class WeatherInfoTableHeaderView: UIView {
 }
 
 extension WeatherInfoTableHeaderView: UIViewSettingProtocol {
-    func setSubviews() {
+    func makeSubviews() {
         addSubview(mainCelsiusLabel)
         addSubview(minCelsiusLabel)
         addSubview(maxCelsiusLabel)
@@ -92,8 +93,8 @@ extension WeatherInfoTableHeaderView: UIViewSettingProtocol {
         addSubview(subDateLabel)
     }
 
-    func setConstraints() {
-        mainCelsiusLabel.translatesAutoresizingMaskIntoConstraints = false
+    func makeConstraints() {
+        mainCelsiusLabel.activateAnchors()
         NSLayoutConstraint.activate([
             mainCelsiusLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor),
             mainCelsiusLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 10),
@@ -101,7 +102,7 @@ extension WeatherInfoTableHeaderView: UIViewSettingProtocol {
             mainCelsiusLabel.rightAnchor.constraint(equalTo: self.rightAnchor),
         ])
 
-        dateLabel.translatesAutoresizingMaskIntoConstraints = false
+        dateLabel.activateAnchors()
         NSLayoutConstraint.activate([
             dateLabel.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: CommonInset.leftInset),
             dateLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10),
@@ -109,14 +110,14 @@ extension WeatherInfoTableHeaderView: UIViewSettingProtocol {
             dateLabel.widthAnchor.constraint(equalToConstant: 50),
         ])
 
-        subDateLabel.translatesAutoresizingMaskIntoConstraints = false
+        subDateLabel.activateAnchors()
         NSLayoutConstraint.activate([
             subDateLabel.leftAnchor.constraint(equalTo: dateLabel.rightAnchor, constant: 10),
             subDateLabel.bottomAnchor.constraint(equalTo: dateLabel.bottomAnchor),
             subDateLabel.heightAnchor.constraint(equalToConstant: 20),
         ])
 
-        minCelsiusLabel.translatesAutoresizingMaskIntoConstraints = false
+        minCelsiusLabel.activateAnchors()
         NSLayoutConstraint.activate([
             minCelsiusLabel.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -20),
             minCelsiusLabel.bottomAnchor.constraint(equalTo: self.dateLabel.bottomAnchor, constant: 0),
@@ -124,7 +125,7 @@ extension WeatherInfoTableHeaderView: UIViewSettingProtocol {
             minCelsiusLabel.widthAnchor.constraint(equalToConstant: 30),
         ])
 
-        maxCelsiusLabel.translatesAutoresizingMaskIntoConstraints = false
+        maxCelsiusLabel.activateAnchors()
         NSLayoutConstraint.activate([
             maxCelsiusLabel.rightAnchor.constraint(equalTo: minCelsiusLabel.leftAnchor, constant: -10),
             maxCelsiusLabel.widthAnchor.constraint(equalTo: minCelsiusLabel.widthAnchor),

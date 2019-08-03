@@ -8,11 +8,11 @@
 
 import UIKit
 
-/// 타이틀 하단 서브 날씨정보 테이블뷰
+/// 메인 타이틀 하단 서브 날씨정보 테이블뷰
 class WeatherSubInfoTableView: UITableView {
     override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
-        setConstraints()
+        makeConstraints()
         setTableView()
     }
 
@@ -21,7 +21,7 @@ class WeatherSubInfoTableView: UITableView {
     }
 
     func setTableView() {
-        backgroundColor = UIColor.white
+        backgroundColor = .white
         allowsSelection = false
         allowsMultipleSelection = false
         separatorStyle = .none
@@ -29,16 +29,16 @@ class WeatherSubInfoTableView: UITableView {
 }
 
 extension WeatherSubInfoTableView: UIViewSettingProtocol {
-    func setSubviews() {}
+    func makeSubviews() {}
 
-    func setConstraints() {
-        translatesAutoresizingMaskIntoConstraints = false
+    func makeConstraints() {
+        activateAnchors()
         NSLayoutConstraint.activate([
             self.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
             self.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor),
             self.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor),
             self.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
-            self.heightAnchor.constraint(equalToConstant: WeatherViewHeight.weekInfoTableView),
+            self.heightAnchor.constraint(equalToConstant: WeatherViewHeight.subInfoTableView),
         ])
     }
 }

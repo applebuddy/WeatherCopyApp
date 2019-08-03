@@ -8,6 +8,8 @@
 
 import UIKit
 
+/// WeatherMainViewController 메인 뷰
+/// * **설정 한 장소목록 및 날씨정보를 나타낸다.**
 class WeatherMainView: UIView {
     let weatherMainTableView: WeatherMainTableView = {
         let weatherMainTableView = WeatherMainTableView(frame: CGRect.zero, style: .grouped)
@@ -16,9 +18,9 @@ class WeatherMainView: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = UIColor.black
-        setSubviews()
-        setConstraints()
+        backgroundColor = CommonColor.weatherMainView
+        makeSubviews()
+        makeConstraints()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -26,22 +28,22 @@ class WeatherMainView: UIView {
     }
 
     func setWeatherMainTableViewConstraint() {
-        weatherMainTableView.translatesAutoresizingMaskIntoConstraints = false
+        weatherMainTableView.activateAnchors()
         NSLayoutConstraint.activate([
             weatherMainTableView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
-            weatherMainTableView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
             weatherMainTableView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor),
             weatherMainTableView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor),
+            weatherMainTableView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
         ])
     }
 }
 
 extension WeatherMainView: UIViewSettingProtocol {
-    func setSubviews() {
+    func makeSubviews() {
         addSubview(weatherMainTableView)
     }
 
-    func setConstraints() {
+    func makeConstraints() {
         setWeatherMainTableViewConstraint()
     }
 }
