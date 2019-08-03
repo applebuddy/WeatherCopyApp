@@ -18,6 +18,8 @@ struct CellIdentifier {
     static let weatherSeparatorTableCell: String = "weatherSeparatorTableViewCell"
 }
 
+let weekInfoStackViewCount = 9
+
 enum WeatherInfoTableViewSection: Int {
     case mainSection = 0
 }
@@ -50,9 +52,14 @@ struct WeatherCellHeight {
     static let dayInfoTableCell: CGFloat = 120
     static let infoTableHeaderCell: CGFloat = 150
     static let dayInfoCollectionCell: CGFloat = 120
-    static let weekInfoTableViewCell: CGFloat = 35
+    static let subInfoTableViewCell: CGFloat = 35
     static let todayInfoTableViewCell: CGFloat = 60
     static let todayInfoTableHeaderView: CGFloat = 60
+}
+
+struct WeatherViewHeight {
+    static let titleViewHeight: CGFloat = 100
+    static let subInfoTableView: CGFloat = UIScreen.main.bounds.size.height - (WeatherViewHeight.titleViewHeight + WeatherCellHeight.todayInfoTableHeaderView + WeatherCellHeight.dayInfoCollectionCell)
 }
 
 struct CommonInset {
@@ -69,10 +76,3 @@ struct CommonColor {
 enum WeatherSection: Int {
     case mainSection = 0
 }
-
-struct WeatherViewHeight {
-    static let titleViewHeight: CGFloat = 100
-    static let weekInfoTableView: CGFloat = 300
-}
-
-let weekInfoStackViewCount = 9

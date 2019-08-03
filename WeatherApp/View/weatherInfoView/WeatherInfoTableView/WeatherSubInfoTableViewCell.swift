@@ -9,7 +9,7 @@
 import UIKit
 
 /// 9일 간 주간 날씨정보 테이블뷰 셀
-class WeatherWeekInfoTableViewCell: UITableViewCell {
+class WeatherSubInfoTableViewCell: UITableViewCell {
     let weatherSubInfoTableView: WeatherSubInfoTableView = {
         let weekInfoTableView = WeatherSubInfoTableView(frame: CGRect.zero, style: .grouped)
         return weekInfoTableView
@@ -39,7 +39,7 @@ class WeatherWeekInfoTableViewCell: UITableViewCell {
     }
 }
 
-extension WeatherWeekInfoTableViewCell: UIViewSettingProtocol {
+extension WeatherSubInfoTableViewCell: UIViewSettingProtocol {
     func setSubviews() {
         addSubview(weatherSubInfoTableView)
     }
@@ -55,7 +55,7 @@ extension WeatherWeekInfoTableViewCell: UIViewSettingProtocol {
     }
 }
 
-extension WeatherWeekInfoTableViewCell: CellSettingProtocol {
+extension WeatherSubInfoTableViewCell: CellSettingProtocol {
     func registerCell() {
         weatherSubInfoTableView.register(WeekInfoTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weekInfoTableCell)
         weatherSubInfoTableView.register(TodayInfoTableViewCell.self, forCellReuseIdentifier: CellIdentifier.todayInfoTableCell)
@@ -64,7 +64,7 @@ extension WeatherWeekInfoTableViewCell: CellSettingProtocol {
 
 // MARK: - TableViewDelegate
 
-extension WeatherWeekInfoTableViewCell: UITableViewDelegate {
+extension WeatherSubInfoTableViewCell: UITableViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         if scrollView.contentOffset.y <= 0 {
             scrollView.contentOffset.y = CGFloat.zero
@@ -75,7 +75,7 @@ extension WeatherWeekInfoTableViewCell: UITableViewDelegate {
         guard let sectionIndex = WeatherSubInfoTableViewSection(rawValue: indexPath.section) else { return CGFloat.leastNormalMagnitude }
         switch sectionIndex {
         case .weekInfoSection:
-            return WeatherCellHeight.weekInfoTableViewCell
+            return WeatherCellHeight.subInfoTableViewCell
         case .todayInfoSection:
             return WeatherCellHeight.todayInfoTableViewCell
         }
@@ -114,7 +114,7 @@ extension WeatherWeekInfoTableViewCell: UITableViewDelegate {
     }
 }
 
-extension WeatherWeekInfoTableViewCell: UITableViewDataSource {
+extension WeatherSubInfoTableViewCell: UITableViewDataSource {
     func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let sectionIndex = WeatherSubInfoTableViewSection(rawValue: section) else { return 0 }
         switch sectionIndex {

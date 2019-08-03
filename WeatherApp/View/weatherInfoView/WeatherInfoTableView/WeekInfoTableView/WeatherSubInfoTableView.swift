@@ -38,7 +38,7 @@ extension WeatherSubInfoTableView: UIViewSettingProtocol {
             self.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor),
             self.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor),
             self.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
-            self.heightAnchor.constraint(equalToConstant: WeatherViewHeight.weekInfoTableView),
+            self.heightAnchor.constraint(equalToConstant: WeatherViewHeight.subInfoTableView),
         ])
     }
 }
