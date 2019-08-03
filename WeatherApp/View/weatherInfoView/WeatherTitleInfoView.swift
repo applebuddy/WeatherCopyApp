@@ -8,7 +8,8 @@
 
 import UIKit
 
-class WeatherInfoView: UIView {
+/// WeatherInfoViewController 메인타이틀 서브정보 뷰
+class WeatherTitleInfoView: UIView {
     let weatherTitleView: WeatherTitleView = {
         let weatherTitleView = WeatherTitleView()
         weatherTitleView.backgroundColor = .black
@@ -52,7 +53,7 @@ class WeatherInfoView: UIView {
     }
 }
 
-extension WeatherInfoView: UIViewSettingProtocol {
+extension WeatherTitleInfoView: UIViewSettingProtocol {
     func setSubviews() {
         addSubview(weatherTitleView)
         addSubview(weatherInfoTableView)
