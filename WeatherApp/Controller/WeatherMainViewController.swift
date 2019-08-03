@@ -25,11 +25,37 @@ class WeatherMainViewController: UIViewController {
         super.loadView()
         view = weatherMainView
     }
+
+    func makeWeatherMainTableViewEvent(_ scrollView: UIScrollView, offsetY _: CGFloat) {
+        if scrollView.contentOffset.y >= 0 {
+            scrollView.contentOffset.y = 0
+        }
+    }
 }
 
 extension WeatherMainViewController: UITableViewDelegate {
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        makeWeatherMainTableViewEvent(scrollView, offsetY: scrollView.contentOffset.y)
+    }
+
+    func tableView(_: UITableView, viewForHeaderInSection _: Int) -> UIView? {
+        let headerView = WeatherSeparatorView()
+        headerView.backgroundColor = .white
+        return headerView
+    }
+
+    func tableView(_: UITableView, viewForFooterInSection _: Int) -> UIView? {
+        let footerView = WeatherMainTableFooterView()
+        footerView.backgroundColor = CommonColor.weatherMainTableFooterViewBackgronud
+        return footerView
+    }
+
     func tableView(_: UITableView, heightForRowAt _: IndexPath) -> CGFloat {
-        return 100
+        return WeatherCellHeight.MainTableViewCell
+    }
+
+    func tableView(_: UITableView, heightForFooterInSection _: Int) -> CGFloat {
+        return WeatherViewHeight.weatherMainBottomView
     }
 
     func tableView(_: UITableView, didSelectRowAt _: IndexPath) {

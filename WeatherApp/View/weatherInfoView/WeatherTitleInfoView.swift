@@ -24,8 +24,8 @@ class WeatherTitleInfoView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .white
-        setSubviews()
-        setConstraints()
+        makeSubviews()
+        makeConstraints()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -54,12 +54,12 @@ class WeatherTitleInfoView: UIView {
 }
 
 extension WeatherTitleInfoView: UIViewSettingProtocol {
-    func setSubviews() {
+    func makeSubviews() {
         addSubview(weatherTitleView)
         addSubview(weatherInfoTableView)
     }
 
-    func setConstraints() {
+    func makeConstraints() {
         setWeatherTitleViewContraint()
         setWeatherTableViewConstraint()
     }

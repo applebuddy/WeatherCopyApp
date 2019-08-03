@@ -36,8 +36,8 @@ class TodayInfoTableHeaderView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .white
-        setSubviews()
-        setConstraints()
+        makeSubviews()
+        makeConstraints()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -47,12 +47,12 @@ class TodayInfoTableHeaderView: UIView {
 }
 
 extension TodayInfoTableHeaderView: UIViewSettingProtocol {
-    func setSubviews() {
+    func makeSubviews() {
         addSubview(headerBottomBorderView)
         addSubview(todayInfoTextView)
     }
 
-    func setConstraints() {
+    func makeConstraints() {
         headerBottomBorderView.activateAnchors()
         NSLayoutConstraint.activate([
             headerBottomBorderView.heightAnchor.constraint(equalToConstant: 1),

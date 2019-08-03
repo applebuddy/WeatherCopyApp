@@ -18,9 +18,9 @@ class WeatherMainView: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = .black
-        setSubviews()
-        setConstraints()
+        backgroundColor = CommonColor.weatherMainViewBackground
+        makeSubviews()
+        makeConstraints()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -31,19 +31,19 @@ class WeatherMainView: UIView {
         weatherMainTableView.activateAnchors()
         NSLayoutConstraint.activate([
             weatherMainTableView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
-            weatherMainTableView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
             weatherMainTableView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor),
             weatherMainTableView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor),
+            weatherMainTableView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
         ])
     }
 }
 
 extension WeatherMainView: UIViewSettingProtocol {
-    func setSubviews() {
+    func makeSubviews() {
         addSubview(weatherMainTableView)
     }
 
-    func setConstraints() {
+    func makeConstraints() {
         setWeatherMainTableViewConstraint()
     }
 }

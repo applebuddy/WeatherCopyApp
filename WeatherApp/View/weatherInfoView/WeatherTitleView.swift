@@ -32,8 +32,8 @@ class WeatherTitleView: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setSubviews()
-        setConstraints()
+        makeSubviews()
+        makeConstraints()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -42,12 +42,12 @@ class WeatherTitleView: UIView {
 }
 
 extension WeatherTitleView: UIViewSettingProtocol {
-    func setSubviews() {
+    func makeSubviews() {
         addSubview(weatherTitleLabel)
         addSubview(weatherSubTitleLabel)
     }
 
-    func setConstraints() {
+    func makeConstraints() {
         weatherTitleLabel.activateAnchors()
         NSLayoutConstraint.activate([
             weatherTitleLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 20),

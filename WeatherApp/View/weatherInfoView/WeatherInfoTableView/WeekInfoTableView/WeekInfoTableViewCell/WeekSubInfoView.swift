@@ -56,8 +56,8 @@ class WeekSubInfoView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .white
-        setSubviews()
-        setConstraints()
+        makeSubviews()
+        makeConstraints()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -67,12 +67,12 @@ class WeekSubInfoView: UIView {
 }
 
 extension WeekSubInfoView: UIViewSettingProtocol {
-    func setSubviews() {
+    func makeSubviews() {
         setSubWeekInfoStackView()
         addSubview(subWeekInfoStackView)
     }
 
-    func setConstraints() {
+    func makeConstraints() {
         subWeekInfoStackView.activateAnchors()
         NSLayoutConstraint.activate([
             subWeekInfoStackView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: CommonInset.topInset / 2),

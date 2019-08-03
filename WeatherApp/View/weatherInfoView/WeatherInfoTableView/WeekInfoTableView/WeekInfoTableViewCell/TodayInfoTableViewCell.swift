@@ -70,8 +70,8 @@ class TodayInfoTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = .white
-        setSubviews()
-        setConstraints()
+        makeSubviews()
+        makeConstraints()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -100,12 +100,12 @@ class TodayInfoTableViewCell: UITableViewCell {
 }
 
 extension TodayInfoTableViewCell: UIViewSettingProtocol {
-    func setSubviews() {
+    func makeSubviews() {
         setTodayInfoStackView()
         addSubview(cellBottomBorderView)
     }
 
-    func setConstraints() {
+    func makeConstraints() {
         cellBottomBorderView.activateAnchors()
         NSLayoutConstraint.activate([
             cellBottomBorderView.heightAnchor.constraint(equalToConstant: 1),

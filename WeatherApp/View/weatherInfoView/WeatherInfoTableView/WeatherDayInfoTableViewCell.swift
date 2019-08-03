@@ -27,8 +27,8 @@ class WeatherDayInfoTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = .blue
-        setSubviews()
-        setConstraints()
+        makeSubviews()
+        makeConstraints()
 
         dayInfoCollectionView.register(DayInfoCollectionViewCell.self, forCellWithReuseIdentifier: CellIdentifier.dayInfoCollectionCell)
         dayInfoCollectionView.delegate = self
@@ -80,11 +80,11 @@ extension WeatherInfoViewController: CellSettingProtocol {
 }
 
 extension WeatherDayInfoTableViewCell: UIViewSettingProtocol {
-    func setSubviews() {
+    func makeSubviews() {
         addSubview(dayInfoCollectionView)
     }
 
-    func setConstraints() {
+    func makeConstraints() {
         dayInfoCollectionView.activateAnchors()
         NSLayoutConstraint.activate([
             dayInfoCollectionView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 0),

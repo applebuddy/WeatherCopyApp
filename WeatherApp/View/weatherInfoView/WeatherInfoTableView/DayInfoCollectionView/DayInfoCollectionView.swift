@@ -22,7 +22,7 @@ class DayInfoCollectionView: UICollectionView {
 }
 
 extension DayInfoCollectionView: UIViewSettingProtocol {
-    func setSubviews() {}
+    func makeSubviews() {}
 
-    func setConstraints() {}
+    func makeConstraints() {}
 }

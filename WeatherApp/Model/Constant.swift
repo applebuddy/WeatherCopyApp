@@ -8,7 +8,8 @@
 
 import UIKit
 
-// MARK - Cell Constants
+// MARK: - Cell Constants
+
 /// * WeatherApp 셀 식별자
 struct CellIdentifier {
     static let weatherDayInfoTableCell: String = "weatherDayInfoTableViewCell"
@@ -39,6 +40,7 @@ enum WeatherSubInfoTableViewSection: Int {
 }
 
 // MARK: TableView Row Index
+
 /// * WeatherInfoTableView Row Index
 enum WeatherInfoTableViewRow: Int {
     case dayInfoRow = 0
@@ -57,6 +59,7 @@ enum TodayInfoTableViewRow: Int {
 
 /// * View Heights
 struct WeatherViewHeight {
+    static let weatherMainBottomView: CGFloat = 100
     static let titleViewHeight: CGFloat = 100
     static let subInfoTableView: CGFloat = UIScreen.main.bounds.size.height - (WeatherViewHeight.titleViewHeight + WeatherViewHeight.todayInfoTableHeaderView + WeatherCellHeight.dayInfoCollectionCell)
     static let todayInfoTableHeaderView: CGFloat = 60
@@ -69,6 +72,7 @@ struct WeatherCellHeight {
     static let dayInfoCollectionCell: CGFloat = 120
     static let subInfoTableViewCell: CGFloat = 35
     static let todayInfoTableViewCell: CGFloat = 60
+    static let MainTableViewCell: CGFloat = 100
 }
 
 /// * TableInfoCell Title Text
@@ -79,6 +83,10 @@ struct TodayInfoCellData {
 
 // MARK: - Common Data
 
+struct CommonSize {
+    static let defaultButtonSize = CGSize(width: 30, height: 30)
+}
+
 struct CommonInset {
     static let leftInset: CGFloat = 20
     static let rightInset: CGFloat = 20
@@ -88,5 +96,7 @@ struct CommonInset {
 
 struct CommonColor {
     static let separator = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+    static let weatherMainViewBackground = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+    static let weatherMainTableFooterViewBackgronud = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+    static let weatherInfoViewBackground = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
 }
-

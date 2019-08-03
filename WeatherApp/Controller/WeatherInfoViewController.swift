@@ -51,13 +51,13 @@ class WeatherInfoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        view.backgroundColor = .white
+        view.backgroundColor = CommonColor.weatherInfoViewBackground
         registerCell()
         setInfoViewController()
         setButtonTarget()
         setToolBarButtonItem()
         setTableHeaderView()
-        setConstraints()
+        makeConstraints()
     }
 
     override func loadView() {
@@ -92,7 +92,7 @@ class WeatherInfoViewController: UIViewController {
         hidesBottomBarWhenPushed = false
     }
 
-    func setWeatherInfoTableHeaderViewAnimation(_ scrollView: UIScrollView, offsetY _: CGFloat) {
+    func makeWeatherInfoTableHeaderViewScrollEvent(_ scrollView: UIScrollView, offsetY _: CGFloat) {
         if scrollView.contentOffset.y <= 0 {
             scrollView.contentOffset.y = CGFloat.zero
         }
@@ -122,7 +122,7 @@ class WeatherInfoViewController: UIViewController {
 extension WeatherInfoViewController: UITableViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         print(scrollView.contentOffset.y)
-        setWeatherInfoTableHeaderViewAnimation(scrollView, offsetY: scrollView.contentOffset.y)
+        makeWeatherInfoTableHeaderViewScrollEvent(scrollView, offsetY: scrollView.contentOffset.y)
     }
 
     func tableView(_: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -176,17 +176,17 @@ extension WeatherInfoViewController: UITableViewDataSource {
 }
 
 extension WeatherInfoViewController: UIViewSettingProtocol {
-    func setSubviews() {}
+    func makeSubviews() {}
 
-    func setConstraints() {
+    func makeConstraints() {
         linkBarButton.activateAnchors()
         NSLayoutConstraint.activate([
-            linkBarButton.heightAnchor.constraint(equalToConstant: 30),
+            linkBarButton.heightAnchor.constraint(equalToConstant: CommonSize.defaultButtonSize.height),
             linkBarButton.widthAnchor.constraint(equalTo: linkBarButton.heightAnchor, multiplier: 1.0),
         ])
         listBarButton.activateAnchors()
         NSLayoutConstraint.activate([
-            listBarButton.heightAnchor.constraint(equalToConstant: 30),
+            listBarButton.heightAnchor.constraint(equalToConstant: CommonSize.defaultButtonSize.height),
             listBarButton.widthAnchor.constraint(equalTo: listBarButton.heightAnchor, multiplier: 1.0),
         ])
     }

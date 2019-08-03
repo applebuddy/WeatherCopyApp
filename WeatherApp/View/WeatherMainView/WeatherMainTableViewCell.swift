@@ -45,8 +45,8 @@ class WeatherMainTableViewCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = .white
-        setSubviews()
-        setConstraints()
+        makeSubviews()
+        makeConstraints()
     }
 
     required init?(coder _: NSCoder) {
@@ -60,14 +60,14 @@ class WeatherMainTableViewCell: UITableViewCell {
 }
 
 extension WeatherMainTableViewCell: UIViewSettingProtocol {
-    func setSubviews() {
+    func makeSubviews() {
         addSubview(nowTimeLabel)
         addSubview(mainIndicatorImageView)
         addSubview(cityTitleLabel)
         addSubview(cityCelsiusLabel)
     }
 
-    func setConstraints() {
+    func makeConstraints() {
         nowTimeLabel.activateAnchors()
         NSLayoutConstraint.activate([
             nowTimeLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: CommonInset.topInset * 2),
@@ -90,14 +90,12 @@ extension WeatherMainTableViewCell: UIViewSettingProtocol {
             cityTitleLabel.leftAnchor.constraint(equalTo: nowTimeLabel.leftAnchor),
             cityTitleLabel.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.7),
         ])
-        
+
         cityCelsiusLabel.activateAnchors()
         NSLayoutConstraint.activate([
-            cityCelsiusLabel.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -CommonInset.rightInset/2),
-            cityCelsiusLabel.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor)
-            
-            ])
-        
-        
+            cityCelsiusLabel.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -CommonInset.rightInset / 2),
+            cityCelsiusLabel.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor),
+
+        ])
     }
 }

@@ -50,9 +50,9 @@ class DayInfoCollectionViewCell: UICollectionViewCell {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        setSubviews()
+        makeSubviews()
 
-        setConstraints()
+        makeConstraints()
         backgroundColor = .red
     }
 
@@ -74,12 +74,12 @@ class DayInfoCollectionViewCell: UICollectionViewCell {
 }
 
 extension DayInfoCollectionViewCell: UIViewSettingProtocol {
-    func setSubviews() {
+    func makeSubviews() {
         addSubview(cellStackView)
         setStackView()
     }
 
-    func setConstraints() {
+    func makeConstraints() {
         cellStackView.activateAnchors()
 
         cellStackView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true

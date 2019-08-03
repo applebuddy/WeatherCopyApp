@@ -12,7 +12,7 @@ import UIKit
 class WeatherSubInfoTableView: UITableView {
     override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
-        setConstraints()
+        makeConstraints()
         setTableView()
     }
 
@@ -29,9 +29,9 @@ class WeatherSubInfoTableView: UITableView {
 }
 
 extension WeatherSubInfoTableView: UIViewSettingProtocol {
-    func setSubviews() {}
+    func makeSubviews() {}
 
-    func setConstraints() {
+    func makeConstraints() {
         activateAnchors()
         NSLayoutConstraint.activate([
             self.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),

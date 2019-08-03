@@ -63,8 +63,8 @@ class WeatherInfoTableHeaderView: UIView {
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .black
-        setSubviews()
-        setConstraints()
+        makeSubviews()
+        makeConstraints()
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -85,7 +85,7 @@ class WeatherInfoTableHeaderView: UIView {
 }
 
 extension WeatherInfoTableHeaderView: UIViewSettingProtocol {
-    func setSubviews() {
+    func makeSubviews() {
         addSubview(mainCelsiusLabel)
         addSubview(minCelsiusLabel)
         addSubview(maxCelsiusLabel)
@@ -93,7 +93,7 @@ extension WeatherInfoTableHeaderView: UIViewSettingProtocol {
         addSubview(subDateLabel)
     }
 
-    func setConstraints() {
+    func makeConstraints() {
         mainCelsiusLabel.activateAnchors()
         NSLayoutConstraint.activate([
             mainCelsiusLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor),

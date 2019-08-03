@@ -21,7 +21,7 @@ class WeatherSeparatorView: UIView {
 }
 
 extension WeatherSeparatorView: UIViewSettingProtocol {
-    func setSubviews() {}
+    func makeSubviews() {}
 
-    func setConstraints() {}
+    func makeConstraints() {}
 }

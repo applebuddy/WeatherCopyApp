@@ -17,8 +17,8 @@ class WeatherSubInfoTableViewCell: UITableViewCell {
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        setSubviews()
-        setConstraints()
+        makeSubviews()
+        makeConstraints()
         registerCell()
         weatherSubInfoTableView.delegate = self
         weatherSubInfoTableView.dataSource = self
@@ -40,11 +40,11 @@ class WeatherSubInfoTableViewCell: UITableViewCell {
 }
 
 extension WeatherSubInfoTableViewCell: UIViewSettingProtocol {
-    func setSubviews() {
+    func makeSubviews() {
         addSubview(weatherSubInfoTableView)
     }
 
-    func setConstraints() {
+    func makeConstraints() {
         weatherSubInfoTableView.activateAnchors()
         NSLayoutConstraint.activate([
             weatherSubInfoTableView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 0),
