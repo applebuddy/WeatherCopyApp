@@ -9,6 +9,36 @@
 import UIKit
 
 class WeatherMainTableViewCell: UITableViewCell {
+    let nowTimeLabel: UILabel = {
+        let nowTimeLabel = UILabel()
+        nowTimeLabel.text = "오후 4:21"
+        nowTimeLabel.textColor = .white
+        nowTimeLabel.font = .systemFont(ofSize: 20)
+        return nowTimeLabel
+    }()
+
+    let cityTitleLabel: UILabel = {
+        let cityTitleLabel = UILabel()
+        cityTitleLabel.text = "광명시"
+        cityTitleLabel.textColor = .white
+        cityTitleLabel.font = .boldSystemFont(ofSize: 20)
+        return cityTitleLabel
+    }()
+
+    let cityCelsiusLabel: UILabel = {
+        let cityCelsiusLabel = UILabel()
+        cityCelsiusLabel.text = "34º"
+        cityCelsiusLabel.textColor = .white
+        cityCelsiusLabel.font = .boldSystemFont(ofSize: 30)
+        return cityCelsiusLabel
+    }()
+
+    let mainIndicatorImageView: UIImageView = {
+        let mainIndicatorImageView = UIImageView()
+        mainIndicatorImageView.image = #imageLiteral(resourceName: "mainIndicator")
+        return mainIndicatorImageView
+    }()
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         setSubviews()
@@ -27,15 +57,14 @@ class WeatherMainTableViewCell: UITableViewCell {
 }
 
 extension WeatherMainTableViewCell: UIViewSettingProtocol {
-    func setSubviews() {}
+    func setSubviews() {
+        addSubview(nowTimeLabel)
+        addSubview(cityTitleLabel)
+        addSubview(cityCelsiusLabel)
+        addSubview(mainIndicatorImageView)
+    }
 
     func setConstraints() {
-//        translatesAutoresizingMaskIntoConstraints = false
-//        NSLayoutConstraint.activate([
-//            self.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 0),
-//            self.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 0),
-//            self.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: 0),
-//            self.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: 0)
-//            ])
+//        self.nowTimeLabel.activateAnchors()
     }
 }

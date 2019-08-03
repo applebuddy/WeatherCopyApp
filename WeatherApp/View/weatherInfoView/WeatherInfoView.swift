@@ -11,7 +11,7 @@ import UIKit
 class WeatherInfoView: UIView {
     let weatherTitleView: WeatherTitleView = {
         let weatherTitleView = WeatherTitleView()
-        weatherTitleView.backgroundColor = UIColor.black
+        weatherTitleView.backgroundColor = .black
         return weatherTitleView
     }()
 
@@ -22,7 +22,7 @@ class WeatherInfoView: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = UIColor.white
+        backgroundColor = .white
         setSubviews()
         setConstraints()
     }
@@ -32,7 +32,7 @@ class WeatherInfoView: UIView {
     }
 
     func setWeatherTableViewConstraint() {
-        weatherInfoTableView.translatesAutoresizingMaskIntoConstraints = false
+        weatherInfoTableView.activateAnchors()
         NSLayoutConstraint.activate([
             weatherInfoTableView.topAnchor.constraint(equalTo: weatherTitleView.bottomAnchor),
             weatherInfoTableView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
@@ -42,7 +42,7 @@ class WeatherInfoView: UIView {
     }
 
     func setWeatherTitleViewContraint() {
-        weatherTitleView.translatesAutoresizingMaskIntoConstraints = false
+        weatherTitleView.activateAnchors()
         NSLayoutConstraint.activate([
             weatherTitleView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 0),
             weatherTitleView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 0),

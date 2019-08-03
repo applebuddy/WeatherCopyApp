@@ -22,7 +22,7 @@ class TodayInfoTableHeaderView: UIView {
         )
         todayInfoTextView.isEditable = false
         todayInfoTextView.isSelectable = false
-        todayInfoTextView.font = UIFont.systemFont(ofSize: 15)
+        todayInfoTextView.font = .systemFont(ofSize: 15)
         todayInfoTextView.contentMode = .scaleToFill
         return todayInfoTextView
     }()
@@ -35,7 +35,7 @@ class TodayInfoTableHeaderView: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = UIColor.white
+        backgroundColor = .white
         setSubviews()
         setConstraints()
     }
@@ -53,7 +53,7 @@ extension TodayInfoTableHeaderView: UIViewSettingProtocol {
     }
 
     func setConstraints() {
-        headerBottomBorderView.translatesAutoresizingMaskIntoConstraints = false
+        headerBottomBorderView.activateAnchors()
         NSLayoutConstraint.activate([
             headerBottomBorderView.heightAnchor.constraint(equalToConstant: 1),
             headerBottomBorderView.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width),
@@ -61,7 +61,7 @@ extension TodayInfoTableHeaderView: UIViewSettingProtocol {
             headerBottomBorderView.centerXAnchor.constraint(equalToSystemSpacingAfter: safeAreaLayoutGuide.centerXAnchor, multiplier: 1),
         ])
 
-        todayInfoTextView.translatesAutoresizingMaskIntoConstraints = false
+        todayInfoTextView.activateAnchors()
         NSLayoutConstraint.activate([
             todayInfoTextView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: CommonInset.leftInset),
             todayInfoTextView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: CommonInset.topInset),

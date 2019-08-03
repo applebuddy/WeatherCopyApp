@@ -19,7 +19,7 @@ class WeatherInfoTableView: UITableView {
     }
 
     func setTableView() {
-        backgroundColor = UIColor.white
+        backgroundColor = .white
         allowsSelection = false
         allowsMultipleSelection = false
         separatorStyle = .none

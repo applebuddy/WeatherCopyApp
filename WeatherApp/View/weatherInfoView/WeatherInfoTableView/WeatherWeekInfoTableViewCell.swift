@@ -35,7 +35,7 @@ class WeatherWeekInfoTableViewCell: UITableViewCell {
     }
 
     func setCellData() {
-        backgroundColor = UIColor.black
+        backgroundColor = .black
     }
 }
 
@@ -45,7 +45,7 @@ extension WeatherWeekInfoTableViewCell: UIViewSettingProtocol {
     }
 
     func setConstraints() {
-        weatherSubInfoTableView.translatesAutoresizingMaskIntoConstraints = false
+        weatherSubInfoTableView.activateAnchors()
         NSLayoutConstraint.activate([
             weatherSubInfoTableView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 0),
             weatherSubInfoTableView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: 0),

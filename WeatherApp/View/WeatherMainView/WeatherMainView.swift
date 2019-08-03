@@ -16,7 +16,7 @@ class WeatherMainView: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = UIColor.black
+        backgroundColor = .black
         setSubviews()
         setConstraints()
     }
@@ -26,7 +26,7 @@ class WeatherMainView: UIView {
     }
 
     func setWeatherMainTableViewConstraint() {
-        weatherMainTableView.translatesAutoresizingMaskIntoConstraints = false
+        weatherMainTableView.activateAnchors()
         NSLayoutConstraint.activate([
             weatherMainTableView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
             weatherMainTableView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),

@@ -32,7 +32,7 @@ extension WeatherSeparatorTableViewCell: UIViewSettingProtocol {
     }
 
     func setConstraints() {
-        separatorView.translatesAutoresizingMaskIntoConstraints = false
+        separatorView.activateAnchors()
         NSLayoutConstraint.activate([
             separatorView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
             separatorView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),

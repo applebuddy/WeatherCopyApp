@@ -20,7 +20,7 @@ class WeatherInfoViewController: UIViewController {
 
     let linkBarButton: UIButton = {
         let linkBarButton = UIButton(type: .custom)
-        linkBarButton.setImage(#imageLiteral(resourceName: "cloud"), for: .normal)
+        linkBarButton.setImage(#imageLiteral(resourceName: "weatherLink"), for: .normal)
         return linkBarButton
     }()
 
@@ -32,8 +32,8 @@ class WeatherInfoViewController: UIViewController {
 
     let presentViewButton: UIButton = {
         let presentViewButton = UIButton(type: .custom)
-        presentViewButton.setTitleColor(UIColor.lightGray, for: .normal)
-        presentViewButton.backgroundColor = UIColor.white
+        presentViewButton.setTitleColor(.lightGray, for: .normal)
+        presentViewButton.backgroundColor = .white
         return presentViewButton
     }()
 
@@ -51,7 +51,7 @@ class WeatherInfoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        view.backgroundColor = UIColor.white
+        view.backgroundColor = .white
         registerCell()
         setInfoViewController()
         setButtonTarget()
@@ -174,12 +174,12 @@ extension WeatherInfoViewController: UIViewSettingProtocol {
     func setSubviews() {}
 
     func setConstraints() {
-        linkBarButton.translatesAutoresizingMaskIntoConstraints = false
+        linkBarButton.activateAnchors()
         NSLayoutConstraint.activate([
             linkBarButton.heightAnchor.constraint(equalToConstant: 30),
             linkBarButton.widthAnchor.constraint(equalTo: linkBarButton.heightAnchor, multiplier: 1.0),
         ])
-        listBarButton.translatesAutoresizingMaskIntoConstraints = false
+        listBarButton.activateAnchors()
         NSLayoutConstraint.activate([
             listBarButton.heightAnchor.constraint(equalToConstant: 30),
             listBarButton.widthAnchor.constraint(equalTo: listBarButton.heightAnchor, multiplier: 1.0),

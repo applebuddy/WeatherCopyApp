@@ -17,7 +17,7 @@ class MainNavigationController: UINavigationController {
 
     func setToolBar() {
         toolbar.barStyle = .blackTranslucent
-        toolbar.backgroundColor = UIColor.black
+        toolbar.backgroundColor = .black
     }
 
     func setNavigationBar() {

@@ -13,9 +13,9 @@ class WeatherTitleView: UIView {
     let weatherTitleLabel: UILabel = {
         let weatherTitleLabel = UILabel()
         weatherTitleLabel.text = "광명시"
-        weatherTitleLabel.font = UIFont.systemFont(ofSize: 30)
+        weatherTitleLabel.font = .systemFont(ofSize: 30)
         weatherTitleLabel.textAlignment = .center
-        weatherTitleLabel.textColor = UIColor.white
+        weatherTitleLabel.textColor = .white
         weatherTitleLabel.adjustsFontSizeToFitWidth = true
         return weatherTitleLabel
     }()
@@ -23,9 +23,9 @@ class WeatherTitleView: UIView {
     let weatherSubTitleLabel: UILabel = {
         let weatherSubTitleLabel = UILabel()
         weatherSubTitleLabel.text = "흐림"
-        weatherSubTitleLabel.font = UIFont.systemFont(ofSize: 15)
+        weatherSubTitleLabel.font = .systemFont(ofSize: 15)
         weatherSubTitleLabel.textAlignment = .center
-        weatherSubTitleLabel.textColor = UIColor.white
+        weatherSubTitleLabel.textColor = .white
         return weatherSubTitleLabel
     }()
 
@@ -47,7 +47,7 @@ extension WeatherTitleView: UIViewSettingProtocol {
     }
 
     func setConstraints() {
-        weatherTitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        weatherTitleLabel.activateAnchors()
         NSLayoutConstraint.activate([
             weatherTitleLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 20),
             weatherTitleLabel.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 30),
@@ -56,7 +56,7 @@ extension WeatherTitleView: UIViewSettingProtocol {
             weatherTitleLabel.heightAnchor.constraint(equalToConstant: 30),
         ])
 
-        weatherSubTitleLabel.translatesAutoresizingMaskIntoConstraints = false
+        weatherSubTitleLabel.activateAnchors()
         NSLayoutConstraint.activate([
             weatherSubTitleLabel.topAnchor.constraint(equalTo: weatherTitleLabel.bottomAnchor, constant: 10),
             weatherSubTitleLabel.leftAnchor.constraint(equalTo: weatherTitleLabel.leftAnchor),

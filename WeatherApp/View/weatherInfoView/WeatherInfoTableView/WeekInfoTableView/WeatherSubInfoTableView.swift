@@ -21,7 +21,7 @@ class WeatherSubInfoTableView: UITableView {
     }
 
     func setTableView() {
-        backgroundColor = UIColor.white
+        backgroundColor = .white
         allowsSelection = false
         allowsMultipleSelection = false
         separatorStyle = .none
@@ -32,7 +32,7 @@ extension WeatherSubInfoTableView: UIViewSettingProtocol {
     func setSubviews() {}
 
     func setConstraints() {
-        translatesAutoresizingMaskIntoConstraints = false
+        activateAnchors()
         NSLayoutConstraint.activate([
             self.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
             self.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor),

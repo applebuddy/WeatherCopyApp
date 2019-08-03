@@ -20,13 +20,13 @@ class WeatherDayInfoTableViewCell: UITableViewCell {
         // ✭ 컬렉션뷰의 frame을 CGRect.zero 설정하면, cellForItemAt delegate 메서드가 호출되지 않을 수 있다.
         let dayInfoCollectionView = DayInfoCollectionView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: 0), collectionViewLayout: layout)
         dayInfoCollectionView.isScrollEnabled = true
-        dayInfoCollectionView.backgroundColor = UIColor.lightGray
+        dayInfoCollectionView.backgroundColor = .lightGray
         return dayInfoCollectionView
     }()
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-        backgroundColor = UIColor.blue
+        backgroundColor = .blue
         setSubviews()
         setConstraints()
 
@@ -46,7 +46,7 @@ class WeatherDayInfoTableViewCell: UITableViewCell {
     }
 
     func setCellData() {
-        backgroundColor = UIColor.lightGray
+        backgroundColor = .lightGray
     }
 }
 
@@ -85,7 +85,7 @@ extension WeatherDayInfoTableViewCell: UIViewSettingProtocol {
     }
 
     func setConstraints() {
-        dayInfoCollectionView.translatesAutoresizingMaskIntoConstraints = false
+        dayInfoCollectionView.activateAnchors()
         NSLayoutConstraint.activate([
             dayInfoCollectionView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 0),
             dayInfoCollectionView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: 0),

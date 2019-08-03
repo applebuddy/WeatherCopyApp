@@ -38,7 +38,7 @@ extension WeekInfoTableViewCell: UIViewSettingProtocol {
     }
 
     func setConstraints() {
-        weekSubInfoView.translatesAutoresizingMaskIntoConstraints = false
+        weekSubInfoView.activateAnchors()
         NSLayoutConstraint.activate([
             weekSubInfoView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 0),
             weekSubInfoView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: 0),
