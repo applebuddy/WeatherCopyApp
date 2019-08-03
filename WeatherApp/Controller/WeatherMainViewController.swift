@@ -9,6 +9,8 @@
 import UIKit
 
 class WeatherMainViewController: UIViewController {
+    // MARK: - UI
+
     let weatherCitySearchViewController: WeatherCitySearchViewController = {
         let weatherCitySearchViewController = WeatherCitySearchViewController()
         return weatherCitySearchViewController
@@ -19,11 +21,12 @@ class WeatherMainViewController: UIViewController {
         return weatherMainView
     }()
 
+    // MARK: - Life Cycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        setMainViewController()
         registerCell()
-        weatherMainView.weatherMainTableView.delegate = self
-        weatherMainView.weatherMainTableView.dataSource = self
     }
 
     override func loadView() {
@@ -31,7 +34,12 @@ class WeatherMainViewController: UIViewController {
         view = weatherMainView
     }
 
-    // MARK: - Set MEthod
+    // MARK: - Set Method
+
+    func setMainViewController() {
+        weatherMainView.weatherMainTableView.delegate = self
+        weatherMainView.weatherMainTableView.dataSource = self
+    }
 
     func setFooterViewButtonTarget(footerView: WeatherMainTableFooterView) {
         footerView.celsiusToggleButton.addTarget(self, action: #selector(celsiusToggleButtonPressed(_:)), for: .touchUpInside)
@@ -64,6 +72,8 @@ class WeatherMainViewController: UIViewController {
         UIApplication.shared.open(url as URL)
     }
 }
+
+// MARK: - UITableView Protocol
 
 extension WeatherMainViewController: UITableViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {

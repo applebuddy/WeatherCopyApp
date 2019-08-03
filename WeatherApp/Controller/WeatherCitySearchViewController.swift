@@ -9,14 +9,18 @@
 import UIKit
 
 class WeatherCitySearchViewController: UIViewController {
+    // MARK: - UI
+
     let weatherCitySearchView: WeatherCitySearchView = {
         let weatherCitySearchView = WeatherCitySearchView()
         return weatherCitySearchView
     }()
 
+    // MARK: - Life Cycle
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        setCitySearchViewController()
         setButtonTarget()
     }
 
@@ -25,11 +29,25 @@ class WeatherCitySearchViewController: UIViewController {
         view = weatherCitySearchView
     }
 
+    override func viewWillAppear(_: Bool) {
+        super.viewWillAppear(true)
+        weatherCitySearchView.citySearchBar.becomeFirstResponder()
+    }
+
+    // MARK: - Set Method
+
+    func setCitySearchViewController() {
+        view.backgroundColor = .black
+    }
+
     func setButtonTarget() {
         weatherCitySearchView.backToMainButton.addTarget(self, action: #selector(backToMainButtonPressed(_:)), for: .touchUpInside)
     }
 
+    // MARK: - Button Event
+
     @objc func backToMainButtonPressed(_: UIButton) {
+        view.endEditing(true)
         dismiss(animated: true, completion: nil)
     }
 }
