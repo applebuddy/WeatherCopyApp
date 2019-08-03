@@ -41,6 +41,11 @@ enum WeatherSubInfoTableViewSection: Int {
     case todayInfoSection = 1
 }
 
+struct TodayInfoCellData {
+    static let cellLeftLabelText = ["일출", "비 올 확률", "바람", "강수량", "가시거리"]
+    static let cellRightLabelText = ["일몰", "습도", "체감", "기압", "자외선 지수"]
+}
+
 struct WeatherCellHeight {
     static let dayInfoTableCell: CGFloat = 120
     static let infoTableHeaderCell: CGFloat = 150

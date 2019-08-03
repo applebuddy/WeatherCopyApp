@@ -136,21 +136,25 @@ extension WeatherWeekInfoTableViewCell: UITableViewDataSource {
         case .todayInfoSection:
             guard let todayInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.todayInfoTableCell, for: indexPath) as? TodayInfoTableViewCell,
                 let todayInfoRowIndex = TodayInfoTableViewRow(rawValue: indexPath.row) else { return UITableViewCell() }
+
+            todayInfoCell.setLabelTitle(
+                leftTitle: TodayInfoCellData.cellLeftLabelText[indexPath.row],
+                rightTitle: TodayInfoCellData.cellRightLabelText[indexPath.row]
+            )
+            todayInfoCell.cellBottomBorderView.backgroundColor = CommonColor.separator
             switch todayInfoRowIndex {
             case .firstRow:
-                todayInfoCell.setLabelTitle(leftTitle: "일출", rightTitle: "일몰")
+                break
             case .secondRow:
-                todayInfoCell.setLabelTitle(leftTitle: "비 올 확률", rightTitle: "습도")
+                break
             case .thirdRow:
-                todayInfoCell.setLabelTitle(leftTitle: "바람", rightTitle: "체감")
+                break
             case .fourthRow:
-                todayInfoCell.setLabelTitle(leftTitle: "강수량", rightTitle: "기압")
+                break
             case .fifthRow:
-                todayInfoCell.setLabelTitle(leftTitle: "가시거리", rightTitle: "자외선 지수")
                 todayInfoCell.cellBottomBorderView.backgroundColor = .clear
-                return todayInfoCell
             }
+            return todayInfoCell
         }
-        return UITableViewCell()
     }
 }
