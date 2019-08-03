@@ -108,20 +108,16 @@ class WeatherInfoViewController: UIViewController {
     }
 
     @objc func listButtonPressed(_: UIButton) {
-        print("listBarButton Pressed")
         present(weatherMainViewController, animated: true, completion: nil)
     }
 
-    @objc func presentViewButtonPressed(_: UIButton) {
-        print("presentViewButton Pressed")
-    }
+    @objc func presentViewButtonPressed(_: UIButton) {}
 }
 
 // MARK: - UITableView Protocol
 
 extension WeatherInfoViewController: UITableViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        print(scrollView.contentOffset.y)
         makeWeatherInfoTableHeaderViewScrollEvent(scrollView, offsetY: scrollView.contentOffset.y)
     }
 

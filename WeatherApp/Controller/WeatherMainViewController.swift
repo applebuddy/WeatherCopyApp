@@ -48,7 +48,6 @@ class WeatherMainViewController: UIViewController {
     // MARK: - Button Event
 
     @objc func celsiusToggleButtonPressed(_ sender: UIButton) {
-        print("CTPressed")
         if sender.image(for: .normal) == UIImage(named: "toggleButton_C") {
             sender.setImage(UIImage(named: "toggleButton_F"), for: .normal)
         } else {
@@ -57,12 +56,10 @@ class WeatherMainViewController: UIViewController {
     }
 
     @objc func addCityButtonPressed(_: UIButton) {
-        print("ACPressed")
         present(weatherCitySearchViewController, animated: true, completion: nil)
     }
 
     @objc func weatherLinkButtonPressed(_: UIButton) {
-        print("WLPressed")
         guard let url = NSURL(string: "https://weather.com/ko-KR/weather/today/l/37.46,126.88?par=apple_widget&locale=ko_KR") else { return }
         UIApplication.shared.open(url as URL)
     }
