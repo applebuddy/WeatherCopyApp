@@ -18,7 +18,7 @@ class WeatherMainView: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = CommonColor.weatherMainViewBackground
+        backgroundColor = CommonColor.weatherMainView
         makeSubviews()
         makeConstraints()
     }

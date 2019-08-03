@@ -63,6 +63,7 @@ struct WeatherViewHeight {
     static let titleViewHeight: CGFloat = 100
     static let subInfoTableView: CGFloat = UIScreen.main.bounds.size.height - (WeatherViewHeight.titleViewHeight + WeatherViewHeight.todayInfoTableHeaderView + WeatherCellHeight.dayInfoCollectionCell)
     static let todayInfoTableHeaderView: CGFloat = 60
+    static let weatherCitySearchView: CGFloat = 100
 }
 
 /// * TableView Cell Heights
@@ -96,7 +97,8 @@ struct CommonInset {
 
 struct CommonColor {
     static let separator = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-    static let weatherMainViewBackground = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-    static let weatherMainTableFooterViewBackgronud = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
-    static let weatherInfoViewBackground = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+    static let weatherMainView = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+    static let weatherMainTableFooterView = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+    static let weatherInfoView = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
+    static let weatherCitySearchView = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
 }

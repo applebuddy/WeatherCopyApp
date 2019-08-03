@@ -37,8 +37,8 @@ class WeatherInfoViewController: UIViewController {
         return presentViewButton
     }()
 
-    let weatherInfoView: WeatherTitleInfoView = {
-        let weatherInfoView = WeatherTitleInfoView()
+    let weatherInfoView: WeatherInfoView = {
+        let weatherInfoView = WeatherInfoView()
         return weatherInfoView
     }()
 
@@ -51,7 +51,7 @@ class WeatherInfoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
-        view.backgroundColor = CommonColor.weatherInfoViewBackground
+        view.backgroundColor = CommonColor.weatherInfoView
         registerCell()
         setInfoViewController()
         setButtonTarget()

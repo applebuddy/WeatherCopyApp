@@ -21,6 +21,7 @@ class WeatherMainTableFooterView: UIView {
     let celsiusToggleButton: UIButton = {
         let celsiusToggleButton = UIButton(type: .custom)
         celsiusToggleButton.setImage(#imageLiteral(resourceName: "toggleButton_C"), for: .normal)
+
         celsiusToggleButton.contentMode = .scaleAspectFit
         return celsiusToggleButton
     }()

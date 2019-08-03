@@ -9,6 +9,11 @@
 import UIKit
 
 class WeatherMainViewController: UIViewController {
+    let weatherCitySearchViewController: WeatherCitySearchViewController = {
+        let weatherCitySearchViewController = WeatherCitySearchViewController()
+        return weatherCitySearchViewController
+    }()
+
     let weatherMainView: WeatherMainView = {
         let weatherMainView = WeatherMainView()
         return weatherMainView
@@ -26,10 +31,40 @@ class WeatherMainViewController: UIViewController {
         view = weatherMainView
     }
 
+    // MARK: - Set MEthod
+
+    func setFooterViewButtonTarget(footerView: WeatherMainTableFooterView) {
+        footerView.celsiusToggleButton.addTarget(self, action: #selector(celsiusToggleButtonPressed(_:)), for: .touchUpInside)
+        footerView.addCityButton.addTarget(self, action: #selector(addCityButtonPressed(_:)), for: .touchUpInside)
+        footerView.weatherLinkButton.addTarget(self, action: #selector(weatherLinkButtonPressed(_:)), for: .touchUpInside)
+    }
+
     func makeWeatherMainTableViewEvent(_ scrollView: UIScrollView, offsetY _: CGFloat) {
         if scrollView.contentOffset.y >= 0 {
             scrollView.contentOffset.y = 0
         }
+    }
+
+    // MARK: - Button Event
+
+    @objc func celsiusToggleButtonPressed(_ sender: UIButton) {
+        print("CTPressed")
+        if sender.image(for: .normal) == UIImage(named: "toggleButton_C") {
+            sender.setImage(UIImage(named: "toggleButton_F"), for: .normal)
+        } else {
+            sender.setImage(UIImage(named: "toggleButton_C"), for: .normal)
+        }
+    }
+
+    @objc func addCityButtonPressed(_: UIButton) {
+        print("ACPressed")
+        present(weatherCitySearchViewController, animated: true, completion: nil)
+    }
+
+    @objc func weatherLinkButtonPressed(_: UIButton) {
+        print("WLPressed")
+        guard let url = NSURL(string: "https://weather.com/ko-KR/weather/today/l/37.46,126.88?par=apple_widget&locale=ko_KR") else { return }
+        UIApplication.shared.open(url as URL)
     }
 }
 
@@ -46,7 +81,8 @@ extension WeatherMainViewController: UITableViewDelegate {
 
     func tableView(_: UITableView, viewForFooterInSection _: Int) -> UIView? {
         let footerView = WeatherMainTableFooterView()
-        footerView.backgroundColor = CommonColor.weatherMainTableFooterViewBackgronud
+        footerView.backgroundColor = CommonColor.weatherMainTableFooterView
+        setFooterViewButtonTarget(footerView: footerView)
         return footerView
     }
 
