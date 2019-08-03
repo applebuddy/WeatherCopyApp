@@ -20,13 +20,13 @@ class WeatherInfoViewController: UIViewController {
 
     let linkBarButton: UIButton = {
         let linkBarButton = UIButton(type: .custom)
-        linkBarButton.setImage(#imageLiteral(resourceName: "weatherLinkImage"), for: .normal)
+        linkBarButton.setImage(#imageLiteral(resourceName: "cloud"), for: .normal)
         return linkBarButton
     }()
 
     let listBarButton: UIButton = {
         let listBarButton = UIButton(type: .custom)
-        listBarButton.setImage(#imageLiteral(resourceName: "weatherListImage"), for: .normal)
+        listBarButton.setImage(#imageLiteral(resourceName: "weatherList"), for: .normal)
         return listBarButton
     }()
 
@@ -159,12 +159,12 @@ extension WeatherInfoViewController: UITableViewDataSource {
             let rowIndex = WeatherInfoTableViewRow(rawValue: indexPath.row) else { return UITableViewCell() }
 
         switch rowIndex {
-        case .dayInfoCell:
+        case .dayInfoRow:
             weatherDayInfoCell.setCellData()
 
             return weatherDayInfoCell
-        case .separatorCell: return WeatherSeparatorTableViewCell()
-        case .weekInfoCell:
+        case .separatorRow: return WeatherSeparatorTableViewCell()
+        case .weekInfoRow:
             return weatherWeekInfoCell
         }
     }

@@ -83,6 +83,11 @@ class TodayInfoTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
     }
 
+    func setLabelTitle(leftTitle: String, rightTitle: String) {
+        leftInfoTitleLabel.text = leftTitle
+        rightInfoTitleLabel.text = rightTitle
+    }
+
     func setTodayInfoStackView() {
         leftStackView.addArrangedSubview(leftInfoTitleLabel)
         leftStackView.addArrangedSubview(leftInfoTitleSubLabel)

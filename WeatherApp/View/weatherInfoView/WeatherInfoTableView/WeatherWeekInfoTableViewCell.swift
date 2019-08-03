@@ -73,7 +73,6 @@ extension WeatherWeekInfoTableViewCell: UITableViewDelegate {
 
     func tableView(_: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         guard let sectionIndex = WeatherSubInfoTableViewSection(rawValue: indexPath.section) else { return CGFloat.leastNormalMagnitude }
-        if indexPath.row == 0 { return 1 }
         switch sectionIndex {
         case .weekInfoSection:
             return WeatherCellHeight.weekInfoTableViewCell
@@ -120,7 +119,7 @@ extension WeatherWeekInfoTableViewCell: UITableViewDataSource {
         guard let sectionIndex = WeatherSubInfoTableViewSection(rawValue: section) else { return 0 }
         switch sectionIndex {
         case .weekInfoSection: return 9
-        case .todayInfoSection: return 6
+        case .todayInfoSection: return 5
         }
     }
 
@@ -135,9 +134,23 @@ extension WeatherWeekInfoTableViewCell: UITableViewDataSource {
             guard let weekInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weekInfoTableCell, for: indexPath) as? WeekInfoTableViewCell else { return UITableViewCell() }
             return weekInfoCell
         case .todayInfoSection:
-            if indexPath.row == 0 { return WeatherSeparatorTableViewCell() }
-            guard let todayInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.todayInfoTableCell, for: indexPath) as? TodayInfoTableViewCell else { return UITableViewCell() }
-            return todayInfoCell
+            guard let todayInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.todayInfoTableCell, for: indexPath) as? TodayInfoTableViewCell,
+                let todayInfoRowIndex = TodayInfoTableViewRow(rawValue: indexPath.row) else { return UITableViewCell() }
+            switch todayInfoRowIndex {
+            case .firstRow:
+                todayInfoCell.setLabelTitle(leftTitle: "일출", rightTitle: "일몰")
+            case .secondRow:
+                todayInfoCell.setLabelTitle(leftTitle: "비 올 확률", rightTitle: "습도")
+            case .thirdRow:
+                todayInfoCell.setLabelTitle(leftTitle: "바람", rightTitle: "체감")
+            case .fourthRow:
+                todayInfoCell.setLabelTitle(leftTitle: "강수량", rightTitle: "기압")
+            case .fifthRow:
+                todayInfoCell.setLabelTitle(leftTitle: "가시거리", rightTitle: "자외선 지수")
+                todayInfoCell.cellBottomBorderView.backgroundColor = .clear
+                return todayInfoCell
+            }
         }
+        return UITableViewCell()
     }
 }

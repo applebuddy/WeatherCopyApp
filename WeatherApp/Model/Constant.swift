@@ -23,9 +23,17 @@ enum WeatherInfoTableViewSection: Int {
 }
 
 enum WeatherInfoTableViewRow: Int {
-    case dayInfoCell = 0
-    case separatorCell = 1
-    case weekInfoCell = 2
+    case dayInfoRow = 0
+    case separatorRow = 1
+    case weekInfoRow = 2
+}
+
+enum TodayInfoTableViewRow: Int {
+    case firstRow = 0
+    case secondRow = 1
+    case thirdRow = 2
+    case fourthRow = 3
+    case fifthRow = 4
 }
 
 enum WeatherSubInfoTableViewSection: Int {
@@ -37,7 +45,7 @@ struct WeatherCellHeight {
     static let dayInfoTableCell: CGFloat = 120
     static let infoTableHeaderCell: CGFloat = 150
     static let dayInfoCollectionCell: CGFloat = 120
-    static let weekInfoTableViewCell: CGFloat = 50
+    static let weekInfoTableViewCell: CGFloat = 35
     static let todayInfoTableViewCell: CGFloat = 60
     static let todayInfoTableHeaderView: CGFloat = 60
 }
