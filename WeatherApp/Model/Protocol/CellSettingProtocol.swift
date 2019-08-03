@@ -8,6 +8,7 @@
 
 import UIKit
 
+/// Cell 공통 메서드 정의 프로토콜
 protocol CellSettingProtocol {
     func registerCell()
 }

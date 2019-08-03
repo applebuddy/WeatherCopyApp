@@ -8,6 +8,7 @@
 
 import UIKit
 
+/// UIView의 공통 메서드 정의 프로토콜
 protocol UIViewSettingProtocol {
     func setSubviews()
     func setConstraints()

@@ -87,7 +87,7 @@ extension WeatherSubInfoTableViewCell: UITableViewDelegate {
         case .weekInfoSection:
             return CGFloat.leastNormalMagnitude
         case .todayInfoSection:
-            return WeatherCellHeight.todayInfoTableHeaderView
+            return WeatherViewHeight.todayInfoTableHeaderView
         }
     }
 

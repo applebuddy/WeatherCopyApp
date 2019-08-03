@@ -30,6 +30,7 @@ class WeatherMainTableViewCell: UITableViewCell {
     let cityCelsiusLabel: UILabel = {
         let cityCelsiusLabel = UILabel()
         cityCelsiusLabel.text = "34º"
+        cityCelsiusLabel.sizeToFit()
         cityCelsiusLabel.textColor = .black
         cityCelsiusLabel.font = .boldSystemFont(ofSize: 50)
         return cityCelsiusLabel
@@ -63,7 +64,7 @@ extension WeatherMainTableViewCell: UIViewSettingProtocol {
         addSubview(nowTimeLabel)
         addSubview(mainIndicatorImageView)
         addSubview(cityTitleLabel)
-//        addSubview(cityCelsiusLabel)
+        addSubview(cityCelsiusLabel)
     }
 
     func setConstraints() {
@@ -89,5 +90,14 @@ extension WeatherMainTableViewCell: UIViewSettingProtocol {
             cityTitleLabel.leftAnchor.constraint(equalTo: nowTimeLabel.leftAnchor),
             cityTitleLabel.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.7),
         ])
+        
+        cityCelsiusLabel.activateAnchors()
+        NSLayoutConstraint.activate([
+            cityCelsiusLabel.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -CommonInset.rightInset/2),
+            cityCelsiusLabel.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor)
+            
+            ])
+        
+        
     }
 }
