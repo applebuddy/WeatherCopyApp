@@ -37,8 +37,8 @@ class WeatherInfoViewController: UIViewController {
         return presentViewButton
     }()
 
-    let weatherInfoView: WeatherInfoView = {
-        let weatherInfoView = WeatherInfoView()
+    let weatherInfoView: WeatherTitleInfoView = {
+        let weatherInfoView = WeatherTitleInfoView()
         return weatherInfoView
     }()
 

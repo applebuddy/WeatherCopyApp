@@ -8,7 +8,7 @@
 
 import UIKit
 
-/// 주간 날씨정보 테이블뷰 셀
+/// 9일 간 주간 날씨정보 테이블뷰 셀
 class WeatherWeekInfoTableViewCell: UITableViewCell {
     let weatherSubInfoTableView: WeatherSubInfoTableView = {
         let weekInfoTableView = WeatherSubInfoTableView(frame: CGRect.zero, style: .grouped)

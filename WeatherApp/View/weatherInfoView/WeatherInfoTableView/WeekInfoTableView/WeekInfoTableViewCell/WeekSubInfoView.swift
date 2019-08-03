@@ -8,6 +8,7 @@
 
 import UIKit
 
+/// WeekSubInfoTableViewCell 메인 뷰
 class WeekSubInfoView: UIView {
     let dateLabel: UILabel = {
         let dateLabel = UILabel()

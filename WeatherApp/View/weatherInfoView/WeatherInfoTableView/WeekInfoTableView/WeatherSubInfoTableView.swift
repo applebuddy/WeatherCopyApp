@@ -8,7 +8,7 @@
 
 import UIKit
 
-/// 타이틀 하단 서브 날씨정보 테이블뷰
+/// 메인 타이틀 하단 서브 날씨정보 테이블뷰
 class WeatherSubInfoTableView: UITableView {
     override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)

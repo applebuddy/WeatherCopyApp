@@ -8,6 +8,7 @@
 
 import UIKit
 
+/// WeatherMainViewController 메인 테이블뷰 셀
 class WeatherMainTableViewCell: UITableViewCell {
     let nowTimeLabel: UILabel = {
         let nowTimeLabel = UILabel()

@@ -8,7 +8,7 @@
 
 import UIKit
 
-/// WeatherInfoViewController 메인타이틀 서브정보 뷰
+/// WeatherInfoViewController 메인타이틀 정보 뷰
 class WeatherTitleInfoView: UIView {
     let weatherTitleView: WeatherTitleView = {
         let weatherTitleView = WeatherTitleView()

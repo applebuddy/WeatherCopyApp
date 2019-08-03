@@ -8,7 +8,7 @@
 
 import UIKit
 
-/// 내일부터 9일간의 날씨예보를 간략하게 보여주는 테이블뷰셀
+/// 9일간의 날씨예보를 간략하게 보여주는 테이블뷰셀
 class WeekInfoTableViewCell: UITableViewCell {
     let weekSubInfoView: WeekSubInfoView = {
         let weekInfoView = WeekSubInfoView()

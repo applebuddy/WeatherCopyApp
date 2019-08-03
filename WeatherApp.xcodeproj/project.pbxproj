@@ -37,7 +37,7 @@
 		07ED2A1122F18F45003FB9C6 /* WeatherAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07ED2A1022F18F45003FB9C6 /* WeatherAppTests.swift */; };
 		07ED2A1C22F18F45003FB9C6 /* WeatherAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07ED2A1B22F18F45003FB9C6 /* WeatherAppUITests.swift */; };
 		07ED2A2A22F19534003FB9C6 /* MainNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07ED2A2922F19534003FB9C6 /* MainNavigationController.swift */; };
-		07ED2A2C22F19826003FB9C6 /* WeatherInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07ED2A2B22F19826003FB9C6 /* WeatherInfoView.swift */; };
+		07ED2A2C22F19826003FB9C6 /* WeatherTitleInfoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07ED2A2B22F19826003FB9C6 /* WeatherTitleInfoView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -94,7 +94,7 @@
 		07ED2A1B22F18F45003FB9C6 /* WeatherAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherAppUITests.swift; sourceTree = "<group>"; };
 		07ED2A1D22F18F45003FB9C6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		07ED2A2922F19534003FB9C6 /* MainNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainNavigationController.swift; sourceTree = "<group>"; };
-		07ED2A2B22F19826003FB9C6 /* WeatherInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherInfoView.swift; sourceTree = "<group>"; };
+		07ED2A2B22F19826003FB9C6 /* WeatherTitleInfoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherTitleInfoView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -126,7 +126,7 @@
 			isa = PBXGroup;
 			children = (
 				075976DF22F1B3C200D56361 /* WeatherTitleView.swift */,
-				07ED2A2B22F19826003FB9C6 /* WeatherInfoView.swift */,
+				07ED2A2B22F19826003FB9C6 /* WeatherTitleInfoView.swift */,
 				075976EC22F20D2500D56361 /* WeatherInfoTableView */,
 			);
 			path = weatherInfoView;
@@ -438,7 +438,7 @@
 				07E8F19922F44EDC00B5F8DE /* WeatherSeparatorView.swift in Sources */,
 				07ED29FC22F18F44003FB9C6 /* AppDelegate.swift in Sources */,
 				07E4345F22F347CB00C0E246 /* WeatherMainView.swift in Sources */,
-				07ED2A2C22F19826003FB9C6 /* WeatherInfoView.swift in Sources */,
+				07ED2A2C22F19826003FB9C6 /* WeatherTitleInfoView.swift in Sources */,
 				07E8F19722F441E900B5F8DE /* TodayInfoTableViewCell.swift in Sources */,
 				07E4345C22F3475600C0E246 /* WeatherMainViewController.swift in Sources */,
 				077F5BE022F2D5370045391B /* DayInfoCollectionViewCell.swift in Sources */,

@@ -8,6 +8,7 @@
 
 import UIKit
 
+/// 메인타이틀 하단의 테이블 헤더 뷰
 class WeatherInfoTableHeaderView: UIView {
     let mainCelsiusLabel: UILabel = {
         let celsiusLabel = UILabel()

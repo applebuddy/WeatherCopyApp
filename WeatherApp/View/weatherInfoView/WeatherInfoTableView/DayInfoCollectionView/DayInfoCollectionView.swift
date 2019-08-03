@@ -8,7 +8,7 @@
 
 import UIKit
 
-/// 하루 기준의 날씨정보 컬렉션뷰
+/// 하루 기준 날씨정보 컬렉션뷰
 class DayInfoCollectionView: UICollectionView {
     override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame, collectionViewLayout: layout)
