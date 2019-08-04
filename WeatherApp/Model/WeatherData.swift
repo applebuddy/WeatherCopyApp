@@ -12,3 +12,8 @@ struct WeatherCoordinate {
     var latitude: Double
     var longitude: Double
 }
+
+enum TemperatureType: Int {
+    case celsius = 0
+    case fahrenheit = 1
+}

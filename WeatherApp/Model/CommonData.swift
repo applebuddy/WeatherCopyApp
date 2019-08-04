@@ -11,6 +11,7 @@ import UIKit
 final class CommonData {
     static let shared = CommonData()
 
+    var temperatureType: TemperatureType = .celsius
     var isLocationAuthority = UserDefaults.standard.bool(forKey: DataIdentifier.isLocationAuthority)
     var mainCoordinate = WeatherCoordinate(latitude: 0, longitude: 0)
 
@@ -26,5 +27,14 @@ final class CommonData {
     func setMainCoordinate(latitude: Double, longitude: Double) {
         mainCoordinate.latitude = latitude
         mainCoordinate.longitude = longitude
+    }
+
+    func changeTemperatureType() {
+        switch temperatureType {
+        case .celsius:
+            temperatureType = .fahrenheit
+        case .fahrenheit:
+            temperatureType = .celsius
+        }
     }
 }

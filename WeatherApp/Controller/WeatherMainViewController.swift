@@ -32,7 +32,6 @@ class WeatherMainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setMainViewController()
-        setLocationManager()
         registerCell()
     }
 
@@ -89,6 +88,8 @@ class WeatherMainViewController: UIViewController {
         // 사용자가 직접 환경설정에서 위치접근을 설정한 경우를 체그하기 위해 위치권한 상태를 체크한다.
         if !checkLocationAuthStatus() {
             present(weatherCitySearchViewController, animated: true)
+        } else {
+            setLocationManager()
         }
     }
 
@@ -96,9 +97,15 @@ class WeatherMainViewController: UIViewController {
 
     @objc func celsiusToggleButtonPressed(_ sender: UIButton) {
         if sender.image(for: .normal) == UIImage(named: "toggleButton_C") {
+            CommonData.shared.changeTemperatureType()
             sender.setImage(UIImage(named: "toggleButton_F"), for: .normal)
         } else {
+            CommonData.shared.changeTemperatureType()
             sender.setImage(UIImage(named: "toggleButton_C"), for: .normal)
+        }
+
+        DispatchQueue.main.async {
+            self.weatherMainView.weatherMainTableView.reloadData()
         }
     }
 
@@ -162,7 +169,7 @@ extension WeatherMainViewController: UITableViewDataSource {
         case .mainRow:
             let timeZone = mainWeatherData?.timezone ?? "-"
             let timeStamp = mainWeatherData?.currently.time ?? 0
-            let temperature = mainWeatherData?.hourly.data[0].temperature ?? 0
+            let temperature = (mainWeatherData?.hourly.data[0].temperature ?? 0).changeTemperatureFToC().roundedValue(roundSize: 0)
 
             weatherMainCell.setCellData(cityName: timeZone, timeStamp: timeStamp, temperature: temperature)
         case .subRow:
@@ -178,15 +185,30 @@ extension WeatherMainViewController: CLLocationManagerDelegate {
     /// * **위치가 업데이트 될 때마다 실행 되는 델리게이트 메서드**
     func locationManager(_ manager: CLLocationManager, didUpdateLocations _: [CLLocation]) {
         if let nowCoordinate = manager.location?.coordinate {
-            CommonData.shared.setMainCoordinate(latitude: nowCoordinate.latitude, longitude: nowCoordinate.longitude)
             print("latitude: \(nowCoordinate.latitude), longitude: \(nowCoordinate.longitude)")
-            let mainLatitude = CommonData.shared.mainCoordinate.latitude
-            let mainLongitude = CommonData.shared.mainCoordinate.longitude
-            WeatherAPI.shared.requestAPI(latitude: mainLatitude, longitude: mainLongitude) { weatherAPIData in
-                print("WeatherAPIData 전송완료 성공 ^-^")
-                self.mainWeatherData = weatherAPIData
-                DispatchQueue.main.async {
-                    self.weatherMainView.weatherMainTableView.reloadData()
+            let originLatitude = CommonData.shared.mainCoordinate.latitude.roundedValue(roundSize: 1)
+            let originLongitude = CommonData.shared.mainCoordinate.longitude.roundedValue(roundSize: 1)
+            let nowLatitude = nowCoordinate.latitude.roundedValue(roundSize: 1)
+            let nowLongitude = nowCoordinate.longitude.roundedValue(roundSize: 1)
+
+            print(nowLatitude)
+            print(originLatitude)
+            print(originLongitude)
+            print(nowLongitude)
+            if nowLatitude == originLatitude,
+                originLongitude == nowLongitude {
+                // 만약 최근 위도 경도와 소수점 한자리까지 결과값이 동일하면 API요청을 하지 않는다.
+                print("지금 위도 경도 같아 호출하지마")
+            } else {
+                print("지금 위도 경도 최신화 필요해 호출해")
+                CommonData.shared.setMainCoordinate(latitude: nowCoordinate.latitude, longitude: nowCoordinate.longitude)
+                let mainLatitude = CommonData.shared.mainCoordinate.latitude
+                let mainLongitude = CommonData.shared.mainCoordinate.longitude
+                WeatherAPI.shared.requestAPI(latitude: mainLatitude, longitude: mainLongitude) { weatherAPIData in
+                    self.mainWeatherData = weatherAPIData
+                    DispatchQueue.main.async {
+                        self.weatherMainView.weatherMainTableView.reloadData()
+                    }
                 }
             }
         }

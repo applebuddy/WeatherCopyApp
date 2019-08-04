@@ -97,14 +97,6 @@ class WeatherCitySearchViewController: UIViewController {
 // MARK: - CLLocationManager Protocol
 
 extension WeatherCitySearchViewController: CLLocationManagerDelegate {
-    /// * **위치가 업데이트 될 때마다 실행 되는 델리게이트 메서드**
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations _: [CLLocation]) {
-        if let nowCoordinate = manager.location?.coordinate {
-            CommonData.shared.setMainCoordinate(latitude: nowCoordinate.latitude, longitude: nowCoordinate.longitude)
-            print("latitude: \(nowCoordinate.latitude), longitude: \(nowCoordinate.longitude)")
-        }
-    }
-
     func locationManager(_: CLLocationManager, didChangeAuthorization _: CLAuthorizationStatus) {
         let locationAuthStatus = CLLocationManager.authorizationStatus()
         switch locationAuthStatus {
