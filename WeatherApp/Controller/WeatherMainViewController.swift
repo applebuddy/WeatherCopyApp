@@ -61,7 +61,7 @@ class WeatherMainViewController: UIViewController {
 
     // MARK: Check Method
 
-    func checkLocationAuthStatus() {
+    func checkLocationAuthStatus() -> Bool {
         let locationAuthStatus = CLLocationManager.authorizationStatus()
         switch locationAuthStatus {
         case .authorizedAlways: WeatherCommonData.shared.setLocationAuthData(isAuth: true)
@@ -69,12 +69,12 @@ class WeatherMainViewController: UIViewController {
         default:
             break
         }
+        return WeatherCommonData.shared.isLocationAuthority
     }
 
     func checksLocationAuthority() {
         // 사용자가 직접 환경설정에서 위치접근을 설정한 경우를 체그하기 위해 위치권한 상태를 체크한다.
-        let isAuthority = WeatherCommonData.shared.isLocationAuthority
-        if !isAuthority {
+        if !checkLocationAuthStatus() {
             present(weatherCitySearchViewController, animated: true)
         }
     }
