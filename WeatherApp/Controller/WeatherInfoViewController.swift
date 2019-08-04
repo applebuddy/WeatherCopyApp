@@ -55,6 +55,7 @@ class WeatherInfoViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        print(WeatherCommonData.shared.isLocationAuthority)
         setInfoViewController()
         registerCell()
         setInfoView()
@@ -62,6 +63,7 @@ class WeatherInfoViewController: UIViewController {
         setToolBarButtonItem()
         setTableHeaderView()
         makeConstraints()
+        presentToMainView()
     }
 
     override func loadView() {
@@ -109,6 +111,12 @@ class WeatherInfoViewController: UIViewController {
         let height = CGFloat(max(0, WeatherCellHeight.infoTableHeaderCell - max(0, scrollView.contentOffset.y)))
         let alphaValue = pow(height / WeatherCellHeight.infoTableHeaderCell, 10)
         weatherInfoTableHeaderView.setTableHeaderViewAlpha(alpha: CGFloat(alphaValue))
+    }
+
+    // MARK: Check Event
+
+    func presentToMainView() {
+        present(weatherMainViewController, animated: false)
     }
 
     // MARK: - Button Event

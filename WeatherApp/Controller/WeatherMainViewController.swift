@@ -6,6 +6,7 @@
 //  Copyright © 2019 MinKyeongTae. All rights reserved.
 //
 
+import CoreLocation
 import UIKit
 
 class WeatherMainViewController: UIViewController {
@@ -34,6 +35,11 @@ class WeatherMainViewController: UIViewController {
         view = weatherMainView
     }
 
+    override func viewWillAppear(_: Bool) {
+        super.viewWillAppear(true)
+        checksLocationAuthority()
+    }
+
     // MARK: - Set Method
 
     func setMainViewController() {
@@ -50,6 +56,26 @@ class WeatherMainViewController: UIViewController {
     func makeWeatherMainTableViewEvent(_ scrollView: UIScrollView, offsetY _: CGFloat) {
         if scrollView.contentOffset.y >= 0 {
             scrollView.contentOffset.y = 0
+        }
+    }
+
+    // MARK: Check Method
+
+    func checkLocationAuthStatus() {
+        let locationAuthStatus = CLLocationManager.authorizationStatus()
+        switch locationAuthStatus {
+        case .authorizedAlways: WeatherCommonData.shared.setLocationAuthData(isAuth: true)
+        case .authorizedWhenInUse: WeatherCommonData.shared.setLocationAuthData(isAuth: true)
+        default:
+            break
+        }
+    }
+
+    func checksLocationAuthority() {
+        // 사용자가 직접 환경설정에서 위치접근을 설정한 경우를 체그하기 위해 위치권한 상태를 체크한다.
+        let isAuthority = WeatherCommonData.shared.isLocationAuthority
+        if !isAuthority {
+            present(weatherCitySearchViewController, animated: true)
         }
     }
 

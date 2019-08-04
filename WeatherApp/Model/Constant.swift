@@ -8,6 +8,10 @@
 
 import UIKit
 
+struct DataIdentifier {
+    static let isLocationAuthority = "isLocationAuthority"
+}
+
 // MARK: - Cell Constants
 
 /// * WeatherApp 셀 식별자
