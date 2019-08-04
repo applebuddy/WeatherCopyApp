@@ -8,10 +8,11 @@
 
 import UIKit
 
-final class WeatherCommonData {
-    static let shared = WeatherCommonData()
+final class CommonData {
+    static let shared = CommonData()
 
     var isLocationAuthority = UserDefaults.standard.bool(forKey: DataIdentifier.isLocationAuthority)
+    var mainCoordinate = WeatherCoordinate(latitude: 0, longitude: 0)
 
     func checkLocationAuthority() -> Bool {
         return isLocationAuthority
@@ -20,5 +21,10 @@ final class WeatherCommonData {
     func setLocationAuthData(isAuth: Bool) {
         UserDefaults.standard.set(isAuth, forKey: DataIdentifier.isLocationAuthority)
         isLocationAuthority = isAuth
+    }
+
+    func setMainCoordinate(latitude: Double, longitude: Double) {
+        mainCoordinate.latitude = latitude
+        mainCoordinate.longitude = longitude
     }
 }

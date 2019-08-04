@@ -10,9 +10,19 @@ import UIKit
 
 /// WeatherMainViewController 메인 테이블뷰 셀
 class WeatherMainTableViewCell: UITableViewCell {
+    // MARK: - Property
+
+    let mainDateFormatter: DateFormatter = {
+        let mainDateFormatter = DateFormatter()
+        mainDateFormatter.dateFormat = "a HH:mm"
+        return mainDateFormatter
+    }()
+
+    // MARK: - UI
+
     let nowTimeLabel: UILabel = {
         let nowTimeLabel = UILabel()
-        nowTimeLabel.text = "오후 14:21"
+        nowTimeLabel.text = "-"
         nowTimeLabel.textColor = .black
         nowTimeLabel.font = .systemFont(ofSize: 15)
         return nowTimeLabel
@@ -20,7 +30,7 @@ class WeatherMainTableViewCell: UITableViewCell {
 
     let cityTitleLabel: UILabel = {
         let cityTitleLabel = UILabel()
-        cityTitleLabel.text = "광명시"
+        cityTitleLabel.text = "-"
         cityTitleLabel.sizeToFit()
         cityTitleLabel.textColor = .black
         cityTitleLabel.font = .boldSystemFont(ofSize: 30)
@@ -29,7 +39,7 @@ class WeatherMainTableViewCell: UITableViewCell {
 
     let cityCelsiusLabel: UILabel = {
         let cityCelsiusLabel = UILabel()
-        cityCelsiusLabel.text = "34º"
+        cityCelsiusLabel.text = "-"
         cityCelsiusLabel.sizeToFit()
         cityCelsiusLabel.textColor = .black
         cityCelsiusLabel.font = .boldSystemFont(ofSize: 50)
@@ -56,6 +66,18 @@ class WeatherMainTableViewCell: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         // Configure the view for the selected state
+    }
+
+    func setCellData(cityName: String, timeStamp: Int, temperature: Double) {
+        cityTitleLabel.text = "\(cityName)"
+        if timeStamp != 0 {
+            let date = Date(timeIntervalSince1970: Double(timeStamp))
+            nowTimeLabel.text = "\(mainDateFormatter.string(from: date))"
+        }
+
+        if temperature != 0 {
+            cityCelsiusLabel.text = "\(temperature)º"
+        }
     }
 }
 

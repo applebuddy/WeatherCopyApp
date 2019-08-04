@@ -53,9 +53,14 @@ class WeatherInfoViewController: UIViewController {
 
     // MARK: - Life Cycle
 
+    override func loadView() {
+        super.loadView()
+        view = weatherInfoView
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(WeatherCommonData.shared.isLocationAuthority)
+        print(CommonData.shared.isLocationAuthority)
         setInfoViewController()
         registerCell()
         setInfoView()
@@ -64,11 +69,6 @@ class WeatherInfoViewController: UIViewController {
         setTableHeaderView()
         makeConstraints()
         presentToMainView()
-    }
-
-    override func loadView() {
-        super.loadView()
-        view = weatherInfoView
     }
 
     // MARK: - Set Method

@@ -10,6 +10,7 @@ import UIKit
 
 struct DataIdentifier {
     static let isLocationAuthority = "isLocationAuthority"
+    static let weatherCoordinate = "weatherCoordinate"
 }
 
 // MARK: - Cell Constants
@@ -28,8 +29,13 @@ struct CellIdentifier {
 // MARK: TableView Section Index
 
 /// * WeatherMainTableView Section Index
-enum WeatherSection: Int {
+enum WeatherMainTableViewSection: Int {
     case mainSection = 0
+}
+
+enum WeatherMainTableViewRow: Int {
+    case mainRow = 0
+    case subRow = 1
 }
 
 /// * WeatherInfoTableView Section Index

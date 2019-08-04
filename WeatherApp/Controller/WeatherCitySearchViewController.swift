@@ -10,6 +10,8 @@ import CoreLocation
 import UIKit
 
 class WeatherCitySearchViewController: UIViewController {
+    // MARK: - Property
+
     let locationManager = CLLocationManager()
 
     // MARK: - UI
@@ -25,6 +27,7 @@ class WeatherCitySearchViewController: UIViewController {
         super.viewDidLoad()
         setCitySearchViewController()
         setButtonTarget()
+        setLocationManager()
     }
 
     override func loadView() {
@@ -52,18 +55,22 @@ class WeatherCitySearchViewController: UIViewController {
         switch locationAuthStatus {
         case .notDetermined:
             locationManager.requestAlwaysAuthorization()
-        case .authorizedAlways: WeatherCommonData.shared.setLocationAuthData(isAuth: true)
-        case .authorizedWhenInUse: WeatherCommonData.shared.setLocationAuthData(isAuth: true)
+        case .authorizedAlways,
+             .authorizedWhenInUse:
+            CommonData.shared.setLocationAuthData(isAuth: true)
         default:
             presentLocationAuthAlertController()
         }
     }
 
-    func setCitySearchViewController() {
-        view.backgroundColor = .black
+    func setLocationManager() {
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.startUpdatingLocation()
+    }
+
+    func setCitySearchViewController() {
+        view.backgroundColor = .black
     }
 
     func presentLocationAuthAlertController() {
@@ -93,15 +100,16 @@ extension WeatherCitySearchViewController: CLLocationManagerDelegate {
     /// * **위치가 업데이트 될 때마다 실행 되는 델리게이트 메서드**
     func locationManager(_ manager: CLLocationManager, didUpdateLocations _: [CLLocation]) {
         if let nowCoordinate = manager.location?.coordinate {
-            //  print("latitude: \(nowCoordinate.latitude), longitude: \(nowCoordinate.longitude)" )
+            CommonData.shared.setMainCoordinate(latitude: nowCoordinate.latitude, longitude: nowCoordinate.longitude)
+            print("latitude: \(nowCoordinate.latitude), longitude: \(nowCoordinate.longitude)")
         }
     }
 
     func locationManager(_: CLLocationManager, didChangeAuthorization _: CLAuthorizationStatus) {
         let locationAuthStatus = CLLocationManager.authorizationStatus()
         switch locationAuthStatus {
-        case .authorizedAlways: WeatherCommonData.shared.setLocationAuthData(isAuth: true)
-        case .authorizedWhenInUse: WeatherCommonData.shared.setLocationAuthData(isAuth: true)
+        case .authorizedAlways, .authorizedWhenInUse:
+            CommonData.shared.setLocationAuthData(isAuth: true)
         default:
             break
         }

@@ -10,6 +10,11 @@ import CoreLocation
 import UIKit
 
 class WeatherMainViewController: UIViewController {
+    // MARK: - Property
+
+    let locationManager = CLLocationManager()
+    var mainWeatherData: WeatherAPIData?
+
     // MARK: - UI
 
     let weatherCitySearchViewController: WeatherCitySearchViewController = {
@@ -27,6 +32,7 @@ class WeatherMainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setMainViewController()
+        setLocationManager()
         registerCell()
     }
 
@@ -41,6 +47,12 @@ class WeatherMainViewController: UIViewController {
     }
 
     // MARK: - Set Method
+
+    func setLocationManager() {
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.startUpdatingLocation()
+    }
 
     func setMainViewController() {
         weatherMainView.weatherMainTableView.delegate = self
@@ -64,12 +76,13 @@ class WeatherMainViewController: UIViewController {
     func checkLocationAuthStatus() -> Bool {
         let locationAuthStatus = CLLocationManager.authorizationStatus()
         switch locationAuthStatus {
-        case .authorizedAlways: WeatherCommonData.shared.setLocationAuthData(isAuth: true)
-        case .authorizedWhenInUse: WeatherCommonData.shared.setLocationAuthData(isAuth: true)
+        case .authorizedAlways,
+             .authorizedWhenInUse:
+            CommonData.shared.setLocationAuthData(isAuth: true)
         default:
-            break
+            CommonData.shared.setLocationAuthData(isAuth: false)
         }
-        return WeatherCommonData.shared.isLocationAuthority
+        return CommonData.shared.isLocationAuthority
     }
 
     func checksLocationAuthority() {
@@ -142,9 +155,41 @@ extension WeatherMainViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let weatherMainCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherMainTableCell, for: indexPath) as? WeatherMainTableViewCell else { return UITableViewCell() }
+        guard let weatherMainCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherMainTableCell, for: indexPath) as? WeatherMainTableViewCell,
+            let weatherMainIndex = WeatherMainTableViewRow(rawValue: indexPath.row) else { return UITableViewCell() }
 
+        switch weatherMainIndex {
+        case .mainRow:
+            let timeZone = mainWeatherData?.timezone ?? "-"
+            let timeStamp = mainWeatherData?.currently.time ?? 0
+            let temperature = mainWeatherData?.hourly.data[0].temperature ?? 0
+
+            weatherMainCell.setCellData(cityName: timeZone, timeStamp: timeStamp, temperature: temperature)
+        case .subRow:
+            return weatherMainCell
+        }
         return weatherMainCell
+    }
+}
+
+// MARK: - CLLocationManager Protocol
+
+extension WeatherMainViewController: CLLocationManagerDelegate {
+    /// * **위치가 업데이트 될 때마다 실행 되는 델리게이트 메서드**
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations _: [CLLocation]) {
+        if let nowCoordinate = manager.location?.coordinate {
+            CommonData.shared.setMainCoordinate(latitude: nowCoordinate.latitude, longitude: nowCoordinate.longitude)
+            print("latitude: \(nowCoordinate.latitude), longitude: \(nowCoordinate.longitude)")
+            let mainLatitude = CommonData.shared.mainCoordinate.latitude
+            let mainLongitude = CommonData.shared.mainCoordinate.longitude
+            WeatherAPI.shared.requestAPI(latitude: mainLatitude, longitude: mainLongitude) { weatherAPIData in
+                print("WeatherAPIData 전송완료 성공 ^-^")
+                self.mainWeatherData = weatherAPIData
+                DispatchQueue.main.async {
+                    self.weatherMainView.weatherMainTableView.reloadData()
+                }
+            }
+        }
     }
 }
 

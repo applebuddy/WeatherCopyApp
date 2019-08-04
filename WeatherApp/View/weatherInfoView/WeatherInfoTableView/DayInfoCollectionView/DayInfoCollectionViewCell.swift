@@ -81,29 +81,22 @@ extension DayInfoCollectionViewCell: UIViewSettingProtocol {
 
     func makeConstraints() {
         cellStackView.activateAnchors()
-
         cellStackView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        NSLayoutConstraint(item: cellStackView,
-                           attribute: .centerY,
-                           relatedBy: .equal,
-                           toItem: self,
-                           attribute: .centerY,
-                           multiplier: 1.0,
-                           constant: 0.0).isActive = true
-        cellStackView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 0).isActive = true
-        cellStackView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: 0).isActive = true
-        cellStackView.topAnchor.constraint(equalTo: topAnchor, constant: CommonInset.topInset * 2).isActive = true
-        cellStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -CommonInset.bottomInset * 2).isActive = true
+        cellStackView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        cellStackView.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
 
         cellImageView.activateAnchors()
         percentageLabel.activateAnchors()
         celsiusLabel.activateAnchors()
         titleLabel.activateAnchors()
         NSLayoutConstraint.activate([
-            cellImageView.heightAnchor.constraint(equalTo: cellStackView.heightAnchor, multiplier: 0.3),
-            percentageLabel.heightAnchor.constraint(equalTo: cellStackView.heightAnchor, multiplier: 0.1),
-            celsiusLabel.heightAnchor.constraint(equalTo: cellStackView.heightAnchor, multiplier: 0.2),
-            titleLabel.heightAnchor.constraint(equalTo: cellStackView.heightAnchor, multiplier: 0.2),
+            titleLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.2),
+            titleLabel.widthAnchor.constraint(equalTo: widthAnchor),
+            titleLabel.topAnchor.constraint(equalTo: topAnchor),
+            percentageLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.1),
+            percentageLabel.widthAnchor.constraint(equalTo: widthAnchor),
+            celsiusLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.3),
+            celsiusLabel.widthAnchor.constraint(equalTo: widthAnchor),
         ])
     }
 }
