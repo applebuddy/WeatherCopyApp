@@ -132,8 +132,9 @@ class WeatherMainViewController: UIViewController {
     }
 
     @objc func weatherLinkButtonPressed(_: UIButton) {
-        guard let url = NSURL(string: "https://weather.com/ko-KR/weather/today/l/37.46,126.88?par=apple_widget&locale=ko_KR") else { return }
-        UIApplication.shared.open(url as URL)
+        let latitude = CommonData.shared.mainCoordinate.latitude
+        let longitude = CommonData.shared.mainCoordinate.longitude
+        CommonData.shared.openWeatherURL(latitude: latitude, longitude: longitude)
     }
 }
 

@@ -16,6 +16,7 @@ final class CommonData {
     var mainCoordinate = WeatherCoordinate(latitude: 0, longitude: 0)
     var selectedMainCellIndex = 0
     var mainCityName = "-"
+    var weatherURLString = "https://weather.com/ko-KR/weather/today/"
 
     // MARK: - Set Method
 
@@ -43,6 +44,21 @@ final class CommonData {
             temperatureType = .fahrenheit
         case .fahrenheit:
             temperatureType = .celsius
+        }
+    }
+
+    // MARK: Action Method
+
+    func openWeatherURL(latitude: Double, longitude: Double) {
+        let CustomUrlString = "\(CommonData.shared.weatherURLString)\(latitude),\(longitude)?par=apple_widget&locale=ko_KR"
+        if latitude != 0.0, longitude != 0.0 {
+            if let url = NSURL(string: CustomUrlString) {
+                UIApplication.shared.open(url as URL)
+            }
+        } else {
+            if let url = NSURL(string: "\(CommonData.shared.weatherURLString)") {
+                UIApplication.shared.open(url as URL)
+            }
         }
     }
 

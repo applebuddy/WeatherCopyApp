@@ -123,8 +123,9 @@ class WeatherInfoViewController: UIViewController {
 
     @objc func linkButtonPressed(_: UIButton) {
         // ✭ URL 링크주소는 파싱구현 이후 다시 수정한다.
-        guard let url = NSURL(string: "https://weather.com/ko-KR/weather/today/l/37.46,126.88?par=apple_widget&locale=ko_KR") else { return }
-        UIApplication.shared.open(url as URL)
+        let latitude = CommonData.shared.mainCoordinate.latitude
+        let longitude = CommonData.shared.mainCoordinate.longitude
+        CommonData.shared.openWeatherURL(latitude: latitude, longitude: longitude)
     }
 
     @objc func listButtonPressed(_: UIButton) {
