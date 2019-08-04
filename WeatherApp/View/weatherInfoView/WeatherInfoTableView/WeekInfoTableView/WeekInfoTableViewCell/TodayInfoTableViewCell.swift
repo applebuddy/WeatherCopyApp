@@ -110,16 +110,32 @@ extension TodayInfoTableViewCell: UIViewSettingProtocol {
         NSLayoutConstraint.activate([
             cellBottomBorderView.heightAnchor.constraint(equalToConstant: 1),
             cellBottomBorderView.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width * 0.9),
-            cellBottomBorderView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
-            cellBottomBorderView.centerXAnchor.constraint(equalToSystemSpacingAfter: safeAreaLayoutGuide.centerXAnchor, multiplier: 1),
+            cellBottomBorderView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            cellBottomBorderView.centerXAnchor.constraint(equalTo: centerXAnchor),
         ])
 
         todayInfoStackView.activateAnchors()
         NSLayoutConstraint.activate([
-            todayInfoStackView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 0),
-            todayInfoStackView.bottomAnchor.constraint(equalTo: cellBottomBorderView.topAnchor, constant: -CommonInset.bottomInset),
-            todayInfoStackView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: CommonInset.leftInset),
-            todayInfoStackView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -CommonInset.rightInset),
+            todayInfoStackView.widthAnchor.constraint(equalTo: widthAnchor, constant: -CommonInset.leftInset * 2),
+            todayInfoStackView.topAnchor.constraint(equalTo: topAnchor, constant: CommonInset.topInset),
+            todayInfoStackView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            todayInfoStackView.bottomAnchor.constraint(equalTo: cellBottomBorderView.topAnchor, constant: -CommonInset.bottomInset / 2),
+        ])
+
+        leftStackView.activateAnchors()
+        NSLayoutConstraint.activate([
+            leftStackView.leftAnchor.constraint(equalTo: todayInfoStackView.leftAnchor),
+            leftStackView.topAnchor.constraint(equalTo: todayInfoStackView.topAnchor),
+            leftStackView.widthAnchor.constraint(equalTo: todayInfoStackView.widthAnchor, multiplier: 0.5),
+            leftStackView.bottomAnchor.constraint(equalTo: todayInfoStackView.bottomAnchor),
+        ])
+
+        rightStackView.activateAnchors()
+        NSLayoutConstraint.activate([
+            rightStackView.rightAnchor.constraint(equalTo: todayInfoStackView.rightAnchor),
+            rightStackView.topAnchor.constraint(equalTo: todayInfoStackView.topAnchor),
+            rightStackView.widthAnchor.constraint(equalTo: todayInfoStackView.widthAnchor, multiplier: 0.5),
+            rightStackView.bottomAnchor.constraint(equalTo: todayInfoStackView.bottomAnchor),
         ])
 
         leftInfoTitleLabel.activateAnchors()
@@ -127,10 +143,27 @@ extension TodayInfoTableViewCell: UIViewSettingProtocol {
         rightInfoTitleLabel.activateAnchors()
         rightInfoTitleSubLabel.activateAnchors()
         NSLayoutConstraint.activate([
-            leftInfoTitleLabel.heightAnchor.constraint(equalTo: todayInfoStackView.heightAnchor, multiplier: 0.5),
-            leftInfoTitleSubLabel.heightAnchor.constraint(equalTo: leftInfoTitleLabel.heightAnchor),
-            rightInfoTitleLabel.heightAnchor.constraint(equalTo: leftInfoTitleLabel.heightAnchor),
-            rightInfoTitleSubLabel.heightAnchor.constraint(equalTo: leftInfoTitleLabel.heightAnchor),
+            leftInfoTitleLabel.heightAnchor.constraint(equalTo: leftStackView.heightAnchor, multiplier: 0.3),
+            leftInfoTitleLabel.leftAnchor.constraint(equalTo: leftStackView.leftAnchor),
+            leftInfoTitleLabel.rightAnchor.constraint(equalTo: leftStackView.rightAnchor),
+        ])
+
+        NSLayoutConstraint.activate([
+            leftInfoTitleSubLabel.heightAnchor.constraint(equalTo: leftStackView.heightAnchor, multiplier: 0.7),
+            leftInfoTitleSubLabel.leftAnchor.constraint(equalTo: leftStackView.leftAnchor),
+            leftInfoTitleSubLabel.rightAnchor.constraint(equalTo: rightStackView.leftAnchor),
+        ])
+
+        NSLayoutConstraint.activate([
+            rightInfoTitleLabel.heightAnchor.constraint(equalTo: rightStackView.heightAnchor, multiplier: 0.3),
+            rightInfoTitleLabel.rightAnchor.constraint(equalTo: rightStackView.rightAnchor),
+            rightInfoTitleLabel.leftAnchor.constraint(equalTo: rightStackView.leftAnchor),
+        ])
+
+        NSLayoutConstraint.activate([
+            rightInfoTitleSubLabel.heightAnchor.constraint(equalTo: rightStackView.heightAnchor, multiplier: 0.7),
+            rightInfoTitleSubLabel.rightAnchor.constraint(equalTo: rightStackView.rightAnchor),
+            rightInfoTitleSubLabel.leftAnchor.constraint(equalTo: rightStackView.leftAnchor),
         ])
     }
 }

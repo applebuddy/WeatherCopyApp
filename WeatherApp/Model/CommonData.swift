@@ -54,7 +54,7 @@ final class CommonData {
 
     // MARK: - Get Method
 
-    func getSelectedMainCellIndex() {
+    func getSelectedMainCellIndex() -> Int {
         return selectedMainCellIndex
     }
 }
