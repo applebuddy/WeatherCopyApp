@@ -14,10 +14,10 @@ final class CommonData {
     var temperatureType: TemperatureType = .celsius
     var isLocationAuthority = UserDefaults.standard.bool(forKey: DataIdentifier.isLocationAuthority)
     var mainCoordinate = WeatherCoordinate(latitude: 0, longitude: 0)
+    var selectedMainCellIndex = 0
+    var mainCityName = "-"
 
-    func checkLocationAuthority() -> Bool {
-        return isLocationAuthority
-    }
+    // MARK: - Set Method
 
     func setLocationAuthData(isAuth: Bool) {
         UserDefaults.standard.set(isAuth, forKey: DataIdentifier.isLocationAuthority)
@@ -29,6 +29,14 @@ final class CommonData {
         mainCoordinate.longitude = longitude
     }
 
+    func setMainCityName(cityName: String) {
+        mainCityName = cityName
+    }
+
+    func setSelectedMainCellIndex(index: Int) {
+        selectedMainCellIndex = index
+    }
+
     func changeTemperatureType() {
         switch temperatureType {
         case .celsius:
@@ -36,5 +44,17 @@ final class CommonData {
         case .fahrenheit:
             temperatureType = .celsius
         }
+    }
+
+    // MARK: Check Method
+
+    func checkLocationAuthority() -> Bool {
+        return isLocationAuthority
+    }
+
+    // MARK: - Get Method
+
+    func getSelectedMainCellIndex() {
+        return selectedMainCellIndex
     }
 }

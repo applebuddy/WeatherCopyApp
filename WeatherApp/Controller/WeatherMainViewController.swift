@@ -64,6 +64,24 @@ class WeatherMainViewController: UIViewController {
         footerView.weatherLinkButton.addTarget(self, action: #selector(weatherLinkButtonPressed(_:)), for: .touchUpInside)
     }
 
+    func setCityName(coordinate: CLLocationCoordinate2D) {
+        let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+        let geoCoder = CLGeocoder()
+        let locale = Locale(identifier: "Ko-kr")
+        geoCoder.reverseGeocodeLocation(location, preferredLocale: locale) { placeMarks, error in
+
+            if error != nil {
+                print("\(error?.localizedDescription ?? "could not get cityName")")
+                return
+            }
+            guard let address = placeMarks?.first else { return }
+            let cityName = address.dictionaryWithValues(forKeys: ["locality"])["locality"]
+            guard let cityNameString = cityName as? String else { return }
+
+            CommonData.shared.setMainCityName(cityName: cityNameString)
+        }
+    }
+
     func makeWeatherMainTableViewEvent(_ scrollView: UIScrollView, offsetY _: CGFloat) {
         if scrollView.contentOffset.y >= 0 {
             scrollView.contentOffset.y = 0
@@ -150,6 +168,12 @@ extension WeatherMainViewController: UITableViewDelegate {
     func tableView(_: UITableView, didSelectRowAt _: IndexPath) {
         dismiss(animated: true, completion: nil)
     }
+
+    func tableView(_: UITableView, willDisplay cell: UITableViewCell, forRowAt _: IndexPath) {
+        if cell.isSelected == true {
+            cell.setSelected(false, animated: false)
+        }
+    }
 }
 
 extension WeatherMainViewController: UITableViewDataSource {
@@ -167,11 +191,11 @@ extension WeatherMainViewController: UITableViewDataSource {
 
         switch weatherMainIndex {
         case .mainRow:
-            let timeZone = mainWeatherData?.timezone ?? "-"
+            let cityName = CommonData.shared.mainCityName
             let timeStamp = mainWeatherData?.currently.time ?? 0
-            let temperature = (mainWeatherData?.hourly.data[0].temperature ?? 0).changeTemperatureFToC().roundedValue(roundSize: 0)
+            let temperature = (mainWeatherData?.hourly.data[0].temperature ?? 0).changeTemperatureFToC().roundedValue(roundSize: 1)
 
-            weatherMainCell.setCellData(cityName: timeZone, timeStamp: timeStamp, temperature: temperature)
+            weatherMainCell.setCellData(cityName: cityName, timeStamp: timeStamp, temperature: temperature)
         case .subRow:
             return weatherMainCell
         }
@@ -186,15 +210,10 @@ extension WeatherMainViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations _: [CLLocation]) {
         if let nowCoordinate = manager.location?.coordinate {
             print("latitude: \(nowCoordinate.latitude), longitude: \(nowCoordinate.longitude)")
-            let originLatitude = CommonData.shared.mainCoordinate.latitude.roundedValue(roundSize: 1)
-            let originLongitude = CommonData.shared.mainCoordinate.longitude.roundedValue(roundSize: 1)
-            let nowLatitude = nowCoordinate.latitude.roundedValue(roundSize: 1)
-            let nowLongitude = nowCoordinate.longitude.roundedValue(roundSize: 1)
-
-            print(nowLatitude)
-            print(originLatitude)
-            print(originLongitude)
-            print(nowLongitude)
+            let originLatitude = CommonData.shared.mainCoordinate.latitude.roundedValue(roundSize: 2)
+            let originLongitude = CommonData.shared.mainCoordinate.longitude.roundedValue(roundSize: 2)
+            let nowLatitude = nowCoordinate.latitude.roundedValue(roundSize: 2)
+            let nowLongitude = nowCoordinate.longitude.roundedValue(roundSize: 2)
             if nowLatitude == originLatitude,
                 originLongitude == nowLongitude {
                 // 만약 최근 위도 경도와 소수점 한자리까지 결과값이 동일하면 API요청을 하지 않는다.
@@ -204,6 +223,8 @@ extension WeatherMainViewController: CLLocationManagerDelegate {
                 CommonData.shared.setMainCoordinate(latitude: nowCoordinate.latitude, longitude: nowCoordinate.longitude)
                 let mainLatitude = CommonData.shared.mainCoordinate.latitude
                 let mainLongitude = CommonData.shared.mainCoordinate.longitude
+                setCityName(coordinate: nowCoordinate)
+
                 WeatherAPI.shared.requestAPI(latitude: mainLatitude, longitude: mainLongitude) { weatherAPIData in
                     self.mainWeatherData = weatherAPIData
                     DispatchQueue.main.async {

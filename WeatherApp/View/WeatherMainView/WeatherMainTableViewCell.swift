@@ -33,7 +33,7 @@ class WeatherMainTableViewCell: UITableViewCell {
         cityTitleLabel.text = "-"
         cityTitleLabel.sizeToFit()
         cityTitleLabel.textColor = .black
-        cityTitleLabel.font = .boldSystemFont(ofSize: 30)
+        cityTitleLabel.font = .boldSystemFont(ofSize: 35)
         return cityTitleLabel
     }()
 
@@ -80,7 +80,7 @@ class WeatherMainTableViewCell: UITableViewCell {
             case .celsius:
                 cityCelsiusLabel.text = "\(temperature)º"
             case .fahrenheit:
-                cityCelsiusLabel.text = "\(temperature.changeTemperatureCToF())º"
+                cityCelsiusLabel.text = "\(temperature.changeTemperatureCToF().roundedValue(roundSize: 1))º"
             }
         }
     }
