@@ -169,12 +169,13 @@ extension WeatherMainViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let weatherMainCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherMainTableCell, for: indexPath) as? WeatherMainTableViewCell else { return UITableViewCell() }
         if indexPath.row == 0 {
+            guard let weatherMainCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherMainTableCell, for: indexPath) as? WeatherMainTableViewCell else { return UITableViewCell() }
             let mainWeatherData = CommonData.shared.mainWeatherData
             let cityName = CommonData.shared.mainCityName
-            let timeStamp = mainWeatherData?.currently.time ?? 0
-            let temperature = (mainWeatherData?.hourly.data[0].temperature ?? 0).changeTemperatureFToC().roundedValue(roundSize: 0)
+
+            guard let timeStamp = mainWeatherData?.currently.time,
+                let temperature = mainWeatherData?.hourly.data[0].temperature else { return weatherMainCell }
 
             weatherMainCell.setMainTableCellData(cityName: cityName, timeStamp: timeStamp, temperature: temperature)
             return weatherMainCell
@@ -196,7 +197,6 @@ extension WeatherMainViewController: CLLocationManagerDelegate {
             let originLongitude = CommonData.shared.mainCoordinate.longitude.roundedValue(roundSize: 2)
             let nowLatitude = nowCoordinate.latitude.roundedValue(roundSize: 2)
             let nowLongitude = nowCoordinate.longitude.roundedValue(roundSize: 2)
-            print("didEnterForeground: \(didEnterForeground)")
             if nowLatitude == originLatitude,
                 originLongitude == nowLongitude, didEnterForeground {
                 // 만약 최근 위도 경도와 소수점 한자리까지 결과값이 동일하면 API요청을 하지 않는다.

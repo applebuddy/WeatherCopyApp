@@ -183,10 +183,6 @@ extension WeatherInfoViewController: UITableViewDelegate {
         switch rowIndex {
         case .dayInfoRow:
             guard let dayInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherDayInfoTableCell, for: indexPath) as? WeatherDayInfoTableViewCell else { return }
-            DispatchQueue.main.async {
-                // 24시간 날씨정보 컬렉션뷰 셀을 리로드 한다.
-                dayInfoCell.dayInfoCollectionView.reloadData()
-            }
         default: break
         }
     }
@@ -196,25 +192,12 @@ extension WeatherInfoViewController: UITableViewDelegate {
         switch sectionIndex {
         case .mainSection:
             let weatherData = CommonData.shared.mainWeatherData
-            var mainCelsius = weatherData?.currently.temperature ?? 0.0
-            var minCelsius = weatherData?.daily.data[0].temperatureLow ?? 0.0
-            var maxCelsius = weatherData?.daily.data[0].temperatureHigh ?? 0.0
-            var nowDate: String
-            if let timeStamp = weatherData?.currently.time {
-                let date = Date(timeIntervalSince1970: Double(timeStamp))
-                nowDate = CommonData.shared.infoHeaderDateFormatter.string(from: date)
-            } else {
-                nowDate = "-"
-            }
+            guard let mainCelsius = weatherData?.currently.temperature,
+                let minCelsius = weatherData?.daily.data[0].temperatureLow,
+                let maxCelsius = weatherData?.daily.data[0].temperatureHigh,
+                let timeStamp = weatherData?.currently.time else { return weatherInfoTableHeaderView }
 
-            if CommonData.shared.temperatureType == .celsius,
-                mainCelsius != 0, minCelsius != 0, maxCelsius != 0 {
-                mainCelsius = mainCelsius.changeTemperatureFToC().roundedValue(roundSize: 0)
-                minCelsius = minCelsius.changeTemperatureFToC().roundedValue(roundSize: 0)
-                maxCelsius = maxCelsius.changeTemperatureFToC().roundedValue(roundSize: 0)
-            }
-
-            weatherInfoTableHeaderView.setHeaderViewData(mainCelsius: mainCelsius, minCelusius: minCelsius, maxCelsius: maxCelsius, date: nowDate)
+            weatherInfoTableHeaderView.setHeaderViewData(mainCelsius: mainCelsius, minCelsius: minCelsius, maxCelsius: maxCelsius, timeStamp: timeStamp)
 
             return weatherInfoTableHeaderView
         }

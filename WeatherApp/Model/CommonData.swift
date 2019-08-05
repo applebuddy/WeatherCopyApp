@@ -107,6 +107,18 @@ final class CommonData {
 
     // MARK: - Get Method
 
+    func calculateCelsius(celsius: Double) -> Int {
+        var celsius = celsius
+
+        switch temperatureType {
+        case .celsius:
+            celsius = celsius.changeTemperatureFToC().roundedValue(roundSize: 0)
+        case .fahrenheit:
+            celsius = celsius.roundedValue(roundSize: 0)
+        }
+        return Int(celsius)
+    }
+
     func getWeatherImage(imageType: WeatherType) -> UIImage {
         let weatherImageIndex: String
         switch imageType {

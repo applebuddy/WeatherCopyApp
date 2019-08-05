@@ -70,14 +70,8 @@ class WeatherMainTableViewCell: UITableViewCell {
             nowTimeLabel.text = "\(CommonData.shared.mainDateFormatter.string(from: date))"
         }
 
-        if temperature > 0 {
-            switch CommonData.shared.temperatureType {
-            case .celsius:
-                cityCelsiusLabel.text = "\(temperature)º"
-            case .fahrenheit:
-                cityCelsiusLabel.text = "\(temperature.changeTemperatureCToF().roundedValue(roundSize: 0))º"
-            }
-        }
+        let celsius = CommonData.shared.calculateCelsius(celsius: temperature)
+        cityCelsiusLabel.text = "\(celsius)º"
     }
 }
 

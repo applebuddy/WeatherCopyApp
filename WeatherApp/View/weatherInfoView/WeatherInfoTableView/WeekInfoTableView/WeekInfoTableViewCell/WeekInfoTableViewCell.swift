@@ -36,24 +36,12 @@ class WeekInfoTableViewCell: UITableViewCell {
     func setWeekInfoCellData(timeStamp: Int, imageType: String, maxCelsius: Double, minCelsius: Double) {
         let date = Date(timeIntervalSince1970: Double(timeStamp))
         let dateString = CommonData.shared.infoHeaderDateFormatter.string(from: date)
+        let maxCelsius = CommonData.shared.calculateCelsius(celsius: maxCelsius)
+        let minCelsius = CommonData.shared.calculateCelsius(celsius: minCelsius)
 
         weekSubInfoView.dateLabel.text = "\(dateString)"
-
-        if maxCelsius > 0 {
-            var maxCelsius = maxCelsius.roundedValue(roundSize: 0)
-            if CommonData.shared.temperatureType == .celsius {
-                maxCelsius = maxCelsius.changeTemperatureFToC().roundedValue(roundSize: 0)
-            }
-            weekSubInfoView.maxCelsiusLabel.text = "\(Int(maxCelsius))"
-        }
-
-        if minCelsius > 0 {
-            var minCelsius = maxCelsius.roundedValue(roundSize: 0)
-            if CommonData.shared.temperatureType == .celsius {
-                minCelsius = maxCelsius.changeTemperatureFToC().roundedValue(roundSize: 0)
-            }
-            weekSubInfoView.minCelsiusLabel.text = "\(Int(minCelsius))"
-        }
+        weekSubInfoView.maxCelsiusLabel.text = "\(maxCelsius)"
+        weekSubInfoView.minCelsiusLabel.text = "\(minCelsius)"
 
         guard let imageType = WeatherType(rawValue: imageType) else { return }
         let image = CommonData.shared.getWeatherImage(imageType: imageType)

@@ -59,17 +59,21 @@ extension WeatherDayInfoTableViewCell: UICollectionViewDelegate {
 
         if weatherIndex == 0 {
             let weatherData = CommonData.shared.mainWeatherData
-            let timeStamp = weatherData?.hourly.data[indexPath.item].time ?? 0
-            let date = Date(timeIntervalSince1970: Double(timeStamp))
-            var hour = CommonData.shared.dayInfoDateFormatter.string(from: date)
+
+            var dateTitle = ""
+            guard let precipitation = weatherData?.hourly.data[indexPath.item].precipProbability,
+                let imageType = weatherData?.hourly.data[indexPath.item].icon,
+                let celsius = weatherData?.hourly.data[indexPath.item].temperature,
+                let timeStamp = weatherData?.hourly.data[indexPath.item].time else { return cell }
+
             if indexPath.item == 0 {
-                hour = "지금"
+                dateTitle = "지금"
+            } else {
+                let date = Date(timeIntervalSince1970: Double(timeStamp))
+                dateTitle = CommonData.shared.dayInfoDateFormatter.string(from: date)
             }
-            let precipitation = weatherData?.hourly.data[indexPath.item].precipProbability ?? 0.0
-            let imageType = weatherData?.hourly.data[indexPath.item].icon ?? WeatherType.clearDay
-            let celsius = weatherData?.hourly.data[indexPath.item].temperature ?? 0.0
-            cell.setDayInfoCollectionCellData(title: hour, preciptication: precipitation, imageType: imageType, celsius: celsius)
-            cell.layoutIfNeeded()
+
+            cell.setDayInfoCollectionCellData(title: dateTitle, precipitation: precipitation, imageType: imageType, celsius: celsius)
         }
 
         return cell

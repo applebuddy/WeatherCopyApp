@@ -59,21 +59,18 @@ class DayInfoCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func setDayInfoCollectionCellData(title: String, preciptication: Double, imageType: WeatherType, celsius: Double) {
-        titleLabel.text = "\(title)"
-        if preciptication.roundedValue(roundSize: 0) != 0.0 {
-            percentageLabel.text = "\(Int(preciptication * 100))%"
-        }
-
-        if celsius != 0.0 {
-            if CommonData.shared.temperatureType == .celsius {
-                celsiusLabel.text = "\(celsius.changeTemperatureFToC().roundedValue(roundSize: 0))º"
-            } else {
-                celsiusLabel.text = "\(celsius.roundedValue(roundSize: 0))º"
-            }
-        }
-
+    func setDayInfoCollectionCellData(title: String, precipitation: Double, imageType: WeatherType, celsius: Double) {
+        let precipitation = precipitation * 100
+        let celsius = CommonData.shared.calculateCelsius(celsius: celsius)
         let image = CommonData.shared.getWeatherImage(imageType: imageType)
+
+        if precipitation >= 0.1 {
+            percentageLabel.text = "\(precipitation)%"
+        } else {
+            percentageLabel.text = ""
+        }
+        celsiusLabel.text = "\(celsius)º"
+        titleLabel.text = "\(title)"
         cellImageView.image = image
     }
 

@@ -139,15 +139,15 @@ extension WeatherSubInfoTableViewCell: UITableViewDataSource {
             let selectedWeatherIndex = CommonData.shared.selectedMainCellIndex
             if selectedWeatherIndex == 0 {
                 let weatherData = CommonData.shared.mainWeatherData
-                let timeStamp = weatherData?.daily.data[indexPath.row].time ?? 0
-                let weatherType = weatherData?.daily.data[indexPath.row].icon ?? ""
-                let maxCelsius = weatherData?.daily.data[indexPath.row].temperatureMax ?? 0.0
-                let minCelsius = weatherData?.daily.data[indexPath.row].temperatureMin ?? 0.0
+                guard let timeStamp = weatherData?.daily.data[indexPath.row].time,
+                    let weatherType = weatherData?.daily.data[indexPath.row].icon,
+                    let maxCelsius = weatherData?.daily.data[indexPath.row].temperatureMax,
+                    let minCelsius = weatherData?.daily.data[indexPath.row].temperatureMin else { return weekInfoCell }
 
                 weekInfoCell.setWeekInfoCellData(timeStamp: timeStamp, imageType: weatherType, maxCelsius: maxCelsius, minCelsius: minCelsius)
             }
-
             return weekInfoCell
+
         case .todayInfoSection:
             guard let todayInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.todayInfoTableCell, for: indexPath) as? TodayInfoTableViewCell,
                 let todayInfoRowIndex = TodayInfoTableViewRow(rawValue: indexPath.row) else { return UITableViewCell() }
