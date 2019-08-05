@@ -76,7 +76,7 @@ class WeatherInfoViewController: UIViewController {
         isAppearViewController = false
         DispatchQueue.main.async {
             self.view.layoutIfNeeded()
-            self.weatherInfoView.weatherInfoTableHeaderView.layoutIfNeeded()
+            self.weatherInfoView.layoutIfNeeded()
             self.weatherInfoView.weatherInfoTableView.reloadData()
         }
     }
@@ -168,9 +168,6 @@ class WeatherInfoViewController: UIViewController {
 extension WeatherInfoViewController: UITableViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         makeWeatherInfoTableHeaderViewScrollEvent(scrollView, offsetY: scrollView.contentOffset.y)
-        if scrollView.contentOffset.y < 0 {
-            headerHeightConstraint?.constant += abs(scrollView.contentOffset.y)
-        }
     }
 
     // * WeatherData 갱신 시 DayInfoCollectionViewCell을 리로드 해준다.
@@ -178,7 +175,8 @@ extension WeatherInfoViewController: UITableViewDelegate {
         guard let rowIndex = WeatherInfoTableViewRow(rawValue: indexPath.row) else { return }
 
         switch rowIndex {
-        case .hourInfoRow: break
+        case .hourInfoRow:
+            guard let dayInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherHourInfoTableCell, for: indexPath) as? WeatherHourInfoTableViewCell else { return }
         default: break
         }
     }
@@ -187,15 +185,16 @@ extension WeatherInfoViewController: UITableViewDelegate {
         guard let sectionIndex = WeatherInfoTableViewSection(rawValue: section) else { return UIView() }
         switch sectionIndex {
         case .mainSection:
+            let weatherInfoTableHeaderView = weatherInfoView.weatherInfoTableHeaderView
             let weatherData = CommonData.shared.mainWeatherData
             guard let mainCelsius = weatherData?.currently.temperature,
                 let minCelsius = weatherData?.daily.data[0].temperatureLow,
                 let maxCelsius = weatherData?.daily.data[0].temperatureHigh,
-                let timeStamp = weatherData?.currently.time else { return weatherInfoView.weatherInfoTableHeaderView }
+                let timeStamp = weatherData?.currently.time else { return weatherInfoTableHeaderView }
 
-            weatherInfoView.weatherInfoTableHeaderView.setHeaderViewData(mainCelsius: mainCelsius, minCelsius: minCelsius, maxCelsius: maxCelsius, timeStamp: timeStamp)
+            weatherInfoTableHeaderView.setHeaderViewData(mainCelsius: mainCelsius, minCelsius: minCelsius, maxCelsius: maxCelsius, timeStamp: timeStamp)
 
-            return weatherInfoView.weatherInfoTableHeaderView
+            return weatherInfoTableHeaderView
         }
     }
 
@@ -265,7 +264,7 @@ extension WeatherInfoViewController: CLLocationManagerDelegate {
                     CommonData.shared.setMainWeatherData(weatherData: weatherAPIData)
 
                     DispatchQueue.main.async {
-                        self.weatherInfoView.weatherInfoTableHeaderView.layoutIfNeeded()
+                        self.weatherInfoView.layoutIfNeeded()
                         self.weatherInfoView.weatherInfoTableView.reloadData()
                     }
                 }

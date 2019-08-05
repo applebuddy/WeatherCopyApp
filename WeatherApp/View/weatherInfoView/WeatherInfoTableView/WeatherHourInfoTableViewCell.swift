@@ -54,7 +54,7 @@ class WeatherHourInfoTableViewCell: UITableViewCell {
 
 extension WeatherHourInfoTableViewCell: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifier.HourInfoCollectionCell, for: indexPath) as? HourInfoCollectionViewCell else { return UICollectionViewCell() }
+        guard let hourInfoCollectionCell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifier.HourInfoCollectionCell, for: indexPath) as? HourInfoCollectionViewCell else { return UICollectionViewCell() }
         let weatherIndex = CommonData.shared.selectedMainCellIndex
 
         if weatherIndex == 0 {
@@ -64,7 +64,7 @@ extension WeatherHourInfoTableViewCell: UICollectionViewDelegate {
             guard let precipitation = weatherData?.hourly.data[indexPath.item].precipProbability,
                 let imageType = weatherData?.hourly.data[indexPath.item].icon,
                 let celsius = weatherData?.hourly.data[indexPath.item].temperature,
-                let timeStamp = weatherData?.hourly.data[indexPath.item].time else { return cell }
+                let timeStamp = weatherData?.hourly.data[indexPath.item].time else { return hourInfoCollectionCell }
 
             if indexPath.item == 0 {
                 dateTitle = "지금"
@@ -73,10 +73,10 @@ extension WeatherHourInfoTableViewCell: UICollectionViewDelegate {
                 dateTitle = CommonData.shared.hourInfoDateFormatter.string(from: date)
             }
 
-            cell.setDayInfoCollectionCellData(title: dateTitle, precipitation: precipitation, imageType: imageType, celsius: celsius)
+            hourInfoCollectionCell.setDayInfoCollectionCellData(title: dateTitle, precipitation: precipitation, imageType: imageType, celsius: celsius)
         }
 
-        return cell
+        return hourInfoCollectionCell
     }
 }
 
