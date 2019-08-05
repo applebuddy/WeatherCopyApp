@@ -17,6 +17,7 @@ final class CommonData {
     var selectedMainCellIndex = 0
     var mainCityName = "-"
     var weatherURLString = "https://weather.com/ko-KR/weather/today/"
+    var isAppForeground = false
 
     // MARK: - Set Method
 
@@ -68,9 +69,17 @@ final class CommonData {
         return isLocationAuthority
     }
 
+    func setIsAppForegroundValue(isForeground: Bool) {
+        isAppForeground = isForeground
+    }
+
     // MARK: - Get Method
 
     func getSelectedMainCellIndex() -> Int {
         return selectedMainCellIndex
+    }
+
+    func getIsAppForegroundValue() -> Bool {
+        return isAppForeground
     }
 }

@@ -211,12 +211,14 @@ extension WeatherMainViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations _: [CLLocation]) {
         if let nowCoordinate = manager.location?.coordinate {
             print("latitude: \(nowCoordinate.latitude), longitude: \(nowCoordinate.longitude)")
+            let didEnterForeground = CommonData.shared.getIsAppForegroundValue()
             let originLatitude = CommonData.shared.mainCoordinate.latitude.roundedValue(roundSize: 2)
             let originLongitude = CommonData.shared.mainCoordinate.longitude.roundedValue(roundSize: 2)
             let nowLatitude = nowCoordinate.latitude.roundedValue(roundSize: 2)
             let nowLongitude = nowCoordinate.longitude.roundedValue(roundSize: 2)
+            print("didEnterForeground: \(didEnterForeground)")
             if nowLatitude == originLatitude,
-                originLongitude == nowLongitude {
+                originLongitude == nowLongitude, didEnterForeground {
                 // 만약 최근 위도 경도와 소수점 한자리까지 결과값이 동일하면 API요청을 하지 않는다.
                 print("지금 위도 경도 같아 호출하지마")
             } else {
@@ -232,6 +234,7 @@ extension WeatherMainViewController: CLLocationManagerDelegate {
                         self.weatherMainView.weatherMainTableView.reloadData()
                     }
                 }
+                CommonData.shared.setIsAppForegroundValue(isForeground: true)
             }
         }
     }

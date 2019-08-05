@@ -3,7 +3,7 @@ import UIKit
 
 // MARK: - WeatherAPIData
 
-// MARK: - Empty
+// MARK: - WeatherAPIData
 
 struct WeatherAPIData: Codable {
     let latitude, longitude: Double
@@ -18,7 +18,6 @@ struct WeatherAPIData: Codable {
 
 struct Currently: Codable {
     let time: Int
-    let summary: Summary
     let icon: Icon
     let nearestStormDistance: Int?
     let precipIntensity, precipProbability: Double
@@ -34,29 +33,23 @@ struct Currently: Codable {
 enum Icon: String, Codable {
     case clearDay = "clear-day"
     case clearNight = "clear-night"
-    case cloudy
+    case rain, snow, sleet, wind
+    case fog, cloudy
     case partlyCloudyDay = "partly-cloudy-day"
     case partlyCloudyNight = "partly-cloudy-night"
+    case hail, thunderstorm, tornado
 }
 
 enum PrecipType: String, Codable {
     case rain
-}
-
-enum Summary: String, Codable {
-    case 맑음
-    case 습함
-    case 습함약간흐림 = "습함, 약간 흐림"
-    case 습함흐림 = "습함, 흐림"
-    case 약간흐림 = "약간 흐림"
-    case 흐림
+    case snow
+    case sleet
 }
 
 // MARK: - Daily
 
 struct Daily: Codable {
-    let summary: String
-    let icon: PrecipType
+    let icon: Icon
     let data: [SubInfo]
 }
 
@@ -64,7 +57,7 @@ struct Daily: Codable {
 
 struct SubInfo: Codable {
     let time: Int
-    let summary, icon: String
+    let icon: String
     let sunriseTime, sunsetTime: Int
     let moonPhase, precipIntensity, precipIntensityMax: Double
     let precipIntensityMaxTime: Int
@@ -96,7 +89,6 @@ struct SubInfo: Codable {
 // MARK: - Hourly
 
 struct Hourly: Codable {
-    let summary: String
     let icon: Icon
     let data: [Currently]
 }
