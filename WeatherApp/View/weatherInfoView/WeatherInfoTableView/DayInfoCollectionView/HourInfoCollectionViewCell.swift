@@ -60,11 +60,11 @@ class HourInfoCollectionViewCell: UICollectionViewCell {
     }
 
     func setDayInfoCollectionCellData(title: String, precipitation: Double, imageType: WeatherType, celsius: Double) {
-        let precipitation = precipitation * 100
+        let precipitation = Int(precipitation * 100)
         let celsius = CommonData.shared.calculateCelsius(celsius: celsius)
         let image = CommonData.shared.getWeatherImage(imageType: imageType)
 
-        if precipitation >= 0.1 {
+        if precipitation >= 10 {
             percentageLabel.text = "\(precipitation)%"
         } else {
             percentageLabel.text = ""
@@ -99,16 +99,12 @@ extension HourInfoCollectionViewCell: UIViewSettingProtocol {
         celsiusLabel.activateAnchors()
         titleLabel.activateAnchors()
         NSLayoutConstraint.activate([
-            titleLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.3),
+            titleLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.2),
             titleLabel.widthAnchor.constraint(equalTo: widthAnchor),
-
-            cellImageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.3),
-            cellImageView.widthAnchor.constraint(equalTo: widthAnchor),
-
             percentageLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.1),
             percentageLabel.widthAnchor.constraint(equalTo: widthAnchor),
-
-            celsiusLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.3),
+            cellImageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.3),
+            cellImageView.widthAnchor.constraint(equalTo: widthAnchor),
             celsiusLabel.widthAnchor.constraint(equalTo: widthAnchor),
         ])
     }

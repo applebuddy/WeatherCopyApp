@@ -21,6 +21,12 @@ class WeatherInfoView: UIView {
         return weatherTableView
     }()
 
+    let weatherInfoTableHeaderView: WeatherInfoTableHeaderView = {
+        let weatherInfoTableHeaderView = WeatherInfoTableHeaderView()
+        weatherInfoTableHeaderView.contentMode = .scaleAspectFill
+        return weatherInfoTableHeaderView
+    }()
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .white
@@ -58,16 +64,27 @@ class WeatherInfoView: UIView {
             weatherTitleView.heightAnchor.constraint(equalToConstant: WeatherViewHeight.titleViewHeight),
         ])
     }
+
+    func setInfoHeaderViewContraint() {
+        NSLayoutConstraint.activate([
+            weatherInfoTableHeaderView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            weatherInfoTableHeaderView.topAnchor.constraint(equalTo: weatherTitleView.bottomAnchor),
+            weatherInfoTableHeaderView.widthAnchor.constraint(equalTo: widthAnchor),
+            weatherInfoTableHeaderView.heightAnchor.constraint(equalToConstant: WeatherCellHeight.infoTableHeaderCell),
+        ])
+    }
 }
 
 extension WeatherInfoView: UIViewSettingProtocol {
     func makeSubviews() {
         addSubview(weatherTitleView)
         addSubview(weatherInfoTableView)
+        addSubview(weatherInfoTableHeaderView)
     }
 
     func makeConstraints() {
         setWeatherTitleViewContraint()
         setWeatherTableViewConstraint()
+        setInfoHeaderViewContraint()
     }
 }

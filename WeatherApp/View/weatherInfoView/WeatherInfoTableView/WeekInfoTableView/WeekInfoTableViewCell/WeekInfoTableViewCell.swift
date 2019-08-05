@@ -59,9 +59,9 @@ extension WeekInfoTableViewCell: UIViewSettingProtocol {
         NSLayoutConstraint.activate([
             weekSubInfoView.leftAnchor.constraint(equalTo: leftAnchor, constant: CommonInset.leftInset),
             weekSubInfoView.rightAnchor.constraint(equalTo: rightAnchor, constant: -CommonInset.rightInset),
-            weekSubInfoView.topAnchor.constraint(equalTo: topAnchor, constant: CommonInset.topInset),
-            weekSubInfoView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -CommonInset.bottomInset),
-            weekSubInfoView.heightAnchor.constraint(equalToConstant: WeatherCellHeight.subInfoTableViewCell),
+            weekSubInfoView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            weekSubInfoView.centerYAnchor.constraint(equalTo: centerYAnchor),
+            weekSubInfoView.heightAnchor.constraint(equalTo: heightAnchor, constant: -CommonInset.topInset * 2),
         ])
     }
 }

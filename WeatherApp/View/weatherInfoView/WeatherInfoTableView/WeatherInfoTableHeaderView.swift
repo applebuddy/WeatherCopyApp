@@ -109,16 +109,16 @@ extension WeatherInfoTableHeaderView: UIViewSettingProtocol {
     func makeConstraints() {
         mainCelsiusLabel.activateAnchors()
         NSLayoutConstraint.activate([
-            mainCelsiusLabel.centerXAnchor.constraint(equalTo: self.centerXAnchor),
-            mainCelsiusLabel.topAnchor.constraint(equalTo: self.topAnchor, constant: 10),
-            mainCelsiusLabel.leftAnchor.constraint(equalTo: self.leftAnchor),
-            mainCelsiusLabel.rightAnchor.constraint(equalTo: self.rightAnchor),
+            mainCelsiusLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+            mainCelsiusLabel.topAnchor.constraint(equalTo: topAnchor, constant: 10),
+            mainCelsiusLabel.leftAnchor.constraint(equalTo: leftAnchor),
+            mainCelsiusLabel.rightAnchor.constraint(equalTo: rightAnchor),
         ])
 
         dateLabel.activateAnchors()
         NSLayoutConstraint.activate([
-            dateLabel.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: CommonInset.leftInset),
-            dateLabel.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: -10),
+            dateLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: CommonInset.leftInset),
+            dateLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10),
             dateLabel.heightAnchor.constraint(equalToConstant: 30),
             dateLabel.widthAnchor.constraint(equalToConstant: 50),
         ])
@@ -132,15 +132,15 @@ extension WeatherInfoTableHeaderView: UIViewSettingProtocol {
 
         minCelsiusLabel.activateAnchors()
         NSLayoutConstraint.activate([
-            minCelsiusLabel.rightAnchor.constraint(equalTo: self.rightAnchor, constant: -20),
-            minCelsiusLabel.bottomAnchor.constraint(equalTo: self.dateLabel.bottomAnchor, constant: 0),
+            minCelsiusLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: -CommonInset.rightInset),
+            minCelsiusLabel.bottomAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 0),
             minCelsiusLabel.heightAnchor.constraint(equalToConstant: 20),
             minCelsiusLabel.widthAnchor.constraint(equalToConstant: 30),
         ])
 
         maxCelsiusLabel.activateAnchors()
         NSLayoutConstraint.activate([
-            maxCelsiusLabel.rightAnchor.constraint(equalTo: minCelsiusLabel.leftAnchor, constant: -10),
+            maxCelsiusLabel.rightAnchor.constraint(equalTo: minCelsiusLabel.leftAnchor, constant: -CommonInset.rightInset / 2),
             maxCelsiusLabel.widthAnchor.constraint(equalTo: minCelsiusLabel.widthAnchor),
             maxCelsiusLabel.heightAnchor.constraint(equalTo: minCelsiusLabel.heightAnchor),
             maxCelsiusLabel.centerYAnchor.constraint(equalTo: minCelsiusLabel.centerYAnchor),
