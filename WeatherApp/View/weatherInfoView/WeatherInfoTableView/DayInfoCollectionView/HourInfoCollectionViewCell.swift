@@ -9,7 +9,7 @@
 import UIKit
 
 /// 24시간 날씨예보 정보 컬렉션뷰 셀
-class DayInfoCollectionViewCell: UICollectionViewCell {
+class HourInfoCollectionViewCell: UICollectionViewCell {
     let cellImageView: UIImageView = {
         let cellImageView = UIImageView()
         cellImageView.contentMode = .scaleAspectFit
@@ -82,7 +82,7 @@ class DayInfoCollectionViewCell: UICollectionViewCell {
     }
 }
 
-extension DayInfoCollectionViewCell: UIViewSettingProtocol {
+extension HourInfoCollectionViewCell: UIViewSettingProtocol {
     func makeSubviews() {
         addSubview(cellStackView)
         setStackView()
@@ -99,11 +99,15 @@ extension DayInfoCollectionViewCell: UIViewSettingProtocol {
         celsiusLabel.activateAnchors()
         titleLabel.activateAnchors()
         NSLayoutConstraint.activate([
-            titleLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.2),
+            titleLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.3),
             titleLabel.widthAnchor.constraint(equalTo: widthAnchor),
-            titleLabel.topAnchor.constraint(equalTo: topAnchor),
+
+            cellImageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.3),
+            cellImageView.widthAnchor.constraint(equalTo: widthAnchor),
+
             percentageLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.1),
             percentageLabel.widthAnchor.constraint(equalTo: widthAnchor),
+
             celsiusLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.3),
             celsiusLabel.widthAnchor.constraint(equalTo: widthAnchor),
         ])

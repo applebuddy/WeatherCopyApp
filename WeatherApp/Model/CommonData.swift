@@ -37,7 +37,7 @@ final class CommonData {
         return mainDateFormatter
     }()
 
-    let dayInfoDateFormatter: DateFormatter = {
+    let hourInfoDateFormatter: DateFormatter = {
         let mainDateFormatter = DateFormatter()
         mainDateFormatter.dateFormat = "a h시"
         mainDateFormatter.locale = Locale(identifier: "ko_KR")

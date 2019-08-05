@@ -17,9 +17,9 @@ struct DataIdentifier {
 
 /// * WeatherApp 셀 식별자
 struct CellIdentifier {
-    static let weatherDayInfoTableCell: String = "weatherDayInfoTableViewCell"
+    static let weatherHourInfoTableCell: String = "weatherHourInfoTableViewCell"
     static let weatherWeekInfoTableCell: String = "weatherWeekInfoTableViewCell"
-    static let dayInfoCollectionCell: String = "dayInfoCollectionViewCell"
+    static let HourInfoCollectionCell: String = "hourInfoCollectionViewCell"
     static let weekInfoTableCell: String = "weekInfoTableViewCell"
     static let weatherMainTableCell: String = "weatherMainTableViewCell"
     static let todayInfoTableCell: String = "todayInfoTableViewCell"
@@ -48,7 +48,7 @@ enum WeatherSubInfoTableViewSection: Int {
 
 /// * WeatherInfoTableView Row Index
 enum WeatherInfoTableViewRow: Int {
-    case dayInfoRow = 0
+    case hourInfoRow = 0
     case separatorRow = 1
     case weekInfoRow = 2
 }
@@ -72,16 +72,16 @@ struct WeatherInfoCellCount {
 struct WeatherViewHeight {
     static let weatherMainBottomView: CGFloat = 100
     static let titleViewHeight: CGFloat = 100
-    static let subInfoTableView: CGFloat = UIScreen.main.bounds.size.height - (WeatherViewHeight.titleViewHeight + WeatherViewHeight.todayInfoTableHeaderView + WeatherCellHeight.dayInfoCollectionCell)
+    static let subInfoTableView: CGFloat = UIScreen.main.bounds.size.height - (WeatherViewHeight.titleViewHeight + WeatherViewHeight.todayInfoTableHeaderView + WeatherCellHeight.hourInfoCollectionCell)
     static let todayInfoTableHeaderView: CGFloat = 60
     static let weatherCitySearchView: CGFloat = 100
 }
 
 /// * TableView Cell Heights
 struct WeatherCellHeight {
-    static let dayInfoTableCell: CGFloat = 120
+    static let hourInfoTableCell: CGFloat = 120
     static let infoTableHeaderCell: CGFloat = 150
-    static let dayInfoCollectionCell: CGFloat = 120
+    static let hourInfoCollectionCell: CGFloat = 120
     static let subInfoTableViewCell: CGFloat = 35
     static let todayInfoTableViewCell: CGFloat = 60
     static let MainTableViewCell: CGFloat = 100

@@ -181,8 +181,8 @@ extension WeatherInfoViewController: UITableViewDelegate {
         guard let rowIndex = WeatherInfoTableViewRow(rawValue: indexPath.row) else { return }
 
         switch rowIndex {
-        case .dayInfoRow:
-            guard let dayInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherDayInfoTableCell, for: indexPath) as? WeatherDayInfoTableViewCell else { return }
+        case .hourInfoRow:
+            guard let dayInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherHourInfoTableCell, for: indexPath) as? WeatherHourInfoTableViewCell else { return }
         default: break
         }
     }
@@ -230,15 +230,15 @@ extension WeatherInfoViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let weatherDayInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherDayInfoTableCell, for: indexPath) as? WeatherDayInfoTableViewCell,
+        guard let weatherHourInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherHourInfoTableCell, for: indexPath) as? WeatherHourInfoTableViewCell,
             let weatherWeekInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherWeekInfoTableCell, for: indexPath) as? WeatherSubInfoTableViewCell,
             let rowIndex = WeatherInfoTableViewRow(rawValue: indexPath.row) else { return UITableViewCell() }
 
         switch rowIndex {
-        case .dayInfoRow:
-            weatherDayInfoCell.setCellData()
+        case .hourInfoRow:
+            weatherHourInfoCell.setCellData()
 
-            return weatherDayInfoCell
+            return weatherHourInfoCell
         case .separatorRow: return WeatherSeparatorTableViewCell()
         case .weekInfoRow:
             return weatherWeekInfoCell
@@ -269,7 +269,6 @@ extension WeatherInfoViewController: CLLocationManagerDelegate {
                     CommonData.shared.setMainWeatherData(weatherData: weatherAPIData)
 
                     DispatchQueue.main.async {
-                        self.view.layoutIfNeeded()
                         self.weatherInfoTableHeaderView.layoutIfNeeded()
                         self.weatherInfoView.weatherInfoTableView.reloadData()
                     }
