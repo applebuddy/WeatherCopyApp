@@ -9,9 +9,23 @@
 import UIKit
 
 /// WeatherApp 범용 extension
-
 extension UIView {
     func activateAnchors() {
         translatesAutoresizingMaskIntoConstraints = false
+    }
+}
+
+extension Double {
+    func roundedValue(roundSize: Int) -> Double {
+        let roundSize = pow(10.0, Double(roundSize))
+        return (self * roundSize).rounded() / roundSize
+    }
+
+    func changeTemperatureFToC() -> Double {
+        return (self - 32) / 1.8
+    }
+
+    func changeTemperatureCToF() -> Double {
+        return (self * 1.8) + 32
     }
 }

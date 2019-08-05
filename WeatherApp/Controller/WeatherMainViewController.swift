@@ -6,9 +6,14 @@
 //  Copyright © 2019 MinKyeongTae. All rights reserved.
 //
 
+import CoreLocation
 import UIKit
 
 class WeatherMainViewController: UIViewController {
+    // MARK: - Property
+
+    let locationManager = CLLocationManager()
+
     // MARK: - UI
 
     let weatherCitySearchViewController: WeatherCitySearchViewController = {
@@ -34,7 +39,18 @@ class WeatherMainViewController: UIViewController {
         view = weatherMainView
     }
 
+    override func viewWillAppear(_: Bool) {
+        super.viewWillAppear(true)
+        checksLocationAuthority()
+    }
+
     // MARK: - Set Method
+
+    func setLocationManager() {
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.startUpdatingLocation()
+    }
 
     func setMainViewController() {
         weatherMainView.weatherMainTableView.delegate = self
@@ -53,13 +69,42 @@ class WeatherMainViewController: UIViewController {
         }
     }
 
+    // MARK: Check Method
+
+    func checkLocationAuthStatus() -> Bool {
+        let locationAuthStatus = CLLocationManager.authorizationStatus()
+        switch locationAuthStatus {
+        case .authorizedAlways,
+             .authorizedWhenInUse:
+            CommonData.shared.setLocationAuthData(isAuth: true)
+        default:
+            CommonData.shared.setLocationAuthData(isAuth: false)
+        }
+        return CommonData.shared.isLocationAuthority
+    }
+
+    func checksLocationAuthority() {
+        // 사용자가 직접 환경설정에서 위치접근을 설정한 경우를 체그하기 위해 위치권한 상태를 체크한다.
+        if !checkLocationAuthStatus() {
+            present(weatherCitySearchViewController, animated: true)
+        } else {
+            setLocationManager()
+        }
+    }
+
     // MARK: - Button Event
 
     @objc func celsiusToggleButtonPressed(_ sender: UIButton) {
         if sender.image(for: .normal) == UIImage(named: "toggleButton_C") {
+            CommonData.shared.changeTemperatureType()
             sender.setImage(UIImage(named: "toggleButton_F"), for: .normal)
         } else {
+            CommonData.shared.changeTemperatureType()
             sender.setImage(UIImage(named: "toggleButton_C"), for: .normal)
+        }
+
+        DispatchQueue.main.async {
+            self.weatherMainView.weatherMainTableView.reloadData()
         }
     }
 
@@ -68,8 +113,9 @@ class WeatherMainViewController: UIViewController {
     }
 
     @objc func weatherLinkButtonPressed(_: UIButton) {
-        guard let url = NSURL(string: "https://weather.com/ko-KR/weather/today/l/37.46,126.88?par=apple_widget&locale=ko_KR") else { return }
-        UIApplication.shared.open(url as URL)
+        let latitude = CommonData.shared.mainCoordinate.latitude
+        let longitude = CommonData.shared.mainCoordinate.longitude
+        CommonData.shared.openWeatherURL(latitude: latitude, longitude: longitude)
     }
 }
 
@@ -97,12 +143,19 @@ extension WeatherMainViewController: UITableViewDelegate {
         return WeatherCellHeight.MainTableViewCell
     }
 
-    func tableView(_: UITableView, heightForFooterInSection _: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForFooterInSection _: Int) -> CGFloat {
         return WeatherViewHeight.weatherMainBottomView
     }
 
-    func tableView(_: UITableView, didSelectRowAt _: IndexPath) {
+    func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
+        CommonData.shared.setSelectedMainCellIndex(index: indexPath.row)
         dismiss(animated: true, completion: nil)
+    }
+
+    func tableView(_: UITableView, willDisplay cell: UITableViewCell, forRowAt _: IndexPath) {
+        if cell.isSelected == true {
+            cell.setSelected(false, animated: false)
+        }
     }
 }
 
@@ -116,9 +169,54 @@ extension WeatherMainViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let weatherMainCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherMainTableCell, for: indexPath) as? WeatherMainTableViewCell else { return UITableViewCell() }
+        if indexPath.row == 0 {
+            guard let weatherMainCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherMainTableCell, for: indexPath) as? WeatherMainTableViewCell else { return UITableViewCell() }
+            let mainWeatherData = CommonData.shared.mainWeatherData
+            let cityName = CommonData.shared.mainCityName
 
-        return weatherMainCell
+            guard let timeStamp = mainWeatherData?.currently.time,
+                let temperature = mainWeatherData?.hourly.data[0].temperature else { return weatherMainCell }
+
+            weatherMainCell.setMainTableCellData(cityName: cityName, timeStamp: timeStamp, temperature: temperature)
+            return weatherMainCell
+        } else {
+            return UITableViewCell()
+        }
+    }
+}
+
+// MARK: - CLLocationManager Protocol
+
+extension WeatherMainViewController: CLLocationManagerDelegate {
+    /// * **위치가 업데이트 될 때마다 실행 되는 델리게이트 메서드**
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations _: [CLLocation]) {
+        if let nowCoordinate = manager.location?.coordinate {
+            print("latitude: \(nowCoordinate.latitude), longitude: \(nowCoordinate.longitude)")
+            let didEnterForeground = CommonData.shared.getIsAppForegroundValue()
+            let originLatitude = CommonData.shared.mainCoordinate.latitude.roundedValue(roundSize: 2)
+            let originLongitude = CommonData.shared.mainCoordinate.longitude.roundedValue(roundSize: 2)
+            let nowLatitude = nowCoordinate.latitude.roundedValue(roundSize: 2)
+            let nowLongitude = nowCoordinate.longitude.roundedValue(roundSize: 2)
+            if nowLatitude == originLatitude,
+                originLongitude == nowLongitude, didEnterForeground {
+                // 만약 최근 위도 경도와 소수점 한자리까지 결과값이 동일하면 API요청을 하지 않는다.
+                print("지금 위도 경도 같아 호출하지마")
+            } else {
+                print("지금 위도 경도 최신화 필요해 호출해")
+                CommonData.shared.setMainCoordinate(latitude: nowCoordinate.latitude, longitude: nowCoordinate.longitude)
+                CommonData.shared.setMainCityName(coordinate: nowCoordinate)
+                let mainLatitude = CommonData.shared.mainCoordinate.latitude
+                let mainLongitude = CommonData.shared.mainCoordinate.longitude
+
+                WeatherAPI.shared.requestAPI(latitude: mainLatitude, longitude: mainLongitude) { weatherAPIData in
+                    CommonData.shared.setMainWeatherData(weatherData: weatherAPIData)
+                    DispatchQueue.main.async {
+                        self.weatherMainView.weatherMainTableView.reloadData()
+                    }
+                }
+                CommonData.shared.setIsAppForegroundValue(isForeground: true)
+            }
+        }
     }
 }
 

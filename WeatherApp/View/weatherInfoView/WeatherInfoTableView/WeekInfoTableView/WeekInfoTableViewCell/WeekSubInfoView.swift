@@ -12,22 +12,22 @@ import UIKit
 class WeekSubInfoView: UIView {
     let dateLabel: UILabel = {
         let dateLabel = UILabel()
-        dateLabel.text = "금요일"
+        dateLabel.text = ""
         dateLabel.textAlignment = .left
         return dateLabel
     }()
 
     let maxCelsiusLabel: UILabel = {
         let maxCelsiusLabel = UILabel()
-        maxCelsiusLabel.text = "96"
-        maxCelsiusLabel.textAlignment = .center
+        maxCelsiusLabel.text = ""
+        maxCelsiusLabel.textAlignment = .right
         return maxCelsiusLabel
     }()
 
     let minCelsiusLabel: UILabel = {
         let minCelsiusLabel = UILabel()
-        minCelsiusLabel.text = "77"
-        minCelsiusLabel.textAlignment = .center
+        minCelsiusLabel.text = ""
+        minCelsiusLabel.textAlignment = .right
         minCelsiusLabel.textColor = .gray
         minCelsiusLabel.alpha = 0.7
         return minCelsiusLabel
@@ -35,7 +35,6 @@ class WeekSubInfoView: UIView {
 
     let weatherImageView: UIImageView = {
         let weatherImageView = UIImageView()
-        weatherImageView.image = #imageLiteral(resourceName: "cloud")
         weatherImageView.contentMode = .scaleAspectFit
         return weatherImageView
     }()
@@ -75,11 +74,12 @@ extension WeekSubInfoView: UIViewSettingProtocol {
     func makeConstraints() {
         subWeekInfoStackView.activateAnchors()
         NSLayoutConstraint.activate([
-            subWeekInfoStackView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: CommonInset.topInset / 2),
-            subWeekInfoStackView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: CommonInset.leftInset),
-            subWeekInfoStackView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -CommonInset.rightInset),
-            subWeekInfoStackView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -CommonInset.bottomInset / 2),
-            subWeekInfoStackView.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 1),
+            subWeekInfoStackView.topAnchor.constraint(equalTo: topAnchor),
+            subWeekInfoStackView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            subWeekInfoStackView.leftAnchor.constraint(equalTo: leftAnchor),
+            subWeekInfoStackView.rightAnchor.constraint(equalTo: rightAnchor),
+            subWeekInfoStackView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            subWeekInfoStackView.centerYAnchor.constraint(equalTo: centerYAnchor),
         ])
 
         dateLabel.activateAnchors()
@@ -88,10 +88,14 @@ extension WeekSubInfoView: UIViewSettingProtocol {
         minCelsiusLabel.activateAnchors()
 
         NSLayoutConstraint.activate([
-            dateLabel.widthAnchor.constraint(equalTo: subWeekInfoStackView.widthAnchor, multiplier: 0.3),
-            weatherImageView.widthAnchor.constraint(equalTo: subWeekInfoStackView.widthAnchor, multiplier: 0.3),
-            maxCelsiusLabel.widthAnchor.constraint(equalTo: subWeekInfoStackView.widthAnchor, multiplier: 0.3),
-            minCelsiusLabel.widthAnchor.constraint(equalTo: subWeekInfoStackView.widthAnchor, multiplier: 0.3),
+            dateLabel.widthAnchor.constraint(equalTo: subWeekInfoStackView.widthAnchor, multiplier: 0.2),
+            dateLabel.heightAnchor.constraint(equalTo: heightAnchor),
+            weatherImageView.widthAnchor.constraint(equalTo: subWeekInfoStackView.widthAnchor, multiplier: 0.5),
+            weatherImageView.heightAnchor.constraint(equalTo: heightAnchor),
+            maxCelsiusLabel.widthAnchor.constraint(equalTo: subWeekInfoStackView.widthAnchor, multiplier: 0.15),
+            maxCelsiusLabel.heightAnchor.constraint(equalTo: heightAnchor),
+            minCelsiusLabel.widthAnchor.constraint(equalTo: subWeekInfoStackView.widthAnchor, multiplier: 0.15),
+            minCelsiusLabel.heightAnchor.constraint(equalTo: heightAnchor),
         ])
     }
 }

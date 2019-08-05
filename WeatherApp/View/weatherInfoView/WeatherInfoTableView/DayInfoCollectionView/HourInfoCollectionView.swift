@@ -9,7 +9,7 @@
 import UIKit
 
 /// 하루 기준 날씨정보 컬렉션뷰
-class DayInfoCollectionView: UICollectionView {
+class HourInfoCollectionView: UICollectionView {
     override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame, collectionViewLayout: layout)
         backgroundColor = .black
@@ -21,7 +21,7 @@ class DayInfoCollectionView: UICollectionView {
     }
 }
 
-extension DayInfoCollectionView: UIViewSettingProtocol {
+extension HourInfoCollectionView: UIViewSettingProtocol {
     func makeSubviews() {}
 
     func makeConstraints() {}

@@ -12,7 +12,7 @@ import UIKit
 class WeatherInfoTableHeaderView: UIView {
     let mainCelsiusLabel: UILabel = {
         let celsiusLabel = UILabel()
-        celsiusLabel.text = "27º"
+        celsiusLabel.text = ""
         celsiusLabel.font = .systemFont(ofSize: 80)
         celsiusLabel.textAlignment = .center
         celsiusLabel.textColor = .white
@@ -22,7 +22,7 @@ class WeatherInfoTableHeaderView: UIView {
 
     let minCelsiusLabel: UILabel = {
         let minCelsiusLabel = UILabel()
-        minCelsiusLabel.text = "18"
+        minCelsiusLabel.text = ""
         minCelsiusLabel.font = .systemFont(ofSize: 20)
         minCelsiusLabel.textAlignment = .center
         minCelsiusLabel.textColor = .gray
@@ -33,7 +33,7 @@ class WeatherInfoTableHeaderView: UIView {
 
     let maxCelsiusLabel: UILabel = {
         let maxCelsiusLabel = UILabel()
-        maxCelsiusLabel.text = "36"
+        maxCelsiusLabel.text = ""
         maxCelsiusLabel.font = .systemFont(ofSize: 20)
         maxCelsiusLabel.textAlignment = .center
         maxCelsiusLabel.textColor = .white
@@ -43,7 +43,7 @@ class WeatherInfoTableHeaderView: UIView {
 
     let dateLabel: UILabel = {
         let dateLabel = UILabel()
-        dateLabel.text = "수요일"
+        dateLabel.text = ""
         dateLabel.font = .systemFont(ofSize: 30)
         dateLabel.textAlignment = .center
         dateLabel.textColor = .white
@@ -81,6 +81,19 @@ class WeatherInfoTableHeaderView: UIView {
     func setTableHeaderViewFrame(rect: CGRect) {
         frame = rect
         layoutIfNeeded()
+    }
+
+    func setHeaderViewData(mainCelsius: Double, minCelsius: Double, maxCelsius: Double, timeStamp: Int) {
+        let mainCelsius = CommonData.shared.calculateCelsius(celsius: mainCelsius)
+        let minCelsius = CommonData.shared.calculateCelsius(celsius: minCelsius)
+        let maxCelsius = CommonData.shared.calculateCelsius(celsius: maxCelsius)
+        let date = Date(timeIntervalSince1970: Double(timeStamp))
+        let nowDate = CommonData.shared.infoHeaderDateFormatter.string(from: date)
+
+        mainCelsiusLabel.text = "\(mainCelsius)º"
+        minCelsiusLabel.text = "\(minCelsius)"
+        maxCelsiusLabel.text = "\(maxCelsius)"
+        dateLabel.text = "\(nowDate)"
     }
 }
 

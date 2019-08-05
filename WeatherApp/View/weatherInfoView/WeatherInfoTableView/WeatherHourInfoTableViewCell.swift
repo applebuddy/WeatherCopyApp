@@ -9,16 +9,16 @@
 import UIKit
 
 /// 시간 별 날씨정보 컬렉션뷰를 서브뷰로 갖는 테이블뷰 셀
-class WeatherDayInfoTableViewCell: UITableViewCell {
-    let dayInfoCollectionView: DayInfoCollectionView = {
+class WeatherHourInfoTableViewCell: UITableViewCell {
+    let dayInfoCollectionView: HourInfoCollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
-        let cellSize = CGSize(width: 80, height: WeatherCellHeight.dayInfoCollectionCell)
+        let cellSize = CGSize(width: 80, height: WeatherCellHeight.hourInfoCollectionCell)
         layout.itemSize = cellSize
         layout.minimumInteritemSpacing = 5
 
         // ✭ 컬렉션뷰의 frame을 CGRect.zero 설정하면, cellForItemAt delegate 메서드가 호출되지 않을 수 있다.
-        let dayInfoCollectionView = DayInfoCollectionView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: 0), collectionViewLayout: layout)
+        let dayInfoCollectionView = HourInfoCollectionView(frame: CGRect(x: 0, y: 0, width: UIScreen.main.bounds.size.width, height: 0), collectionViewLayout: layout)
         dayInfoCollectionView.isScrollEnabled = true
         dayInfoCollectionView.backgroundColor = .lightGray
         return dayInfoCollectionView
@@ -30,7 +30,7 @@ class WeatherDayInfoTableViewCell: UITableViewCell {
         makeSubviews()
         makeConstraints()
 
-        dayInfoCollectionView.register(DayInfoCollectionViewCell.self, forCellWithReuseIdentifier: CellIdentifier.dayInfoCollectionCell)
+        dayInfoCollectionView.register(HourInfoCollectionViewCell.self, forCellWithReuseIdentifier: CellIdentifier.HourInfoCollectionCell)
         dayInfoCollectionView.delegate = self
         dayInfoCollectionView.dataSource = self
     }
@@ -52,21 +52,41 @@ class WeatherDayInfoTableViewCell: UITableViewCell {
 
 // MARK: - UICollectionView Protocol
 
-extension WeatherDayInfoTableViewCell: UICollectionViewDelegate {
+extension WeatherHourInfoTableViewCell: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifier.dayInfoCollectionCell, for: indexPath) as? DayInfoCollectionViewCell else { return UICollectionViewCell() }
-        cell.setCellData()
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifier.HourInfoCollectionCell, for: indexPath) as? HourInfoCollectionViewCell else { return UICollectionViewCell() }
+        let weatherIndex = CommonData.shared.selectedMainCellIndex
+
+        if weatherIndex == 0 {
+            let weatherData = CommonData.shared.mainWeatherData
+
+            var dateTitle = ""
+            guard let precipitation = weatherData?.hourly.data[indexPath.item].precipProbability,
+                let imageType = weatherData?.hourly.data[indexPath.item].icon,
+                let celsius = weatherData?.hourly.data[indexPath.item].temperature,
+                let timeStamp = weatherData?.hourly.data[indexPath.item].time else { return cell }
+
+            if indexPath.item == 0 {
+                dateTitle = "지금"
+            } else {
+                let date = Date(timeIntervalSince1970: Double(timeStamp))
+                dateTitle = CommonData.shared.hourInfoDateFormatter.string(from: date)
+            }
+
+            cell.setDayInfoCollectionCellData(title: dateTitle, precipitation: precipitation, imageType: imageType, celsius: celsius)
+        }
+
         return cell
     }
 }
 
-extension WeatherDayInfoTableViewCell: UICollectionViewDataSource {
+extension WeatherHourInfoTableViewCell: UICollectionViewDataSource {
     func numberOfSections(in _: UICollectionView) -> Int {
         return 1
     }
 
     func collectionView(_: UICollectionView, numberOfItemsInSection _: Int) -> Int {
-        return 24
+        return WeatherInfoCellCount.dayInfoCell
     }
 }
 
@@ -74,12 +94,12 @@ extension WeatherDayInfoTableViewCell: UICollectionViewDataSource {
 
 extension WeatherInfoViewController: CellSettingProtocol {
     func registerCell() {
-        weatherInfoView.weatherInfoTableView.register(WeatherDayInfoTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weatherDayInfoTableCell)
+        weatherInfoView.weatherInfoTableView.register(WeatherHourInfoTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weatherHourInfoTableCell)
         weatherInfoView.weatherInfoTableView.register(WeatherSubInfoTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weatherWeekInfoTableCell)
     }
 }
 
-extension WeatherDayInfoTableViewCell: UIViewSettingProtocol {
+extension WeatherHourInfoTableViewCell: UIViewSettingProtocol {
     func makeSubviews() {
         addSubview(dayInfoCollectionView)
     }
@@ -91,7 +111,7 @@ extension WeatherDayInfoTableViewCell: UIViewSettingProtocol {
             dayInfoCollectionView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: 0),
             dayInfoCollectionView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 0),
             dayInfoCollectionView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: 0),
-            dayInfoCollectionView.heightAnchor.constraint(equalToConstant: WeatherCellHeight.dayInfoCollectionCell),
+            dayInfoCollectionView.heightAnchor.constraint(equalToConstant: WeatherCellHeight.hourInfoCollectionCell),
         ])
     }
 }

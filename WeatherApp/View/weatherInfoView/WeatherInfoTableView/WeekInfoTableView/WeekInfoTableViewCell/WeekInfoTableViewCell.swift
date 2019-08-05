@@ -30,6 +30,23 @@ class WeekInfoTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
+
+    // MARK: - Set Method
+
+    func setWeekInfoCellData(timeStamp: Int, imageType: String, maxCelsius: Double, minCelsius: Double) {
+        let date = Date(timeIntervalSince1970: Double(timeStamp))
+        let dateString = CommonData.shared.infoHeaderDateFormatter.string(from: date)
+        let maxCelsius = CommonData.shared.calculateCelsius(celsius: maxCelsius)
+        let minCelsius = CommonData.shared.calculateCelsius(celsius: minCelsius)
+
+        weekSubInfoView.dateLabel.text = "\(dateString)"
+        weekSubInfoView.maxCelsiusLabel.text = "\(maxCelsius)"
+        weekSubInfoView.minCelsiusLabel.text = "\(minCelsius)"
+
+        guard let imageType = WeatherType(rawValue: imageType) else { return }
+        let image = CommonData.shared.getWeatherImage(imageType: imageType)
+        weekSubInfoView.weatherImageView.image = image
+    }
 }
 
 extension WeekInfoTableViewCell: UIViewSettingProtocol {
@@ -40,10 +57,10 @@ extension WeekInfoTableViewCell: UIViewSettingProtocol {
     func makeConstraints() {
         weekSubInfoView.activateAnchors()
         NSLayoutConstraint.activate([
-            weekSubInfoView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 0),
-            weekSubInfoView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: 0),
-            weekSubInfoView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 0),
-            weekSubInfoView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: 0),
+            weekSubInfoView.leftAnchor.constraint(equalTo: leftAnchor, constant: CommonInset.leftInset),
+            weekSubInfoView.rightAnchor.constraint(equalTo: rightAnchor, constant: -CommonInset.rightInset),
+            weekSubInfoView.topAnchor.constraint(equalTo: topAnchor, constant: CommonInset.topInset),
+            weekSubInfoView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -CommonInset.bottomInset),
             weekSubInfoView.heightAnchor.constraint(equalToConstant: WeatherCellHeight.subInfoTableViewCell),
         ])
     }

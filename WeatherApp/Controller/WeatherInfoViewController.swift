@@ -6,13 +6,17 @@
 //  Copyright © 2019 MinKyeongTae. All rights reserved.
 //
 
+import CoreLocation
 import MapKit
 import UIKit
 
 class WeatherInfoViewController: UIViewController {
     // MARK: - Property
 
+    let locationManager = CLLocationManager()
     var headerHeightConstraint: NSLayoutConstraint?
+    var nowWeatherData: WeatherAPIData?
+    var isAppearViewController = false
 
     // MARK: - UI
 
@@ -53,23 +57,55 @@ class WeatherInfoViewController: UIViewController {
 
     // MARK: - Life Cycle
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        setInfoViewController()
-        registerCell()
-        setInfoView()
-        setButtonTarget()
-        setToolBarButtonItem()
-        setTableHeaderView()
-        makeConstraints()
-    }
-
     override func loadView() {
         super.loadView()
         view = weatherInfoView
     }
 
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        print(CommonData.shared.isLocationAuthority)
+        setInfoViewController()
+        registerCell()
+        setLocationManager()
+        setInfoView()
+        setButtonTarget()
+        setToolBarButtonItem()
+        setTableHeaderView()
+        makeConstraints()
+        presentToMainView()
+    }
+
+    override func viewWillAppear(_: Bool) {
+        super.viewWillAppear(true)
+        setWeatherTitleViewData()
+        isAppearViewController = false
+        DispatchQueue.main.async {
+            self.view.layoutIfNeeded()
+            self.weatherInfoTableHeaderView.layoutIfNeeded()
+            self.weatherInfoView.weatherInfoTableView.reloadData()
+        }
+    }
+
     // MARK: - Set Method
+
+    func setLocationManager() {
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.startUpdatingLocation()
+    }
+
+    func setWeatherTitleViewData() {
+        let weatherViewIndex = CommonData.shared.selectedMainCellIndex
+        if weatherViewIndex == 0 {
+            print("메인날씨 뷰컨트롤러 진입")
+            nowWeatherData = CommonData.shared.mainWeatherData
+            let infoViewTitle = CommonData.shared.mainCityName
+            guard let infoViewSubTitle = nowWeatherData?.currently.summary else { return }
+            weatherInfoView.setInfoViewData(title: infoViewTitle,
+                                            subTitle: infoViewSubTitle)
+        }
+    }
 
     func setInfoViewController() {
         view.backgroundColor = CommonColor.weatherInfoView
@@ -111,12 +147,19 @@ class WeatherInfoViewController: UIViewController {
         weatherInfoTableHeaderView.setTableHeaderViewAlpha(alpha: CGFloat(alphaValue))
     }
 
+    // MARK: Check Event
+
+    func presentToMainView() {
+        present(weatherMainViewController, animated: true)
+    }
+
     // MARK: - Button Event
 
     @objc func linkButtonPressed(_: UIButton) {
         // ✭ URL 링크주소는 파싱구현 이후 다시 수정한다.
-        guard let url = NSURL(string: "https://weather.com/ko-KR/weather/today/l/37.46,126.88?par=apple_widget&locale=ko_KR") else { return }
-        UIApplication.shared.open(url as URL)
+        let latitude = CommonData.shared.mainCoordinate.latitude
+        let longitude = CommonData.shared.mainCoordinate.longitude
+        CommonData.shared.openWeatherURL(latitude: latitude, longitude: longitude)
     }
 
     @objc func listButtonPressed(_: UIButton) {
@@ -133,10 +176,30 @@ extension WeatherInfoViewController: UITableViewDelegate {
         makeWeatherInfoTableHeaderViewScrollEvent(scrollView, offsetY: scrollView.contentOffset.y)
     }
 
+    // * WeatherData 갱신 시 DayInfoCollectionViewCell을 리로드 해준다.
+    func tableView(_ tableView: UITableView, didEndDisplaying _: UITableViewCell, forRowAt indexPath: IndexPath) {
+        guard let rowIndex = WeatherInfoTableViewRow(rawValue: indexPath.row) else { return }
+
+        switch rowIndex {
+        case .hourInfoRow:
+            guard let dayInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherHourInfoTableCell, for: indexPath) as? WeatherHourInfoTableViewCell else { return }
+        default: break
+        }
+    }
+
     func tableView(_: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let sectionIndex = WeatherInfoTableViewSection(rawValue: section) else { return UIView() }
         switch sectionIndex {
-        case .mainSection: return weatherInfoTableHeaderView
+        case .mainSection:
+            let weatherData = CommonData.shared.mainWeatherData
+            guard let mainCelsius = weatherData?.currently.temperature,
+                let minCelsius = weatherData?.daily.data[0].temperatureLow,
+                let maxCelsius = weatherData?.daily.data[0].temperatureHigh,
+                let timeStamp = weatherData?.currently.time else { return weatherInfoTableHeaderView }
+
+            weatherInfoTableHeaderView.setHeaderViewData(mainCelsius: mainCelsius, minCelsius: minCelsius, maxCelsius: maxCelsius, timeStamp: timeStamp)
+
+            return weatherInfoTableHeaderView
         }
     }
 
@@ -167,21 +230,56 @@ extension WeatherInfoViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let weatherDayInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherDayInfoTableCell, for: indexPath) as? WeatherDayInfoTableViewCell,
+        guard let weatherHourInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherHourInfoTableCell, for: indexPath) as? WeatherHourInfoTableViewCell,
             let weatherWeekInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherWeekInfoTableCell, for: indexPath) as? WeatherSubInfoTableViewCell,
             let rowIndex = WeatherInfoTableViewRow(rawValue: indexPath.row) else { return UITableViewCell() }
 
         switch rowIndex {
-        case .dayInfoRow:
-            weatherDayInfoCell.setCellData()
+        case .hourInfoRow:
+            weatherHourInfoCell.setCellData()
 
-            return weatherDayInfoCell
+            return weatherHourInfoCell
         case .separatorRow: return WeatherSeparatorTableViewCell()
         case .weekInfoRow:
             return weatherWeekInfoCell
         }
     }
 }
+
+// MARK: - CLLocationManager Protocol
+
+extension WeatherInfoViewController: CLLocationManagerDelegate {
+    /// * **위치가 업데이트 될 때마다 실행 되는 델리게이트 메서드**
+
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations _: [CLLocation]) {
+        if let nowCoordinate = manager.location?.coordinate {
+            CommonData.shared.setMainCityName(coordinate: nowCoordinate)
+            let nowLatitude = nowCoordinate.latitude.roundedValue(roundSize: 2)
+            let nowLongitude = nowCoordinate.longitude.roundedValue(roundSize: 2)
+
+            setWeatherTitleViewData()
+            view.layoutIfNeeded()
+            if !isAppearViewController {
+                print("지금 위도 경도 최신화 필요해 호출해")
+                CommonData.shared.setMainCoordinate(latitude: nowLatitude, longitude: nowLongitude)
+                let mainLatitude = CommonData.shared.mainCoordinate.latitude
+                let mainLongitude = CommonData.shared.mainCoordinate.longitude
+
+                WeatherAPI.shared.requestAPI(latitude: mainLatitude, longitude: mainLongitude) { weatherAPIData in
+                    CommonData.shared.setMainWeatherData(weatherData: weatherAPIData)
+
+                    DispatchQueue.main.async {
+                        self.weatherInfoTableHeaderView.layoutIfNeeded()
+                        self.weatherInfoView.weatherInfoTableView.reloadData()
+                    }
+                }
+                isAppearViewController = true
+            }
+        }
+    }
+}
+
+// MARK: - Custom View Protocol
 
 extension WeatherInfoViewController: UIViewSettingProtocol {
     func makeSubviews() {}

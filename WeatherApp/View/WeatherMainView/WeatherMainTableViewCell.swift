@@ -10,26 +10,31 @@ import UIKit
 
 /// WeatherMainViewController 메인 테이블뷰 셀
 class WeatherMainTableViewCell: UITableViewCell {
+    // MARK: - Property
+
+    // MARK: - UI
+
     let nowTimeLabel: UILabel = {
         let nowTimeLabel = UILabel()
-        nowTimeLabel.text = "오후 14:21"
+        nowTimeLabel.text = "-"
         nowTimeLabel.textColor = .black
         nowTimeLabel.font = .systemFont(ofSize: 15)
+        nowTimeLabel.adjustsFontSizeToFitWidth = true
         return nowTimeLabel
     }()
 
     let cityTitleLabel: UILabel = {
         let cityTitleLabel = UILabel()
-        cityTitleLabel.text = "광명시"
+        cityTitleLabel.text = "-"
         cityTitleLabel.sizeToFit()
         cityTitleLabel.textColor = .black
-        cityTitleLabel.font = .boldSystemFont(ofSize: 30)
+        cityTitleLabel.font = .boldSystemFont(ofSize: 35)
         return cityTitleLabel
     }()
 
     let cityCelsiusLabel: UILabel = {
         let cityCelsiusLabel = UILabel()
-        cityCelsiusLabel.text = "34º"
+        cityCelsiusLabel.text = "-"
         cityCelsiusLabel.sizeToFit()
         cityCelsiusLabel.textColor = .black
         cityCelsiusLabel.font = .boldSystemFont(ofSize: 50)
@@ -56,6 +61,17 @@ class WeatherMainTableViewCell: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
         // Configure the view for the selected state
+    }
+
+    func setMainTableCellData(cityName: String, timeStamp: Int, temperature: Double) {
+        cityTitleLabel.text = "\(cityName)"
+        if timeStamp != 0 {
+            let date = Date(timeIntervalSince1970: Double(timeStamp))
+            nowTimeLabel.text = "\(CommonData.shared.mainDateFormatter.string(from: date))"
+        }
+
+        let celsius = CommonData.shared.calculateCelsius(celsius: temperature)
+        cityCelsiusLabel.text = "\(celsius)º"
     }
 }
 

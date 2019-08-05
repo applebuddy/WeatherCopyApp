@@ -20,7 +20,6 @@ class WeatherMainTableFooterView: UIView {
 
     let celsiusToggleButton: UIButton = {
         let celsiusToggleButton = UIButton(type: .custom)
-        celsiusToggleButton.setImage(#imageLiteral(resourceName: "toggleButton_C"), for: .normal)
         celsiusToggleButton.contentMode = .center
         return celsiusToggleButton
     }()
@@ -36,11 +35,22 @@ class WeatherMainTableFooterView: UIView {
         super.init(frame: frame)
         contentMode = .scaleAspectFit
         makeSubviews()
+        setCelsiusToggleButton()
         makeConstraints()
     }
 
     required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+
+    func setCelsiusToggleButton() {
+        let buttonType = CommonData.shared.temperatureType
+        switch buttonType {
+        case .celsius:
+            celsiusToggleButton.setImage(#imageLiteral(resourceName: "toggleButton_C"), for: .normal)
+        case .fahrenheit:
+            celsiusToggleButton.setImage(#imageLiteral(resourceName: "toggleButton_F"), for: .normal)
+        }
     }
 }
 

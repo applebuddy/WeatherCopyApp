@@ -9,6 +9,8 @@
 import UIKit
 
 class WeatherCitySearchView: UIView {
+    // MARK: - UI
+
     let explainSearchLabel: UILabel = {
         let explainSearchLabel = UILabel()
         explainSearchLabel.text = "도시, 우편번호 또는 공항 위치 입력"
@@ -32,6 +34,8 @@ class WeatherCitySearchView: UIView {
         backToMainButton.backgroundColor = .black
         return backToMainButton
     }()
+
+    // MARK: - Init
 
     override init(frame: CGRect) {
         super.init(frame: frame)

@@ -9,10 +9,9 @@
 import UIKit
 
 /// 24시간 날씨예보 정보 컬렉션뷰 셀
-class DayInfoCollectionViewCell: UICollectionViewCell {
+class HourInfoCollectionViewCell: UICollectionViewCell {
     let cellImageView: UIImageView = {
         let cellImageView = UIImageView()
-        cellImageView.image = #imageLiteral(resourceName: "cloud")
         cellImageView.contentMode = .scaleAspectFit
         return cellImageView
     }()
@@ -27,7 +26,7 @@ class DayInfoCollectionViewCell: UICollectionViewCell {
 
     let percentageLabel: UILabel = {
         let secondLabel = UILabel()
-        secondLabel.text = "70%"
+        secondLabel.text = ""
         secondLabel.font = .systemFont(ofSize: 10)
         secondLabel.textAlignment = .center
         return secondLabel
@@ -50,10 +49,9 @@ class DayInfoCollectionViewCell: UICollectionViewCell {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
+        backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         makeSubviews()
-
         makeConstraints()
-        backgroundColor = .red
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -61,8 +59,19 @@ class DayInfoCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func setCellData() {
-        backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+    func setDayInfoCollectionCellData(title: String, precipitation: Double, imageType: WeatherType, celsius: Double) {
+        let precipitation = precipitation * 100
+        let celsius = CommonData.shared.calculateCelsius(celsius: celsius)
+        let image = CommonData.shared.getWeatherImage(imageType: imageType)
+
+        if precipitation >= 0.1 {
+            percentageLabel.text = "\(precipitation)%"
+        } else {
+            percentageLabel.text = ""
+        }
+        celsiusLabel.text = "\(celsius)º"
+        titleLabel.text = "\(title)"
+        cellImageView.image = image
     }
 
     func setStackView() {
@@ -73,7 +82,7 @@ class DayInfoCollectionViewCell: UICollectionViewCell {
     }
 }
 
-extension DayInfoCollectionViewCell: UIViewSettingProtocol {
+extension HourInfoCollectionViewCell: UIViewSettingProtocol {
     func makeSubviews() {
         addSubview(cellStackView)
         setStackView()
@@ -81,29 +90,26 @@ extension DayInfoCollectionViewCell: UIViewSettingProtocol {
 
     func makeConstraints() {
         cellStackView.activateAnchors()
-
         cellStackView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
-        NSLayoutConstraint(item: cellStackView,
-                           attribute: .centerY,
-                           relatedBy: .equal,
-                           toItem: self,
-                           attribute: .centerY,
-                           multiplier: 1.0,
-                           constant: 0.0).isActive = true
-        cellStackView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor, constant: 0).isActive = true
-        cellStackView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor, constant: 0).isActive = true
-        cellStackView.topAnchor.constraint(equalTo: topAnchor, constant: CommonInset.topInset * 2).isActive = true
-        cellStackView.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -CommonInset.bottomInset * 2).isActive = true
+        cellStackView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
+        cellStackView.heightAnchor.constraint(equalTo: heightAnchor).isActive = true
 
         cellImageView.activateAnchors()
         percentageLabel.activateAnchors()
         celsiusLabel.activateAnchors()
         titleLabel.activateAnchors()
         NSLayoutConstraint.activate([
-            cellImageView.heightAnchor.constraint(equalTo: cellStackView.heightAnchor, multiplier: 0.3),
-            percentageLabel.heightAnchor.constraint(equalTo: cellStackView.heightAnchor, multiplier: 0.1),
-            celsiusLabel.heightAnchor.constraint(equalTo: cellStackView.heightAnchor, multiplier: 0.2),
-            titleLabel.heightAnchor.constraint(equalTo: cellStackView.heightAnchor, multiplier: 0.2),
+            titleLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.3),
+            titleLabel.widthAnchor.constraint(equalTo: widthAnchor),
+
+            cellImageView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.3),
+            cellImageView.widthAnchor.constraint(equalTo: widthAnchor),
+
+            percentageLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.1),
+            percentageLabel.widthAnchor.constraint(equalTo: widthAnchor),
+
+            celsiusLabel.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 0.3),
+            celsiusLabel.widthAnchor.constraint(equalTo: widthAnchor),
         ])
     }
 }
