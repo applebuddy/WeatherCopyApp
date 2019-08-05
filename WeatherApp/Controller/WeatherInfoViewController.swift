@@ -80,6 +80,11 @@ class WeatherInfoViewController: UIViewController {
         super.viewWillAppear(true)
         setWeatherTitleViewData()
         isAppearViewController = false
+        DispatchQueue.main.async {
+            self.view.layoutIfNeeded()
+            self.weatherInfoTableHeaderView.layoutIfNeeded()
+            self.weatherInfoView.weatherInfoTableView.reloadData()
+        }
     }
 
     // MARK: - Set Method
@@ -145,7 +150,7 @@ class WeatherInfoViewController: UIViewController {
     // MARK: Check Event
 
     func presentToMainView() {
-        present(weatherMainViewController, animated: false)
+        present(weatherMainViewController, animated: true)
     }
 
     // MARK: - Button Event
@@ -204,9 +209,9 @@ extension WeatherInfoViewController: UITableViewDelegate {
 
             if CommonData.shared.temperatureType == .celsius,
                 mainCelsius != 0, minCelsius != 0, maxCelsius != 0 {
-                mainCelsius = mainCelsius.changeTemperatureFToC().roundedValue(roundSize: 1)
-                minCelsius = minCelsius.changeTemperatureFToC().roundedValue(roundSize: 1)
-                maxCelsius = maxCelsius.changeTemperatureFToC().roundedValue(roundSize: 1)
+                mainCelsius = mainCelsius.changeTemperatureFToC().roundedValue(roundSize: 0)
+                minCelsius = minCelsius.changeTemperatureFToC().roundedValue(roundSize: 0)
+                maxCelsius = maxCelsius.changeTemperatureFToC().roundedValue(roundSize: 0)
             }
 
             weatherInfoTableHeaderView.setHeaderViewData(mainCelsius: mainCelsius, minCelusius: minCelsius, maxCelsius: maxCelsius, date: nowDate)
@@ -279,7 +284,7 @@ extension WeatherInfoViewController: CLLocationManagerDelegate {
 
                 WeatherAPI.shared.requestAPI(latitude: mainLatitude, longitude: mainLongitude) { weatherAPIData in
                     CommonData.shared.setMainWeatherData(weatherData: weatherAPIData)
-                    print("asds: \(CommonData.shared.mainCityName)")
+
                     DispatchQueue.main.async {
                         self.view.layoutIfNeeded()
                         self.weatherInfoTableHeaderView.layoutIfNeeded()

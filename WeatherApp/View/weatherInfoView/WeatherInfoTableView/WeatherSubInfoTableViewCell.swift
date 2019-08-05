@@ -159,14 +159,45 @@ extension WeatherSubInfoTableViewCell: UITableViewDataSource {
             todayInfoCell.cellBottomBorderView.backgroundColor = CommonColor.separator
             switch todayInfoRowIndex {
             case .firstRow:
-                break
+
+                // MARK: 일출 정보, 일몰 정보
+
+                let sunRiseTime = Double(CommonData.shared.mainWeatherData?.daily.data[0].sunriseTime ?? 0)
+                let sunSetTime = Double(CommonData.shared.mainWeatherData?.daily.data[0].sunsetTime ?? 0)
+                todayInfoCell.setLeftStackViewData(titleInfo: sunRiseTime, rowIndex: indexPath.row)
+                todayInfoCell.setRightStackViewData(titleInfo: sunSetTime, rowIndex: indexPath.row)
             case .secondRow:
-                break
+
+                // MARK: 비 올 확률, 습도
+
+                let precipProbability = Double(CommonData.shared.mainWeatherData?.daily.data[0].precipProbability ?? 0)
+                let humidity = Double(CommonData.shared.mainWeatherData?.daily.data[0].humidity ?? 0)
+                todayInfoCell.setLeftStackViewData(titleInfo: precipProbability, rowIndex: indexPath.row)
+                todayInfoCell.setRightStackViewData(titleInfo: humidity, rowIndex: indexPath.row)
             case .thirdRow:
-                break
+
+                // MARK: 바람, 체감
+
+                let windSpeed = Double(CommonData.shared.mainWeatherData?.daily.data[0].windSpeed ?? 0)
+                let apparentTemperature = Double(CommonData.shared.mainWeatherData?.currently.apparentTemperature ?? 0)
+                todayInfoCell.setLeftStackViewData(titleInfo: windSpeed, rowIndex: indexPath.row)
+                todayInfoCell.setRightStackViewData(titleInfo: apparentTemperature, rowIndex: indexPath.row)
             case .fourthRow:
-                break
+
+                // MARK: 강수량, 기압
+
+                let precipIntensity = Double(CommonData.shared.mainWeatherData?.daily.data[0].precipIntensity ?? 0)
+                let pressure = Double(CommonData.shared.mainWeatherData?.daily.data[0].pressure ?? 0)
+                todayInfoCell.setLeftStackViewData(titleInfo: precipIntensity, rowIndex: indexPath.row)
+                todayInfoCell.setRightStackViewData(titleInfo: pressure, rowIndex: indexPath.row)
             case .fifthRow:
+
+                // MARK: 가시 거리, 자외선 지수
+
+                let visibility = Double(CommonData.shared.mainWeatherData?.daily.data[0].visibility ?? 0)
+                let uvIndex = Double(CommonData.shared.mainWeatherData?.daily.data[0].uvIndex ?? 0)
+                todayInfoCell.setLeftStackViewData(titleInfo: visibility, rowIndex: indexPath.row)
+                todayInfoCell.setRightStackViewData(titleInfo: uvIndex, rowIndex: indexPath.row)
                 todayInfoCell.cellBottomBorderView.backgroundColor = .clear
             }
             return todayInfoCell

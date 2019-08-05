@@ -33,11 +33,6 @@ enum WeatherMainTableViewSection: Int {
     case mainSection = 0
 }
 
-enum WeatherMainTableViewRow: Int {
-    case mainRow = 0
-    case subRow = 1
-}
-
 /// * WeatherInfoTableView Section Index
 enum WeatherInfoTableViewSection: Int {
     case mainSection = 0

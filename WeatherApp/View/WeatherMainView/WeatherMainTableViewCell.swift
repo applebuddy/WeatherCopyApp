@@ -75,7 +75,7 @@ class WeatherMainTableViewCell: UITableViewCell {
             case .celsius:
                 cityCelsiusLabel.text = "\(temperature)º"
             case .fahrenheit:
-                cityCelsiusLabel.text = "\(temperature.changeTemperatureCToF().roundedValue(roundSize: 1))º"
+                cityCelsiusLabel.text = "\(temperature.changeTemperatureCToF().roundedValue(roundSize: 0))º"
             }
         }
     }

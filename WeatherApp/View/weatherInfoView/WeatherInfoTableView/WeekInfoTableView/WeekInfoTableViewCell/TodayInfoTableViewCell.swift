@@ -44,7 +44,7 @@ class TodayInfoTableViewCell: UITableViewCell {
         return leftInfoTitleLabel
     }()
 
-    let leftInfoTitleSubLabel: UILabel = {
+    let leftInfoTitleValueLabel: UILabel = {
         let leftInfoTitleSubLabel = UILabel()
         leftInfoTitleSubLabel.text = "새벽 3:57"
         leftInfoTitleSubLabel.font = .boldSystemFont(ofSize: 25)
@@ -60,7 +60,7 @@ class TodayInfoTableViewCell: UITableViewCell {
         return todayInfoTitleLabel
     }()
 
-    let rightInfoTitleSubLabel: UILabel = {
+    let rightInfoTitleValueLabel: UILabel = {
         let todayInfoTitleSubLabel = UILabel()
         todayInfoTitleSubLabel.text = "오전 5:36"
         todayInfoTitleSubLabel.font = .boldSystemFont(ofSize: 25)
@@ -83,6 +83,108 @@ class TodayInfoTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
     }
 
+    func setLeftStackViewData(titleInfo: Double, rowIndex: Int) {
+        guard let rowIndex = TodayInfoTableViewRow(rawValue: rowIndex) else { return }
+
+        var titleInfoText = ""
+        switch rowIndex {
+        case .firstRow:
+
+            // MARK: 일출
+
+            let date = Date(timeIntervalSince1970: titleInfo)
+            titleInfoText = CommonData.shared.todayInfoDateFormatter.string(from: date)
+        case .secondRow:
+
+            // MARK: 비 올 확률
+
+            if titleInfo != 0 {
+                let precipitationPercent = Int(titleInfo * 100)
+                titleInfoText = "\(precipitationPercent)%"
+            }
+        case .thirdRow:
+
+            // MARK: 바람
+
+            if titleInfo != 0 {
+                let windSpeed = Int(titleInfo.roundedValue(roundSize: 0))
+                titleInfoText = "\(windSpeed)m/s"
+            }
+        case .fourthRow:
+
+            // MARK: 강수량
+
+            if titleInfo != 0 {
+                let rainValue = Int(titleInfo.roundedValue(roundSize: 0))
+                titleInfoText = "\(rainValue)cm"
+            }
+        case .fifthRow:
+
+            // MARK: 가시거리
+
+            if titleInfo != 0 {
+                let visibleSight = titleInfo.roundedValue(roundSize: 1)
+                titleInfoText = "\(visibleSight)km"
+            }
+        }
+
+        leftInfoTitleValueLabel.text = "\(titleInfoText)"
+    }
+
+    func setRightStackViewData(titleInfo: Double, rowIndex: Int) {
+        guard let rowIndex = TodayInfoTableViewRow(rawValue: rowIndex) else { return }
+
+        var titleInfoText = ""
+        switch rowIndex {
+        case .firstRow:
+
+            // MARK: 일몰
+
+            let date = Date(timeIntervalSince1970: Double(titleInfo))
+            titleInfoText = CommonData.shared.todayInfoDateFormatter.string(from: date)
+        case .secondRow:
+
+            // MARK: 습도
+
+            if titleInfo != 0 {
+                let humidity = Int(titleInfo * 100)
+                titleInfoText = "\(humidity)%"
+            }
+        case .thirdRow:
+
+            // MARK: 체감
+
+            if titleInfo != 0 {
+                var feelingValue = titleInfo.roundedValue(roundSize: 0)
+                if feelingValue != 0 {
+                    if CommonData.shared.temperatureType == .celsius {
+                        feelingValue = feelingValue.changeTemperatureFToC().roundedValue(roundSize: 0)
+                        let apparentTemperature = Int(feelingValue)
+                        titleInfoText = "\(apparentTemperature)º"
+                    }
+                }
+            }
+        case .fourthRow:
+
+            // MARK: 기압
+
+            if titleInfo != 0 {
+                let pressure = Int(titleInfo.roundedValue(roundSize: 0))
+                titleInfoText = "\(pressure)hPa"
+            }
+        case .fifthRow:
+
+            // MARK: 자외선 지수
+
+            if titleInfo != 0 {
+                let uvIndex = titleInfo.roundedValue(roundSize: 1)
+                titleInfoText = "\(uvIndex)"
+            }
+        }
+
+        rightInfoTitleValueLabel.text = "\(titleInfoText)"
+    }
+
     func setLabelTitle(leftTitle: String, rightTitle: String) {
         leftInfoTitleLabel.text = leftTitle
         rightInfoTitleLabel.text = rightTitle
@@ -90,9 +192,9 @@ class TodayInfoTableViewCell: UITableViewCell {
 
     func setTodayInfoStackView() {
         leftStackView.addArrangedSubview(leftInfoTitleLabel)
-        leftStackView.addArrangedSubview(leftInfoTitleSubLabel)
+        leftStackView.addArrangedSubview(leftInfoTitleValueLabel)
         rightStackView.addArrangedSubview(rightInfoTitleLabel)
-        rightStackView.addArrangedSubview(rightInfoTitleSubLabel)
+        rightStackView.addArrangedSubview(rightInfoTitleValueLabel)
         todayInfoStackView.addArrangedSubview(leftStackView)
         todayInfoStackView.addArrangedSubview(rightStackView)
         addSubview(todayInfoStackView)
@@ -139,9 +241,9 @@ extension TodayInfoTableViewCell: UIViewSettingProtocol {
         ])
 
         leftInfoTitleLabel.activateAnchors()
-        leftInfoTitleSubLabel.activateAnchors()
+        leftInfoTitleValueLabel.activateAnchors()
         rightInfoTitleLabel.activateAnchors()
-        rightInfoTitleSubLabel.activateAnchors()
+        rightInfoTitleValueLabel.activateAnchors()
         NSLayoutConstraint.activate([
             leftInfoTitleLabel.heightAnchor.constraint(equalTo: leftStackView.heightAnchor, multiplier: 0.3),
             leftInfoTitleLabel.leftAnchor.constraint(equalTo: leftStackView.leftAnchor),
@@ -149,9 +251,9 @@ extension TodayInfoTableViewCell: UIViewSettingProtocol {
         ])
 
         NSLayoutConstraint.activate([
-            leftInfoTitleSubLabel.heightAnchor.constraint(equalTo: leftStackView.heightAnchor, multiplier: 0.7),
-            leftInfoTitleSubLabel.leftAnchor.constraint(equalTo: leftStackView.leftAnchor),
-            leftInfoTitleSubLabel.rightAnchor.constraint(equalTo: rightStackView.leftAnchor),
+            leftInfoTitleValueLabel.heightAnchor.constraint(equalTo: leftStackView.heightAnchor, multiplier: 0.7),
+            leftInfoTitleValueLabel.leftAnchor.constraint(equalTo: leftStackView.leftAnchor),
+            leftInfoTitleValueLabel.rightAnchor.constraint(equalTo: rightStackView.leftAnchor),
         ])
 
         NSLayoutConstraint.activate([
@@ -161,9 +263,9 @@ extension TodayInfoTableViewCell: UIViewSettingProtocol {
         ])
 
         NSLayoutConstraint.activate([
-            rightInfoTitleSubLabel.heightAnchor.constraint(equalTo: rightStackView.heightAnchor, multiplier: 0.7),
-            rightInfoTitleSubLabel.rightAnchor.constraint(equalTo: rightStackView.rightAnchor),
-            rightInfoTitleSubLabel.leftAnchor.constraint(equalTo: rightStackView.leftAnchor),
+            rightInfoTitleValueLabel.heightAnchor.constraint(equalTo: rightStackView.heightAnchor, multiplier: 0.7),
+            rightInfoTitleValueLabel.rightAnchor.constraint(equalTo: rightStackView.rightAnchor),
+            rightInfoTitleValueLabel.leftAnchor.constraint(equalTo: rightStackView.leftAnchor),
         ])
     }
 }

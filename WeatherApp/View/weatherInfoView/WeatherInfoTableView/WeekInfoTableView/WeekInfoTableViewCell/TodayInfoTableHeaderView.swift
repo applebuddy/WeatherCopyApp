@@ -12,7 +12,6 @@ import UIKit
 class TodayInfoTableHeaderView: UIView {
     let todayInfoTextView: UITextView = {
         let todayInfoTextView = UITextView()
-        todayInfoTextView.text = "오늘: 날씨 대체로 맑음, 체감 온도는 102º입니다."
         todayInfoTextView.backgroundColor = .clear
         todayInfoTextView.textContainerInset = UIEdgeInsets(
             top: todayInfoTextView.textContainer.lineFragmentPadding,

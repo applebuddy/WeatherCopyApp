@@ -55,7 +55,7 @@ struct Daily: Codable {
     let data: [SubInfo]
 }
 
-// MARK: - Datum
+// MARK: - SubInfo
 
 struct SubInfo: Codable {
     let time: Int

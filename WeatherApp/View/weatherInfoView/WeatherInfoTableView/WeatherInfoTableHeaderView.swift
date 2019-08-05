@@ -84,9 +84,9 @@ class WeatherInfoTableHeaderView: UIView {
     }
 
     func setHeaderViewData(mainCelsius: Double, minCelusius: Double, maxCelsius: Double, date: String) {
-        mainCelsiusLabel.text = "\(mainCelsius.roundedValue(roundSize: 1))º"
-        minCelsiusLabel.text = "\(minCelusius)"
-        maxCelsiusLabel.text = "\(maxCelsius)"
+        mainCelsiusLabel.text = "\(Int(mainCelsius))º"
+        minCelsiusLabel.text = "\(Int(minCelusius))"
+        maxCelsiusLabel.text = "\(Int(maxCelsius))"
         dateLabel.text = "\(date)"
         layoutIfNeeded()
     }

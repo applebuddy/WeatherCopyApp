@@ -70,8 +70,6 @@ extension WeatherDayInfoTableViewCell: UICollectionViewDelegate {
             let celsius = weatherData?.hourly.data[indexPath.item].temperature ?? 0.0
             cell.setDayInfoCollectionCellData(title: hour, preciptication: precipitation, imageType: imageType, celsius: celsius)
             cell.layoutIfNeeded()
-        } else {
-//            cell.setCellData(title: "", preciptication: 0.0, imageType: "", celsius: 0.0)
         }
 
         return cell

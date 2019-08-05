@@ -61,15 +61,15 @@ class DayInfoCollectionViewCell: UICollectionViewCell {
 
     func setDayInfoCollectionCellData(title: String, preciptication: Double, imageType: WeatherType, celsius: Double) {
         titleLabel.text = "\(title)"
-        if preciptication.roundedValue(roundSize: 1) != 0.0 {
-            percentageLabel.text = "\(preciptication.roundedValue(roundSize: 1))%"
+        if preciptication.roundedValue(roundSize: 0) != 0.0 {
+            percentageLabel.text = "\(Int(preciptication * 100))%"
         }
 
         if celsius != 0.0 {
             if CommonData.shared.temperatureType == .celsius {
-                celsiusLabel.text = "\(celsius.changeTemperatureFToC().roundedValue(roundSize: 1))"
+                celsiusLabel.text = "\(celsius.changeTemperatureFToC().roundedValue(roundSize: 0))º"
             } else {
-                celsiusLabel.text = "\(celsius.roundedValue(roundSize: 1))"
+                celsiusLabel.text = "\(celsius.roundedValue(roundSize: 0))º"
             }
         }
 

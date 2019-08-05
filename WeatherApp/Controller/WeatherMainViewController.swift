@@ -147,21 +147,8 @@ extension WeatherMainViewController: UITableViewDelegate {
         return WeatherViewHeight.weatherMainBottomView
     }
 
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
         CommonData.shared.setSelectedMainCellIndex(index: indexPath.row)
-        guard let weatherMainCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherMainTableCell, for: indexPath) as? WeatherMainTableViewCell,
-            let weatherMainIndex = WeatherMainTableViewRow(rawValue: indexPath.row) else { return }
-
-        switch weatherMainIndex {
-        case .mainRow:
-            let mainCelsius = weatherMainCell.cityCelsiusLabel.text
-            if mainCelsius != "-" {
-                guard let celsius = mainCelsius else { return }
-                CommonData.shared.setMainCelsius(celsius: celsius)
-            }
-        default: break
-        }
-
         dismiss(animated: true, completion: nil)
     }
 
@@ -182,21 +169,18 @@ extension WeatherMainViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let weatherMainCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherMainTableCell, for: indexPath) as? WeatherMainTableViewCell,
-            let weatherMainIndex = WeatherMainTableViewRow(rawValue: indexPath.row) else { return UITableViewCell() }
-
-        switch weatherMainIndex {
-        case .mainRow:
+        guard let weatherMainCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherMainTableCell, for: indexPath) as? WeatherMainTableViewCell else { return UITableViewCell() }
+        if indexPath.row == 0 {
             let mainWeatherData = CommonData.shared.mainWeatherData
             let cityName = CommonData.shared.mainCityName
             let timeStamp = mainWeatherData?.currently.time ?? 0
-            let temperature = (mainWeatherData?.hourly.data[0].temperature ?? 0).changeTemperatureFToC().roundedValue(roundSize: 1)
+            let temperature = (mainWeatherData?.hourly.data[0].temperature ?? 0).changeTemperatureFToC().roundedValue(roundSize: 0)
 
             weatherMainCell.setMainTableCellData(cityName: cityName, timeStamp: timeStamp, temperature: temperature)
-        case .subRow:
             return weatherMainCell
+        } else {
+            return UITableViewCell()
         }
-        return weatherMainCell
     }
 }
 

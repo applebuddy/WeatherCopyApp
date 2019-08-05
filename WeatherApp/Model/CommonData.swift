@@ -44,6 +44,13 @@ final class CommonData {
         return mainDateFormatter
     }()
 
+    let todayInfoDateFormatter: DateFormatter = {
+        let mainDateFormatter = DateFormatter()
+        mainDateFormatter.dateFormat = "a h:mm"
+        mainDateFormatter.locale = Locale(identifier: "ko_KR")
+        return mainDateFormatter
+    }()
+
     // MARK: - Set Method
 
     func setMainCelsius(celsius: String) {
