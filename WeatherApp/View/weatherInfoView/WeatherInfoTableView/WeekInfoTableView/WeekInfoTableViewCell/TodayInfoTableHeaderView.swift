@@ -44,6 +44,12 @@ class TodayInfoTableHeaderView: UIView {
         super.init(coder: aDecoder)
         fatalError("init(coder:) has not been implemented")
     }
+
+    // MARK: - Set Method
+
+    func setInfoHeaderViewData(textViewText: String) {
+        todayInfoTextView.text = "\(textViewText)"
+    }
 }
 
 extension TodayInfoTableHeaderView: UIViewSettingProtocol {

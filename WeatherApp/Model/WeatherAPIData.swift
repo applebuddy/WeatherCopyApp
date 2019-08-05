@@ -50,6 +50,7 @@ enum PrecipType: String, Codable {
 // MARK: - Daily
 
 struct Daily: Codable {
+    let summary: String
     let icon: WeatherType
     let data: [SubInfo]
 }

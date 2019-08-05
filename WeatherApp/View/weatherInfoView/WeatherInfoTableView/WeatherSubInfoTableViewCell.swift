@@ -109,7 +109,11 @@ extension WeatherSubInfoTableViewCell: UITableViewDelegate {
         case .weekInfoSection:
             return WeatherSeparatorView()
         case .todayInfoSection:
-            return TodayInfoTableHeaderView()
+            let todayInfoHeaderView = TodayInfoTableHeaderView()
+            let weatherData = CommonData.shared.mainWeatherData
+            let textViewText = weatherData?.daily.summary ?? ""
+            todayInfoHeaderView.setInfoHeaderViewData(textViewText: textViewText)
+            return todayInfoHeaderView
         }
     }
 }
