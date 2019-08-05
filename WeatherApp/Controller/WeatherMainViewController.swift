@@ -13,7 +13,6 @@ class WeatherMainViewController: UIViewController {
     // MARK: - Property
 
     let locationManager = CLLocationManager()
-    var mainWeatherData: WeatherAPIData?
 
     // MARK: - UI
 
@@ -166,7 +165,8 @@ extension WeatherMainViewController: UITableViewDelegate {
         return WeatherViewHeight.weatherMainBottomView
     }
 
-    func tableView(_: UITableView, didSelectRowAt _: IndexPath) {
+    func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
+        CommonData.shared.setSelectedMainCellIndex(index: indexPath.row)
         dismiss(animated: true, completion: nil)
     }
 
@@ -192,6 +192,7 @@ extension WeatherMainViewController: UITableViewDataSource {
 
         switch weatherMainIndex {
         case .mainRow:
+            let mainWeatherData = CommonData.shared.mainWeatherData
             let cityName = CommonData.shared.mainCityName
             let timeStamp = mainWeatherData?.currently.time ?? 0
             let temperature = (mainWeatherData?.hourly.data[0].temperature ?? 0).changeTemperatureFToC().roundedValue(roundSize: 1)
@@ -229,7 +230,7 @@ extension WeatherMainViewController: CLLocationManagerDelegate {
                 setCityName(coordinate: nowCoordinate)
 
                 WeatherAPI.shared.requestAPI(latitude: mainLatitude, longitude: mainLongitude) { weatherAPIData in
-                    self.mainWeatherData = weatherAPIData
+                    CommonData.shared.setMainWeatherData(weatherData: weatherAPIData)
                     DispatchQueue.main.async {
                         self.weatherMainView.weatherMainTableView.reloadData()
                     }

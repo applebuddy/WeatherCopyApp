@@ -18,6 +18,7 @@ final class CommonData {
     var mainCityName = "-"
     var weatherURLString = "https://weather.com/ko-KR/weather/today/"
     var isAppForeground = false
+    var mainWeatherData: WeatherAPIData?
 
     // MARK: - Set Method
 
@@ -48,6 +49,14 @@ final class CommonData {
         }
     }
 
+    func setMainWeatherData(weatherData: WeatherAPIData) {
+        mainWeatherData = weatherData
+    }
+
+    func setIsAppForegroundValue(isForeground: Bool) {
+        isAppForeground = isForeground
+    }
+
     // MARK: Action Method
 
     func openWeatherURL(latitude: Double, longitude: Double) {
@@ -67,10 +76,6 @@ final class CommonData {
 
     func checkLocationAuthority() -> Bool {
         return isLocationAuthority
-    }
-
-    func setIsAppForegroundValue(isForeground: Bool) {
-        isAppForeground = isForeground
     }
 
     // MARK: - Get Method

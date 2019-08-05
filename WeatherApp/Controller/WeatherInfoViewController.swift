@@ -13,6 +13,7 @@ class WeatherInfoViewController: UIViewController {
     // MARK: - Property
 
     var headerHeightConstraint: NSLayoutConstraint?
+    var nowWeatherData: WeatherAPIData?
 
     // MARK: - UI
 
@@ -71,7 +72,19 @@ class WeatherInfoViewController: UIViewController {
         presentToMainView()
     }
 
+    override func viewWillAppear(_: Bool) {
+        super.viewWillAppear(true)
+        setNowWeatherData()
+    }
+
     // MARK: - Set Method
+
+    func setNowWeatherData() {
+        let weatherViewIndex = CommonData.shared.selectedMainCellIndex
+        if weatherViewIndex == 0 {
+            print("메인날씨 뷰컨트롤러 진입")
+        }
+    }
 
     func setInfoViewController() {
         view.backgroundColor = CommonColor.weatherInfoView
