@@ -17,8 +17,9 @@ struct WeatherAPIData: Codable {
 // MARK: - Currently
 
 struct Currently: Codable {
+    let summary: String
     let time: Int
-    let icon: Icon
+    let icon: WeatherType
     let nearestStormDistance: Int?
     let precipIntensity, precipProbability: Double
     let precipType: PrecipType?
@@ -30,7 +31,7 @@ struct Currently: Codable {
     let visibility, ozone: Double
 }
 
-enum Icon: String, Codable {
+enum WeatherType: String, Codable {
     case clearDay = "clear-day"
     case clearNight = "clear-night"
     case rain, snow, sleet, wind
@@ -49,7 +50,7 @@ enum PrecipType: String, Codable {
 // MARK: - Daily
 
 struct Daily: Codable {
-    let icon: Icon
+    let icon: WeatherType
     let data: [SubInfo]
 }
 
@@ -89,6 +90,6 @@ struct SubInfo: Codable {
 // MARK: - Hourly
 
 struct Hourly: Codable {
-    let icon: Icon
+    let icon: WeatherType
     let data: [Currently]
 }

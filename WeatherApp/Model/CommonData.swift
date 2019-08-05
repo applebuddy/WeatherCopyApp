@@ -6,12 +6,14 @@
 //  Copyright © 2019 MinKyeongTae. All rights reserved.
 //
 
+import CoreLocation
 import UIKit
 
 final class CommonData {
     static let shared = CommonData()
 
     var temperatureType: TemperatureType = .celsius
+    var mainCelsius: Double?
     var isLocationAuthority = UserDefaults.standard.bool(forKey: DataIdentifier.isLocationAuthority)
     var mainCoordinate = WeatherCoordinate(latitude: 0, longitude: 0)
     var selectedMainCellIndex = 0
@@ -19,8 +21,34 @@ final class CommonData {
     var weatherURLString = "https://weather.com/ko-KR/weather/today/"
     var isAppForeground = false
     var mainWeatherData: WeatherAPIData?
+    let locationManager = CLLocationManager()
+
+    let mainDateFormatter: DateFormatter = {
+        let mainDateFormatter = DateFormatter()
+        mainDateFormatter.dateFormat = "a HH:mm"
+        mainDateFormatter.locale = Locale(identifier: "ko_KR")
+        return mainDateFormatter
+    }()
+
+    let infoHeaderDateFormatter: DateFormatter = {
+        let mainDateFormatter = DateFormatter()
+        mainDateFormatter.dateFormat = "EEEE"
+        mainDateFormatter.locale = Locale(identifier: "ko_KR")
+        return mainDateFormatter
+    }()
+
+    let dayInfoDateFormatter: DateFormatter = {
+        let mainDateFormatter = DateFormatter()
+        mainDateFormatter.dateFormat = "a h시"
+        mainDateFormatter.locale = Locale(identifier: "ko_KR")
+        return mainDateFormatter
+    }()
 
     // MARK: - Set Method
+
+    func setMainCelsius(celsius: String) {
+        mainCelsius = Double(celsius)
+    }
 
     func setLocationAuthData(isAuth: Bool) {
         UserDefaults.standard.set(isAuth, forKey: DataIdentifier.isLocationAuthority)
@@ -32,8 +60,21 @@ final class CommonData {
         mainCoordinate.longitude = longitude
     }
 
-    func setMainCityName(cityName: String) {
-        mainCityName = cityName
+    func setMainCityName(coordinate: CLLocationCoordinate2D) {
+        let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+        let geoCoder = CLGeocoder()
+        let locale = Locale(identifier: "Ko-kr")
+        geoCoder.reverseGeocodeLocation(location, preferredLocale: locale) { placeMarks, error in
+
+            if error != nil {
+                print("\(error?.localizedDescription ?? "could not get cityName")")
+                return
+            }
+            guard let address = placeMarks?.first else { return }
+            let cityName = address.dictionaryWithValues(forKeys: ["locality"])["locality"]
+            guard let cityNameString = cityName as? String else { return }
+            self.mainCityName = cityNameString
+        }
     }
 
     func setSelectedMainCellIndex(index: Int) {
@@ -55,6 +96,42 @@ final class CommonData {
 
     func setIsAppForegroundValue(isForeground: Bool) {
         isAppForeground = isForeground
+    }
+
+    // MARK: - Get Method
+
+    func getWeatherImage(imageType: WeatherType) -> UIImage {
+        let weatherImageIndex: String
+        switch imageType {
+        case .clearDay:
+            weatherImageIndex = imageType.rawValue
+        case .clearNight:
+            weatherImageIndex = imageType.rawValue
+        case .rain:
+            weatherImageIndex = imageType.rawValue
+        case .snow:
+            weatherImageIndex = imageType.rawValue
+        case .sleet:
+            weatherImageIndex = imageType.rawValue
+        case .wind:
+            weatherImageIndex = imageType.rawValue
+        case .fog:
+            weatherImageIndex = imageType.rawValue
+        case .cloudy:
+            weatherImageIndex = imageType.rawValue
+        case .partlyCloudyDay:
+            weatherImageIndex = imageType.rawValue
+        case .partlyCloudyNight:
+            weatherImageIndex = imageType.rawValue
+        case .hail:
+            weatherImageIndex = imageType.rawValue
+        case .thunderstorm:
+            weatherImageIndex = imageType.rawValue
+        case .tornado:
+            weatherImageIndex = imageType.rawValue
+        }
+        guard let image = UIImage(named: weatherImageIndex) else { return UIImage() }
+        return image
     }
 
     // MARK: Action Method

@@ -55,7 +55,25 @@ class WeatherDayInfoTableViewCell: UITableViewCell {
 extension WeatherDayInfoTableViewCell: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifier.dayInfoCollectionCell, for: indexPath) as? DayInfoCollectionViewCell else { return UICollectionViewCell() }
-        cell.setCellData()
+        let weatherIndex = CommonData.shared.selectedMainCellIndex
+
+        if weatherIndex == 0 {
+            let weatherData = CommonData.shared.mainWeatherData
+            let timeStamp = weatherData?.hourly.data[indexPath.item].time ?? 0
+            let date = Date(timeIntervalSince1970: Double(timeStamp))
+            var hour = CommonData.shared.dayInfoDateFormatter.string(from: date)
+            if indexPath.item == 0 {
+                hour = "지금"
+            }
+            let precipitation = weatherData?.hourly.data[indexPath.item].precipProbability ?? 0.0
+            let imageType = weatherData?.hourly.data[indexPath.item].icon ?? WeatherType.clearDay
+            let celsius = weatherData?.hourly.data[indexPath.item].temperature ?? 0.0
+            cell.setDayInfoCollectionCellData(title: hour, preciptication: precipitation, imageType: imageType, celsius: celsius)
+            cell.layoutIfNeeded()
+        } else {
+//            cell.setCellData(title: "", preciptication: 0.0, imageType: "", celsius: 0.0)
+        }
+
         return cell
     }
 }
@@ -66,7 +84,7 @@ extension WeatherDayInfoTableViewCell: UICollectionViewDataSource {
     }
 
     func collectionView(_: UICollectionView, numberOfItemsInSection _: Int) -> Int {
-        return 24
+        return WeatherInfoCellCount.dayInfoCell
     }
 }
 

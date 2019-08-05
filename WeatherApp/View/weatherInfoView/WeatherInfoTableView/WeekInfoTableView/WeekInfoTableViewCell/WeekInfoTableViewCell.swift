@@ -30,6 +30,35 @@ class WeekInfoTableViewCell: UITableViewCell {
 
         // Configure the view for the selected state
     }
+
+    // MARK: - Set Method
+
+    func setWeekInfoCellData(timeStamp: Int, imageType: String, maxCelsius: Double, minCelsius: Double) {
+        let date = Date(timeIntervalSince1970: Double(timeStamp))
+        let dateString = CommonData.shared.infoHeaderDateFormatter.string(from: date)
+
+        weekSubInfoView.dateLabel.text = "\(dateString)"
+
+        if maxCelsius > 0 {
+            var maxCelsius = maxCelsius.roundedValue(roundSize: 0)
+            if CommonData.shared.temperatureType == .celsius {
+                maxCelsius = maxCelsius.changeTemperatureFToC().roundedValue(roundSize: 0)
+            }
+            weekSubInfoView.maxCelsiusLabel.text = "\(Int(maxCelsius))"
+        }
+
+        if minCelsius > 0 {
+            var minCelsius = maxCelsius.roundedValue(roundSize: 0)
+            if CommonData.shared.temperatureType == .celsius {
+                minCelsius = maxCelsius.changeTemperatureFToC().roundedValue(roundSize: 0)
+            }
+            weekSubInfoView.minCelsiusLabel.text = "\(Int(minCelsius))"
+        }
+
+        guard let imageType = WeatherType(rawValue: imageType) else { return }
+        let image = CommonData.shared.getWeatherImage(imageType: imageType)
+        weekSubInfoView.weatherImageView.image = image
+    }
 }
 
 extension WeekInfoTableViewCell: UIViewSettingProtocol {

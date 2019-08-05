@@ -67,6 +67,12 @@ enum TodayInfoTableViewRow: Int {
     case fifthRow = 4
 }
 
+struct WeatherInfoCellCount {
+    static let weekInfoCell = 8
+    static let dayInfoCell = 24
+    static let todayInfoCell = 5
+}
+
 /// * View Heights
 struct WeatherViewHeight {
     static let weatherMainBottomView: CGFloat = 100

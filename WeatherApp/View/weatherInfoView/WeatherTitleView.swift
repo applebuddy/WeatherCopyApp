@@ -13,7 +13,7 @@ import UIKit
 class WeatherTitleView: UIView {
     let weatherTitleLabel: UILabel = {
         let weatherTitleLabel = UILabel()
-        weatherTitleLabel.text = "광명시"
+        weatherTitleLabel.text = "_"
         weatherTitleLabel.font = .systemFont(ofSize: 30)
         weatherTitleLabel.textAlignment = .center
         weatherTitleLabel.textColor = .white
@@ -23,7 +23,7 @@ class WeatherTitleView: UIView {
 
     let weatherSubTitleLabel: UILabel = {
         let weatherSubTitleLabel = UILabel()
-        weatherSubTitleLabel.text = "흐림"
+        weatherSubTitleLabel.text = "_"
         weatherSubTitleLabel.font = .systemFont(ofSize: 15)
         weatherSubTitleLabel.textAlignment = .center
         weatherSubTitleLabel.textColor = .white

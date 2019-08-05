@@ -118,8 +118,8 @@ extension WeatherSubInfoTableViewCell: UITableViewDataSource {
     func tableView(_: UITableView, numberOfRowsInSection section: Int) -> Int {
         guard let sectionIndex = WeatherSubInfoTableViewSection(rawValue: section) else { return 0 }
         switch sectionIndex {
-        case .weekInfoSection: return 9
-        case .todayInfoSection: return 5
+        case .weekInfoSection: return WeatherInfoCellCount.weekInfoCell
+        case .todayInfoSection: return WeatherInfoCellCount.todayInfoCell
         }
     }
 
@@ -132,6 +132,17 @@ extension WeatherSubInfoTableViewCell: UITableViewDataSource {
         switch sectionIndex {
         case .weekInfoSection:
             guard let weekInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weekInfoTableCell, for: indexPath) as? WeekInfoTableViewCell else { return UITableViewCell() }
+            let selectedWeatherIndex = CommonData.shared.selectedMainCellIndex
+            if selectedWeatherIndex == 0 {
+                let weatherData = CommonData.shared.mainWeatherData
+                let timeStamp = weatherData?.daily.data[indexPath.row].time ?? 0
+                let weatherType = weatherData?.daily.data[indexPath.row].icon ?? ""
+                let maxCelsius = weatherData?.daily.data[indexPath.row].temperatureMax ?? 0.0
+                let minCelsius = weatherData?.daily.data[indexPath.row].temperatureMin ?? 0.0
+
+                weekInfoCell.setWeekInfoCellData(timeStamp: timeStamp, imageType: weatherType, maxCelsius: maxCelsius, minCelsius: minCelsius)
+            }
+
             return weekInfoCell
         case .todayInfoSection:
             guard let todayInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.todayInfoTableCell, for: indexPath) as? TodayInfoTableViewCell,

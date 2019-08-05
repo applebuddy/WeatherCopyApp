@@ -6,14 +6,17 @@
 //  Copyright © 2019 MinKyeongTae. All rights reserved.
 //
 
+import CoreLocation
 import MapKit
 import UIKit
 
 class WeatherInfoViewController: UIViewController {
     // MARK: - Property
 
+    let locationManager = CLLocationManager()
     var headerHeightConstraint: NSLayoutConstraint?
     var nowWeatherData: WeatherAPIData?
+    var isAppearViewController = false
 
     // MARK: - UI
 
@@ -64,6 +67,7 @@ class WeatherInfoViewController: UIViewController {
         print(CommonData.shared.isLocationAuthority)
         setInfoViewController()
         registerCell()
+        setLocationManager()
         setInfoView()
         setButtonTarget()
         setToolBarButtonItem()
@@ -74,15 +78,27 @@ class WeatherInfoViewController: UIViewController {
 
     override func viewWillAppear(_: Bool) {
         super.viewWillAppear(true)
-        setNowWeatherData()
+        setWeatherTitleViewData()
+        isAppearViewController = false
     }
 
     // MARK: - Set Method
 
-    func setNowWeatherData() {
+    func setLocationManager() {
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.startUpdatingLocation()
+    }
+
+    func setWeatherTitleViewData() {
         let weatherViewIndex = CommonData.shared.selectedMainCellIndex
         if weatherViewIndex == 0 {
             print("메인날씨 뷰컨트롤러 진입")
+            nowWeatherData = CommonData.shared.mainWeatherData
+            let infoViewTitle = CommonData.shared.mainCityName
+            guard let infoViewSubTitle = nowWeatherData?.currently.summary else { return }
+            weatherInfoView.setInfoViewData(title: infoViewTitle,
+                                            subTitle: infoViewSubTitle)
         }
     }
 
@@ -155,10 +171,47 @@ extension WeatherInfoViewController: UITableViewDelegate {
         makeWeatherInfoTableHeaderViewScrollEvent(scrollView, offsetY: scrollView.contentOffset.y)
     }
 
+    // * WeatherData 갱신 시 DayInfoCollectionViewCell을 리로드 해준다.
+    func tableView(_ tableView: UITableView, didEndDisplaying _: UITableViewCell, forRowAt indexPath: IndexPath) {
+        guard let rowIndex = WeatherInfoTableViewRow(rawValue: indexPath.row) else { return }
+
+        switch rowIndex {
+        case .dayInfoRow:
+            guard let dayInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherDayInfoTableCell, for: indexPath) as? WeatherDayInfoTableViewCell else { return }
+            DispatchQueue.main.async {
+                // 24시간 날씨정보 컬렉션뷰 셀을 리로드 한다.
+                dayInfoCell.dayInfoCollectionView.reloadData()
+            }
+        default: break
+        }
+    }
+
     func tableView(_: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         guard let sectionIndex = WeatherInfoTableViewSection(rawValue: section) else { return UIView() }
         switch sectionIndex {
-        case .mainSection: return weatherInfoTableHeaderView
+        case .mainSection:
+            let weatherData = CommonData.shared.mainWeatherData
+            var mainCelsius = weatherData?.currently.temperature ?? 0.0
+            var minCelsius = weatherData?.daily.data[0].temperatureLow ?? 0.0
+            var maxCelsius = weatherData?.daily.data[0].temperatureHigh ?? 0.0
+            var nowDate: String
+            if let timeStamp = weatherData?.currently.time {
+                let date = Date(timeIntervalSince1970: Double(timeStamp))
+                nowDate = CommonData.shared.infoHeaderDateFormatter.string(from: date)
+            } else {
+                nowDate = "-"
+            }
+
+            if CommonData.shared.temperatureType == .celsius,
+                mainCelsius != 0, minCelsius != 0, maxCelsius != 0 {
+                mainCelsius = mainCelsius.changeTemperatureFToC().roundedValue(roundSize: 1)
+                minCelsius = minCelsius.changeTemperatureFToC().roundedValue(roundSize: 1)
+                maxCelsius = maxCelsius.changeTemperatureFToC().roundedValue(roundSize: 1)
+            }
+
+            weatherInfoTableHeaderView.setHeaderViewData(mainCelsius: mainCelsius, minCelusius: minCelsius, maxCelsius: maxCelsius, date: nowDate)
+
+            return weatherInfoTableHeaderView
         }
     }
 
@@ -204,6 +257,42 @@ extension WeatherInfoViewController: UITableViewDataSource {
         }
     }
 }
+
+// MARK: - CLLocationManager Protocol
+
+extension WeatherInfoViewController: CLLocationManagerDelegate {
+    /// * **위치가 업데이트 될 때마다 실행 되는 델리게이트 메서드**
+
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations _: [CLLocation]) {
+        if let nowCoordinate = manager.location?.coordinate {
+            CommonData.shared.setMainCityName(coordinate: nowCoordinate)
+            let nowLatitude = nowCoordinate.latitude.roundedValue(roundSize: 2)
+            let nowLongitude = nowCoordinate.longitude.roundedValue(roundSize: 2)
+
+            setWeatherTitleViewData()
+            view.layoutIfNeeded()
+            if !isAppearViewController {
+                print("지금 위도 경도 최신화 필요해 호출해")
+                CommonData.shared.setMainCoordinate(latitude: nowLatitude, longitude: nowLongitude)
+                let mainLatitude = CommonData.shared.mainCoordinate.latitude
+                let mainLongitude = CommonData.shared.mainCoordinate.longitude
+
+                WeatherAPI.shared.requestAPI(latitude: mainLatitude, longitude: mainLongitude) { weatherAPIData in
+                    CommonData.shared.setMainWeatherData(weatherData: weatherAPIData)
+                    print("asds: \(CommonData.shared.mainCityName)")
+                    DispatchQueue.main.async {
+                        self.view.layoutIfNeeded()
+                        self.weatherInfoTableHeaderView.layoutIfNeeded()
+                        self.weatherInfoView.weatherInfoTableView.reloadData()
+                    }
+                }
+                isAppearViewController = true
+            }
+        }
+    }
+}
+
+// MARK: - Custom View Protocol
 
 extension WeatherInfoViewController: UIViewSettingProtocol {
     func makeSubviews() {}

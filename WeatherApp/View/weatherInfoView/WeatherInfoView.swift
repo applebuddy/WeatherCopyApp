@@ -32,6 +32,13 @@ class WeatherInfoView: UIView {
         super.init(coder: aDecoder)
     }
 
+    // MARK: - Set Method
+
+    func setInfoViewData(title: String, subTitle: String) {
+        weatherTitleView.weatherTitleLabel.text = "\(title)"
+        weatherTitleView.weatherSubTitleLabel.text = "\(subTitle)"
+    }
+
     func setWeatherTableViewConstraint() {
         weatherInfoTableView.activateAnchors()
         NSLayoutConstraint.activate([

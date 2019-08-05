@@ -12,21 +12,21 @@ import UIKit
 class WeekSubInfoView: UIView {
     let dateLabel: UILabel = {
         let dateLabel = UILabel()
-        dateLabel.text = "금요일"
+        dateLabel.text = "-"
         dateLabel.textAlignment = .left
         return dateLabel
     }()
 
     let maxCelsiusLabel: UILabel = {
         let maxCelsiusLabel = UILabel()
-        maxCelsiusLabel.text = "96"
+        maxCelsiusLabel.text = "-"
         maxCelsiusLabel.textAlignment = .center
         return maxCelsiusLabel
     }()
 
     let minCelsiusLabel: UILabel = {
         let minCelsiusLabel = UILabel()
-        minCelsiusLabel.text = "77"
+        minCelsiusLabel.text = "-"
         minCelsiusLabel.textAlignment = .center
         minCelsiusLabel.textColor = .gray
         minCelsiusLabel.alpha = 0.7
@@ -35,7 +35,6 @@ class WeekSubInfoView: UIView {
 
     let weatherImageView: UIImageView = {
         let weatherImageView = UIImageView()
-        weatherImageView.image = #imageLiteral(resourceName: "cloud")
         weatherImageView.contentMode = .scaleAspectFit
         return weatherImageView
     }()

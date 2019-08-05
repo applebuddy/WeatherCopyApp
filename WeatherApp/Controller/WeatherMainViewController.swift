@@ -63,24 +63,6 @@ class WeatherMainViewController: UIViewController {
         footerView.weatherLinkButton.addTarget(self, action: #selector(weatherLinkButtonPressed(_:)), for: .touchUpInside)
     }
 
-    func setCityName(coordinate: CLLocationCoordinate2D) {
-        let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
-        let geoCoder = CLGeocoder()
-        let locale = Locale(identifier: "Ko-kr")
-        geoCoder.reverseGeocodeLocation(location, preferredLocale: locale) { placeMarks, error in
-
-            if error != nil {
-                print("\(error?.localizedDescription ?? "could not get cityName")")
-                return
-            }
-            guard let address = placeMarks?.first else { return }
-            let cityName = address.dictionaryWithValues(forKeys: ["locality"])["locality"]
-            guard let cityNameString = cityName as? String else { return }
-
-            CommonData.shared.setMainCityName(cityName: cityNameString)
-        }
-    }
-
     func makeWeatherMainTableViewEvent(_ scrollView: UIScrollView, offsetY _: CGFloat) {
         if scrollView.contentOffset.y >= 0 {
             scrollView.contentOffset.y = 0
@@ -161,12 +143,25 @@ extension WeatherMainViewController: UITableViewDelegate {
         return WeatherCellHeight.MainTableViewCell
     }
 
-    func tableView(_: UITableView, heightForFooterInSection _: Int) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForFooterInSection _: Int) -> CGFloat {
         return WeatherViewHeight.weatherMainBottomView
     }
 
-    func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         CommonData.shared.setSelectedMainCellIndex(index: indexPath.row)
+        guard let weatherMainCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherMainTableCell, for: indexPath) as? WeatherMainTableViewCell,
+            let weatherMainIndex = WeatherMainTableViewRow(rawValue: indexPath.row) else { return }
+
+        switch weatherMainIndex {
+        case .mainRow:
+            let mainCelsius = weatherMainCell.cityCelsiusLabel.text
+            if mainCelsius != "-" {
+                guard let celsius = mainCelsius else { return }
+                CommonData.shared.setMainCelsius(celsius: celsius)
+            }
+        default: break
+        }
+
         dismiss(animated: true, completion: nil)
     }
 
@@ -197,7 +192,7 @@ extension WeatherMainViewController: UITableViewDataSource {
             let timeStamp = mainWeatherData?.currently.time ?? 0
             let temperature = (mainWeatherData?.hourly.data[0].temperature ?? 0).changeTemperatureFToC().roundedValue(roundSize: 1)
 
-            weatherMainCell.setCellData(cityName: cityName, timeStamp: timeStamp, temperature: temperature)
+            weatherMainCell.setMainTableCellData(cityName: cityName, timeStamp: timeStamp, temperature: temperature)
         case .subRow:
             return weatherMainCell
         }
@@ -225,9 +220,9 @@ extension WeatherMainViewController: CLLocationManagerDelegate {
             } else {
                 print("지금 위도 경도 최신화 필요해 호출해")
                 CommonData.shared.setMainCoordinate(latitude: nowCoordinate.latitude, longitude: nowCoordinate.longitude)
+                CommonData.shared.setMainCityName(coordinate: nowCoordinate)
                 let mainLatitude = CommonData.shared.mainCoordinate.latitude
                 let mainLongitude = CommonData.shared.mainCoordinate.longitude
-                setCityName(coordinate: nowCoordinate)
 
                 WeatherAPI.shared.requestAPI(latitude: mainLatitude, longitude: mainLongitude) { weatherAPIData in
                     CommonData.shared.setMainWeatherData(weatherData: weatherAPIData)

@@ -12,7 +12,6 @@ import UIKit
 class DayInfoCollectionViewCell: UICollectionViewCell {
     let cellImageView: UIImageView = {
         let cellImageView = UIImageView()
-        cellImageView.image = #imageLiteral(resourceName: "cloud")
         cellImageView.contentMode = .scaleAspectFit
         return cellImageView
     }()
@@ -27,7 +26,7 @@ class DayInfoCollectionViewCell: UICollectionViewCell {
 
     let percentageLabel: UILabel = {
         let secondLabel = UILabel()
-        secondLabel.text = "70%"
+        secondLabel.text = ""
         secondLabel.font = .systemFont(ofSize: 10)
         secondLabel.textAlignment = .center
         return secondLabel
@@ -50,10 +49,9 @@ class DayInfoCollectionViewCell: UICollectionViewCell {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
+        backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
         makeSubviews()
-
         makeConstraints()
-        backgroundColor = .red
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -61,8 +59,22 @@ class DayInfoCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func setCellData() {
-        backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
+    func setDayInfoCollectionCellData(title: String, preciptication: Double, imageType: WeatherType, celsius: Double) {
+        titleLabel.text = "\(title)"
+        if preciptication.roundedValue(roundSize: 1) != 0.0 {
+            percentageLabel.text = "\(preciptication.roundedValue(roundSize: 1))%"
+        }
+
+        if celsius != 0.0 {
+            if CommonData.shared.temperatureType == .celsius {
+                celsiusLabel.text = "\(celsius.changeTemperatureFToC().roundedValue(roundSize: 1))"
+            } else {
+                celsiusLabel.text = "\(celsius.roundedValue(roundSize: 1))"
+            }
+        }
+
+        let image = CommonData.shared.getWeatherImage(imageType: imageType)
+        cellImageView.image = image
     }
 
     func setStackView() {

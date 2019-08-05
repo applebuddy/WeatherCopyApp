@@ -12,7 +12,7 @@ import UIKit
 class WeatherInfoTableHeaderView: UIView {
     let mainCelsiusLabel: UILabel = {
         let celsiusLabel = UILabel()
-        celsiusLabel.text = "27º"
+        celsiusLabel.text = "-"
         celsiusLabel.font = .systemFont(ofSize: 80)
         celsiusLabel.textAlignment = .center
         celsiusLabel.textColor = .white
@@ -22,7 +22,7 @@ class WeatherInfoTableHeaderView: UIView {
 
     let minCelsiusLabel: UILabel = {
         let minCelsiusLabel = UILabel()
-        minCelsiusLabel.text = "18"
+        minCelsiusLabel.text = "_"
         minCelsiusLabel.font = .systemFont(ofSize: 20)
         minCelsiusLabel.textAlignment = .center
         minCelsiusLabel.textColor = .gray
@@ -33,7 +33,7 @@ class WeatherInfoTableHeaderView: UIView {
 
     let maxCelsiusLabel: UILabel = {
         let maxCelsiusLabel = UILabel()
-        maxCelsiusLabel.text = "36"
+        maxCelsiusLabel.text = "_"
         maxCelsiusLabel.font = .systemFont(ofSize: 20)
         maxCelsiusLabel.textAlignment = .center
         maxCelsiusLabel.textColor = .white
@@ -43,7 +43,7 @@ class WeatherInfoTableHeaderView: UIView {
 
     let dateLabel: UILabel = {
         let dateLabel = UILabel()
-        dateLabel.text = "수요일"
+        dateLabel.text = "_"
         dateLabel.font = .systemFont(ofSize: 30)
         dateLabel.textAlignment = .center
         dateLabel.textColor = .white
@@ -80,6 +80,14 @@ class WeatherInfoTableHeaderView: UIView {
 
     func setTableHeaderViewFrame(rect: CGRect) {
         frame = rect
+        layoutIfNeeded()
+    }
+
+    func setHeaderViewData(mainCelsius: Double, minCelusius: Double, maxCelsius: Double, date: String) {
+        mainCelsiusLabel.text = "\(mainCelsius.roundedValue(roundSize: 1))º"
+        minCelsiusLabel.text = "\(minCelusius)"
+        maxCelsiusLabel.text = "\(maxCelsius)"
+        dateLabel.text = "\(date)"
         layoutIfNeeded()
     }
 }

@@ -12,12 +12,6 @@ import UIKit
 class WeatherMainTableViewCell: UITableViewCell {
     // MARK: - Property
 
-    let mainDateFormatter: DateFormatter = {
-        let mainDateFormatter = DateFormatter()
-        mainDateFormatter.dateFormat = "a HH:mm"
-        return mainDateFormatter
-    }()
-
     // MARK: - UI
 
     let nowTimeLabel: UILabel = {
@@ -25,6 +19,7 @@ class WeatherMainTableViewCell: UITableViewCell {
         nowTimeLabel.text = "-"
         nowTimeLabel.textColor = .black
         nowTimeLabel.font = .systemFont(ofSize: 15)
+        nowTimeLabel.adjustsFontSizeToFitWidth = true
         return nowTimeLabel
     }()
 
@@ -68,11 +63,11 @@ class WeatherMainTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
 
-    func setCellData(cityName: String, timeStamp: Int, temperature: Double) {
+    func setMainTableCellData(cityName: String, timeStamp: Int, temperature: Double) {
         cityTitleLabel.text = "\(cityName)"
         if timeStamp != 0 {
             let date = Date(timeIntervalSince1970: Double(timeStamp))
-            nowTimeLabel.text = "\(mainDateFormatter.string(from: date))"
+            nowTimeLabel.text = "\(CommonData.shared.mainDateFormatter.string(from: date))"
         }
 
         if temperature > 0 {
