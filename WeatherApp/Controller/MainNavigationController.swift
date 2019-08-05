@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MainNavigationController: UINavigationController {
+public class MainNavigationController: UINavigationController {
     // MARK: - Lift Cycle
 
     override init(rootViewController: UIViewController) {

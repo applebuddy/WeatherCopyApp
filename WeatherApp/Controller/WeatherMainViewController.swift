@@ -140,7 +140,7 @@ extension WeatherMainViewController: UITableViewDelegate {
     }
 
     func tableView(_: UITableView, heightForRowAt _: IndexPath) -> CGFloat {
-        return WeatherCellHeight.MainTableViewCell
+        return WeatherCellHeight.mainTableViewCell
     }
 
     func tableView(_ tableView: UITableView, heightForFooterInSection _: Int) -> CGFloat {
@@ -200,9 +200,7 @@ extension WeatherMainViewController: CLLocationManagerDelegate {
             if nowLatitude == originLatitude,
                 originLongitude == nowLongitude, didEnterForeground {
                 // 만약 최근 위도 경도와 소수점 한자리까지 결과값이 동일하면 API요청을 하지 않는다.
-                print("지금 위도 경도 같아 호출하지마")
             } else {
-                print("지금 위도 경도 최신화 필요해 호출해")
                 CommonData.shared.setMainCoordinate(latitude: nowCoordinate.latitude, longitude: nowCoordinate.longitude)
                 CommonData.shared.setMainCityName(coordinate: nowCoordinate)
                 let mainLatitude = CommonData.shared.mainCoordinate.latitude

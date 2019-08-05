@@ -9,7 +9,7 @@
 import UIKit
 
 /// WeatherInfoViewController 메인타이틀 정보 뷰
-class WeatherInfoView: UIView {
+public class WeatherInfoView: UIView {
     let weatherTitleView: WeatherTitleView = {
         let weatherTitleView = WeatherTitleView()
         weatherTitleView.backgroundColor = .black

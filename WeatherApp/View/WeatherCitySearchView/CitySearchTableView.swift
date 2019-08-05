@@ -1,22 +1,22 @@
 //
-//  WeatherMainTableView.swift
+//  CitySearchTableView.swift
 //  WeatherApp
 //
-//  Created by MinKyeongTae on 02/08/2019.
+//  Created by MinKyeongTae on 06/08/2019.
 //  Copyright © 2019 MinKyeongTae. All rights reserved.
 //
 
 import UIKit
 
-/// WeatherMainViewController 메인 테이블뷰
-/// * **설정 한 장소목록 및 날씨정보를 나타낸다.**
-class WeatherMainTableView: UITableView {
+class CitySearchTableView: UITableView {
     override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
         backgroundColor = .black
+        separatorColor = .white
     }
 
-    required init?(coder _: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
         fatalError("init(coder:) has not been implemented")
     }
 }

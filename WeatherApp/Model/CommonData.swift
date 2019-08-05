@@ -12,39 +12,39 @@ import UIKit
 final class CommonData {
     static let shared = CommonData()
 
-    var temperatureType: TemperatureType = .celsius
-    var mainCelsius: Double?
-    var isLocationAuthority = UserDefaults.standard.bool(forKey: DataIdentifier.isLocationAuthority)
-    var mainCoordinate = WeatherCoordinate(latitude: 0, longitude: 0)
-    var selectedMainCellIndex = 0
-    var mainCityName = "-"
-    var weatherURLString = "https://weather.com/ko-KR/weather/today/"
-    var isAppForeground = false
-    var mainWeatherData: WeatherAPIData?
-    let locationManager = CLLocationManager()
+    public var temperatureType: TemperatureType = .celsius
+    public var mainCelsius: Double?
+    public var isLocationAuthority = UserDefaults.standard.bool(forKey: DataIdentifier.isLocationAuthority)
+    public var mainCoordinate = WeatherCoordinate(latitude: 0, longitude: 0)
+    public var selectedMainCellIndex = 0
+    public var mainCityName = "-"
+    public var weatherURLString = "https://weather.com/ko-KR/weather/today/"
+    public var isAppForeground = false
+    public var mainWeatherData: WeatherAPIData?
+    public let locationManager = CLLocationManager()
 
-    let mainDateFormatter: DateFormatter = {
+    public let mainDateFormatter: DateFormatter = {
         let mainDateFormatter = DateFormatter()
         mainDateFormatter.dateFormat = "a HH:mm"
         mainDateFormatter.locale = Locale(identifier: "ko_KR")
         return mainDateFormatter
     }()
 
-    let infoHeaderDateFormatter: DateFormatter = {
+    public let infoHeaderDateFormatter: DateFormatter = {
         let mainDateFormatter = DateFormatter()
         mainDateFormatter.dateFormat = "EEEE"
         mainDateFormatter.locale = Locale(identifier: "ko_KR")
         return mainDateFormatter
     }()
 
-    let hourInfoDateFormatter: DateFormatter = {
+    public let hourInfoDateFormatter: DateFormatter = {
         let mainDateFormatter = DateFormatter()
         mainDateFormatter.dateFormat = "a h시"
         mainDateFormatter.locale = Locale(identifier: "ko_KR")
         return mainDateFormatter
     }()
 
-    let todayInfoDateFormatter: DateFormatter = {
+    public let todayInfoDateFormatter: DateFormatter = {
         let mainDateFormatter = DateFormatter()
         mainDateFormatter.dateFormat = "a h:mm"
         mainDateFormatter.locale = Locale(identifier: "ko_KR")
@@ -53,21 +53,21 @@ final class CommonData {
 
     // MARK: - Set Method
 
-    func setMainCelsius(celsius: String) {
+    public func setMainCelsius(celsius: String) {
         mainCelsius = Double(celsius)
     }
 
-    func setLocationAuthData(isAuth: Bool) {
+    public func setLocationAuthData(isAuth: Bool) {
         UserDefaults.standard.set(isAuth, forKey: DataIdentifier.isLocationAuthority)
         isLocationAuthority = isAuth
     }
 
-    func setMainCoordinate(latitude: Double, longitude: Double) {
+    public func setMainCoordinate(latitude: Double, longitude: Double) {
         mainCoordinate.latitude = latitude
         mainCoordinate.longitude = longitude
     }
 
-    func setMainCityName(coordinate: CLLocationCoordinate2D) {
+    public func setMainCityName(coordinate: CLLocationCoordinate2D) {
         let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
         let geoCoder = CLGeocoder()
         let locale = Locale(identifier: "Ko-kr")
@@ -84,11 +84,11 @@ final class CommonData {
         }
     }
 
-    func setSelectedMainCellIndex(index: Int) {
+    public func setSelectedMainCellIndex(index: Int) {
         selectedMainCellIndex = index
     }
 
-    func changeTemperatureType() {
+    public func changeTemperatureType() {
         switch temperatureType {
         case .celsius:
             temperatureType = .fahrenheit
@@ -97,17 +97,17 @@ final class CommonData {
         }
     }
 
-    func setMainWeatherData(weatherData: WeatherAPIData) {
+    public func setMainWeatherData(weatherData: WeatherAPIData) {
         mainWeatherData = weatherData
     }
 
-    func setIsAppForegroundValue(isForeground: Bool) {
+    public func setIsAppForegroundValue(isForeground: Bool) {
         isAppForeground = isForeground
     }
 
     // MARK: - Get Method
 
-    func calculateCelsius(celsius: Double) -> Int {
+    public func calculateCelsius(celsius: Double) -> Int {
         var celsius = celsius
 
         switch temperatureType {
@@ -119,7 +119,7 @@ final class CommonData {
         return Int(celsius)
     }
 
-    func getWeatherImage(imageType: WeatherType) -> UIImage {
+    public func getWeatherImage(imageType: WeatherType) -> UIImage {
         let weatherImageIndex: String
         switch imageType {
         case .clearDay:
@@ -155,7 +155,7 @@ final class CommonData {
 
     // MARK: Action Method
 
-    func openWeatherURL(latitude: Double, longitude: Double) {
+    public func openWeatherURL(latitude: Double, longitude: Double) {
         let CustomUrlString = "\(CommonData.shared.weatherURLString)\(latitude),\(longitude)?par=apple_widget&locale=ko_KR"
         if latitude != 0.0, longitude != 0.0 {
             if let url = NSURL(string: CustomUrlString) {
@@ -170,17 +170,17 @@ final class CommonData {
 
     // MARK: Check Method
 
-    func checkLocationAuthority() -> Bool {
+    public func checkLocationAuthority() -> Bool {
         return isLocationAuthority
     }
 
     // MARK: - Get Method
 
-    func getSelectedMainCellIndex() -> Int {
+    public func getSelectedMainCellIndex() -> Int {
         return selectedMainCellIndex
     }
 
-    func getIsAppForegroundValue() -> Bool {
+    public func getIsAppForegroundValue() -> Bool {
         return isAppForeground
     }
 }

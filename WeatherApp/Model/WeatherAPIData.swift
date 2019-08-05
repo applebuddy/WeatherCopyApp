@@ -5,7 +5,7 @@ import UIKit
 
 // MARK: - WeatherAPIData
 
-struct WeatherAPIData: Codable {
+public struct WeatherAPIData: Codable {
     let latitude, longitude: Double
     let timezone: String
     let currently: Currently
@@ -16,7 +16,7 @@ struct WeatherAPIData: Codable {
 
 // MARK: - Currently
 
-struct Currently: Codable {
+public struct Currently: Codable {
     let summary: String
     let time: Int
     let icon: WeatherType
@@ -31,7 +31,7 @@ struct Currently: Codable {
     let visibility, ozone: Double
 }
 
-enum WeatherType: String, Codable {
+public enum WeatherType: String, Codable {
     case clearDay = "clear-day"
     case clearNight = "clear-night"
     case rain, snow, sleet, wind
@@ -41,7 +41,7 @@ enum WeatherType: String, Codable {
     case hail, thunderstorm, tornado
 }
 
-enum PrecipType: String, Codable {
+public enum PrecipType: String, Codable {
     case rain
     case snow
     case sleet
@@ -49,7 +49,7 @@ enum PrecipType: String, Codable {
 
 // MARK: - Daily
 
-struct Daily: Codable {
+public struct Daily: Codable {
     let summary: String
     let icon: WeatherType
     let data: [SubInfo]
@@ -57,7 +57,7 @@ struct Daily: Codable {
 
 // MARK: - SubInfo
 
-struct SubInfo: Codable {
+public struct SubInfo: Codable {
     let time: Int
     let icon: String
     let sunriseTime, sunsetTime: Int
@@ -90,7 +90,7 @@ struct SubInfo: Codable {
 
 // MARK: - Hourly
 
-struct Hourly: Codable {
+public struct Hourly: Codable {
     let icon: WeatherType
     let data: [Currently]
 }

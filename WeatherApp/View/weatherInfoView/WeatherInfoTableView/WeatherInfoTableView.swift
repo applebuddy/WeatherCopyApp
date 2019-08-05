@@ -10,7 +10,7 @@ import UIKit
 
 /// 메인 타이틀 뷰 하단 WeatherInfoViewController 메인 테이블뷰
 /// * **타이틀 날씨 정보 하단의 세부정보를 나타낸다.**
-class WeatherInfoTableView: UITableView {
+public class WeatherInfoTableView: UITableView {
     override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
         setTableView()

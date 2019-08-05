@@ -92,7 +92,6 @@ class WeatherInfoViewController: UIViewController {
     func setWeatherTitleViewData() {
         let weatherViewIndex = CommonData.shared.selectedMainCellIndex
         if weatherViewIndex == 0 {
-            print("메인날씨 뷰컨트롤러 진입")
             nowWeatherData = CommonData.shared.mainWeatherData
             let infoViewTitle = CommonData.shared.mainCityName
             guard let infoViewSubTitle = nowWeatherData?.currently.summary else { return }
@@ -255,7 +254,6 @@ extension WeatherInfoViewController: CLLocationManagerDelegate {
             setWeatherTitleViewData()
             view.layoutIfNeeded()
             if !isAppearViewController {
-                print("지금 위도 경도 최신화 필요해 호출해")
                 CommonData.shared.setMainCoordinate(latitude: nowLatitude, longitude: nowLongitude)
                 let mainLatitude = CommonData.shared.mainCoordinate.latitude
                 let mainLongitude = CommonData.shared.mainCoordinate.longitude

@@ -8,12 +8,12 @@
 
 import UIKit
 
-struct WeatherCoordinate {
+public struct WeatherCoordinate {
     var latitude: Double
     var longitude: Double
 }
 
-enum TemperatureType: Int {
+public enum TemperatureType: Int {
     case celsius = 0
     case fahrenheit = 1
 }

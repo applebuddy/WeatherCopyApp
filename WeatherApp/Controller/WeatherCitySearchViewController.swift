@@ -7,12 +7,17 @@
 //
 
 import CoreLocation
+import MapKit
 import UIKit
 
 class WeatherCitySearchViewController: UIViewController {
     // MARK: - Property
 
     let locationManager = CLLocationManager()
+    let geoCoder = CLGeocoder()
+    let completer = MKLocalSearchCompleter()
+    var searchCiryList = [String: CLLocationCoordinate2D]()
+    var displayedResultList = [String]()
 
     // MARK: - UI
 
@@ -21,13 +26,16 @@ class WeatherCitySearchViewController: UIViewController {
         return weatherCitySearchView
     }()
 
+    var citySearchBar: UISearchBar?
+
     // MARK: - Life Cycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
         setCitySearchViewController()
-        setButtonTarget()
-        setLocationManager()
+        registerCell()
+        weatherCitySearchView.citySearchTableView.delegate = self
+        weatherCitySearchView.citySearchTableView.dataSource = self
     }
 
     override func loadView() {
@@ -65,12 +73,18 @@ class WeatherCitySearchViewController: UIViewController {
 
     func setLocationManager() {
         locationManager.delegate = self
+        completer.delegate = self
+
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.startUpdatingLocation()
     }
 
     func setCitySearchViewController() {
         view.backgroundColor = .black
+        setButtonTarget()
+        setLocationManager()
+        citySearchBar = weatherCitySearchView.citySearchBar
+        citySearchBar?.delegate = self
     }
 
     func presentLocationAuthAlertController() {
@@ -94,6 +108,86 @@ class WeatherCitySearchViewController: UIViewController {
     }
 }
 
+// MARK: - SearchBar Protocol
+
+extension WeatherCitySearchViewController: UISearchBarDelegate {
+    func searchBar(_: UISearchBar, textDidChange searchText: String) {
+        print("DidChange...b")
+        print("Text is...: \(searchText)")
+        completer.queryFragment = "\(searchText)"
+        completerDidUpdateResults(completer)
+    }
+}
+
+extension WeatherCitySearchViewController: UITableViewDelegate {
+    func tableView(_: UITableView, heightForRowAt _: IndexPath) -> CGFloat {
+        return WeatherCellHeight.citySearchTableView
+    }
+
+    func tableView(_: UITableView, heightForFooterInSection _: Int) -> CGFloat {
+        return WeatherViewHeight.citySearchTableFooterView
+    }
+
+    func tableView(_: UITableView, viewForFooterInSection _: Int) -> UIView? {
+        let separatorView = WeatherSeparatorView()
+        return separatorView
+    }
+
+    func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
+        geoCoder.geocodeAddressString(displayedResultList[indexPath.row]) { placemarks, _ in
+            guard let placemarks = placemarks,
+                let location = placemarks.first?.location
+            else {
+                print("Couldn't found Coordinate.")
+                return
+            }
+
+            // Use your location
+            print(location.coordinate.latitude)
+            print(location.coordinate.longitude)
+        }
+    }
+}
+
+extension WeatherCitySearchViewController: UITableViewDataSource {
+    func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
+        return displayedResultList.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let citySearchTableCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.citySearchTableCell, for: indexPath) as? CitySearchTableViewCell else { return UITableViewCell() }
+        if indexPath.row == 0 {
+            if displayedResultList.count == 0 {
+                citySearchTableCell.searchedCityLabel.text = "도시를 검색 중입니다..."
+            }
+        }
+
+        if displayedResultList.count == 0 {
+            return citySearchTableCell
+        }
+
+        citySearchTableCell.setCellData(cityText: displayedResultList[indexPath.row])
+
+        return citySearchTableCell
+    }
+}
+
+// MARK: MapKit Protocol
+
+extension WeatherCitySearchViewController: MKLocalSearchCompleterDelegate {
+    func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
+        displayedResultList = []
+        _ = completer.results.map { result in
+            let searchedCity = "\(result.title + ", " + result.subtitle)"
+            displayedResultList.append(searchedCity)
+            print("\(searchedCity)")
+        }
+        DispatchQueue.main.async {
+            self.weatherCitySearchView.citySearchTableView.reloadData()
+        }
+    }
+}
+
 // MARK: - CLLocationManager Protocol
 
 extension WeatherCitySearchViewController: CLLocationManagerDelegate {
@@ -105,5 +199,11 @@ extension WeatherCitySearchViewController: CLLocationManagerDelegate {
         default:
             break
         }
+    }
+}
+
+extension WeatherCitySearchViewController: CellSettingProtocol {
+    func registerCell() {
+        weatherCitySearchView.citySearchTableView.register(CitySearchTableViewCell.self, forCellReuseIdentifier: CellIdentifier.citySearchTableCell)
     }
 }

@@ -8,16 +8,16 @@
 
 import UIKit
 
-class WeatherAPI {
+public class WeatherAPI {
     static let shared = WeatherAPI()
 
     // STEP 1) JSON데이터를 받기 위해 사용할 변수와 API토큰을 준비한다.
-    let urlSession = URLSession(configuration: .default)
-    var dataTask = URLSessionDataTask()
-    var baseURL = "https://api.darksky.net/forecast/"
-    let APIToken = "447da2f0774b0e23418285c52c5ec67b/"
-    let APISubURL = "?lang=ko&exclude=minutely,alerts,flags"
-    var errorMessage = ""
+    public let urlSession = URLSession(configuration: .default)
+    public var dataTask = URLSessionDataTask()
+    public var baseURL = "https://api.darksky.net/forecast/"
+    public let APIToken = "447da2f0774b0e23418285c52c5ec67b/"
+    public let APISubURL = "?lang=ko&exclude=minutely,alerts,flags"
+    public var errorMessage = ""
 
     init() {
         // STEP 2) BaseURL에 API토큰을 추가한다.
@@ -25,7 +25,7 @@ class WeatherAPI {
     }
 
     // completion: @escaping weatherResult
-    func requestAPI(latitude: Double, longitude: Double, completion: @escaping (WeatherAPIData) -> Void) {
+    public func requestAPI(latitude: Double, longitude: Double, completion: @escaping (WeatherAPIData) -> Void) {
         let APIUrlString = "\(baseURL)\(latitude),\(longitude)\(APISubURL)"
         print("APIUrlString: \(APIUrlString)")
         guard let APIUrl = URL(string: APIUrlString) else { return }
@@ -64,7 +64,7 @@ class WeatherAPI {
         dataTask.resume()
     }
 
-    func setBaseURL(token _: String) {
+    public func setBaseURL(token _: String) {
         baseURL.append(APIToken)
     }
 }

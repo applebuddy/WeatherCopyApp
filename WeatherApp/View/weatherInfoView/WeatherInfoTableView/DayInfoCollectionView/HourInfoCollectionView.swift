@@ -9,7 +9,7 @@
 import UIKit
 
 /// 하루 기준 날씨정보 컬렉션뷰
-class HourInfoCollectionView: UICollectionView {
+public class HourInfoCollectionView: UICollectionView {
     override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: frame, collectionViewLayout: layout)
         backgroundColor = .black
