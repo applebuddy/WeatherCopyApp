@@ -3,8 +3,6 @@ import UIKit
 
 // MARK: - WeatherAPIData
 
-// MARK: - WeatherAPIData
-
 public struct WeatherAPIData: Codable {
     let latitude, longitude: Double
     let timezone: String

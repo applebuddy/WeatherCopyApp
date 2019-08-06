@@ -58,7 +58,6 @@ class WeatherInfoViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        print(CommonData.shared.isLocationAuthority)
         setInfoViewController()
         registerCell()
         setLocationManager()

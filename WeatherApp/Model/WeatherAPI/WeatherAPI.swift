@@ -29,7 +29,6 @@ public class WeatherAPI {
     public func requestAPI(latitude: Double, longitude: Double, completion: @escaping (WeatherAPIData) -> Void) {
         delegate?.weatherAPIDidRequested(self)
         let APIUrlString = "\(baseURL)\(latitude),\(longitude)\(APISubURL)"
-        print("APIUrlString: \(APIUrlString)")
         guard let APIUrl = URL(string: APIUrlString) else { return }
 
         // STEP 4-1) URLSessionDataTash 초기화
