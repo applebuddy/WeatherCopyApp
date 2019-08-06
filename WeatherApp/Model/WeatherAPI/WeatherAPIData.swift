@@ -3,7 +3,7 @@ import UIKit
 
 // MARK: - WeatherAPIData
 
-public struct WeatherAPIData: Codable {
+struct WeatherAPIData: Codable {
     let latitude, longitude: Double
     let timezone: String
     let currently: Currently
@@ -14,13 +14,12 @@ public struct WeatherAPIData: Codable {
 
 // MARK: - Currently
 
-public struct Currently: Codable {
+struct Currently: Codable {
     let summary: String
     let time: Int
     let icon: WeatherType
     let nearestStormDistance: Int?
     let precipIntensity, precipProbability: Double
-    let precipType: PrecipType?
     let temperature, apparentTemperature, dewPoint, humidity: Double
     let pressure, windSpeed, windGust: Double
     let windBearing: Int
@@ -29,7 +28,7 @@ public struct Currently: Codable {
     let visibility, ozone: Double
 }
 
-public enum WeatherType: String, Codable {
+enum WeatherType: String, Codable {
     case clearDay = "clear-day"
     case clearNight = "clear-night"
     case rain, snow, sleet, wind
@@ -39,15 +38,19 @@ public enum WeatherType: String, Codable {
     case hail, thunderstorm, tornado
 }
 
-public enum PrecipType: String, Codable {
-    case rain
-    case snow
-    case sleet
+enum PrecipType: String, Codable {
+    case clearDay = "clear-day"
+    case clearNight = "clear-night"
+    case rain, snow, sleet, wind
+    case fog, cloudy
+    case partlyCloudyDay = "partly-cloudy-day"
+    case partlyCloudyNight = "partly-cloudy-night"
+    case hail, thunderstorm, tornado
 }
 
 // MARK: - Daily
 
-public struct Daily: Codable {
+struct Daily: Codable {
     let summary: String
     let icon: WeatherType
     let data: [SubInfo]
@@ -55,7 +58,7 @@ public struct Daily: Codable {
 
 // MARK: - SubInfo
 
-public struct SubInfo: Codable {
+struct SubInfo: Codable {
     let time: Int
     let icon: String
     let sunriseTime, sunsetTime: Int
@@ -88,7 +91,7 @@ public struct SubInfo: Codable {
 
 // MARK: - Hourly
 
-public struct Hourly: Codable {
+struct Hourly: Codable {
     let icon: WeatherType
     let data: [Currently]
 }

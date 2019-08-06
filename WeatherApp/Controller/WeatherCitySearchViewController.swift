@@ -171,17 +171,21 @@ extension WeatherCitySearchViewController: UITableViewDelegate {
                 self.presentLocationDataErrorAlertController()
             }
 
-            guard let placemarks = placemarks,
-                let location = placemarks.first?.location else {
+            guard let placeMarks = placemarks,
+                let location = placeMarks.first?.location else {
                 self.presentLocationDataErrorAlertController()
                 return
             }
 
-            let defaultCityName = self.calculateDefaultCityName(placeMarks: placemarks)
+            let defaultCityName = self.calculateDefaultCityName(placeMarks: placeMarks)
 
-            CommonData.shared.addSubWeatherData(coordinate: location.coordinate, defaultCityName: defaultCityName) {
-                CommonData.shared.saveSubWeatherDataList()
-                self.dismiss(animated: true)
+            CommonData.shared.addSubWeatherData(coordinate: location.coordinate, defaultCityName: defaultCityName) { isSucceed in
+                if isSucceed {
+                    CommonData.shared.saveSubWeatherDataList()
+                    self.dismiss(animated: true)
+                } else {
+                    self.presentLocationDataErrorAlertController()
+                }
             }
         }
     }
