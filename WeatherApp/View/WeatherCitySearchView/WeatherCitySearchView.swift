@@ -8,7 +8,7 @@
 
 import UIKit
 
-class WeatherCitySearchView: UIView {
+public class WeatherCitySearchView: UIView {
     // MARK: - UI
 
     let explainSearchLabel: UILabel = {
@@ -19,6 +19,11 @@ class WeatherCitySearchView: UIView {
         explainSearchLabel.textColor = .white
         explainSearchLabel.textAlignment = .center
         return explainSearchLabel
+    }()
+
+    let citySearchTableView: CitySearchTableView = {
+        let citySearchTableView = CitySearchTableView()
+        return citySearchTableView
     }()
 
     let citySearchBar: UISearchBar = {
@@ -54,6 +59,7 @@ extension WeatherCitySearchView: UIViewSettingProtocol {
         addSubview(explainSearchLabel)
         addSubview(citySearchBar)
         addSubview(backToMainButton)
+        addSubview(citySearchTableView)
     }
 
     func makeConstraints() {
@@ -78,6 +84,14 @@ extension WeatherCitySearchView: UIViewSettingProtocol {
             backToMainButton.leftAnchor.constraint(equalTo: citySearchBar.rightAnchor),
             backToMainButton.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor),
             backToMainButton.bottomAnchor.constraint(equalTo: citySearchBar.bottomAnchor),
+        ])
+
+        citySearchTableView.activateAnchors()
+        NSLayoutConstraint.activate([
+            citySearchTableView.topAnchor.constraint(equalTo: citySearchBar.bottomAnchor),
+            citySearchTableView.leftAnchor.constraint(equalTo: citySearchBar.leftAnchor),
+            citySearchTableView.rightAnchor.constraint(equalTo: rightAnchor, constant: -CommonInset.rightInset),
+            citySearchTableView.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
     }
 }

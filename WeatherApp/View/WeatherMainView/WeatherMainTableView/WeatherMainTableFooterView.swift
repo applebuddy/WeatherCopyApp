@@ -10,7 +10,7 @@ import UIKit
 
 /// WeatherMainTableViewCell 하단 뷰
 /// * **WeatherMainTableViewCell 하단의 버튼기능을 나타낸다.**
-class WeatherMainTableFooterView: UIView {
+public class WeatherMainTableFooterView: UIView {
     let weatherLinkButton: UIButton = {
         let weatherLinkButton = UIButton(type: .custom)
         weatherLinkButton.setImage(#imageLiteral(resourceName: "weatherLink"), for: .normal)

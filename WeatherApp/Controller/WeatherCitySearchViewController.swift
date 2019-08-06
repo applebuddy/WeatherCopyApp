@@ -7,12 +7,19 @@
 //
 
 import CoreLocation
+import MapKit
 import UIKit
 
 class WeatherCitySearchViewController: UIViewController {
     // MARK: - Property
 
     let locationManager = CLLocationManager()
+    let geoCoder = CLGeocoder()
+    let completer = MKLocalSearchCompleter()
+    var searchCiryList = [String: CLLocationCoordinate2D]()
+    var displayedResultList = [String]()
+    var selectedCityLocationData: CLLocation?
+    var citySearchBar: UISearchBar?
 
     // MARK: - UI
 
@@ -26,8 +33,9 @@ class WeatherCitySearchViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         setCitySearchViewController()
-        setButtonTarget()
-        setLocationManager()
+        registerCell()
+        weatherCitySearchView.citySearchTableView.delegate = self
+        weatherCitySearchView.citySearchTableView.dataSource = self
     }
 
     override func loadView() {
@@ -49,6 +57,10 @@ class WeatherCitySearchViewController: UIViewController {
 
     // MARK: Set Location Method
 
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+
     func requestLocationAuthority() {
         // 현재 위치권한이 있는지 유무를 확인한다.
         let locationAuthStatus = CLLocationManager.authorizationStatus()
@@ -65,12 +77,27 @@ class WeatherCitySearchViewController: UIViewController {
 
     func setLocationManager() {
         locationManager.delegate = self
+        completer.delegate = self
+
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.startUpdatingLocation()
     }
 
     func setCitySearchViewController() {
         view.backgroundColor = .black
+        setButtonTarget()
+        setLocationManager()
+        citySearchBar = weatherCitySearchView.citySearchBar
+        citySearchBar?.delegate = self
+    }
+
+    // MARK: - Alert Event
+
+    func presentLocationDataErrorAlertController() {
+        let errorAlertController = UIAlertController(title: "위치정보 흭득실패", message: "해당 위치정보를 얻는데 실패했습니다. 다른 지역을 선택해주세요.", preferredStyle: .alert)
+        let errorAlertAction = UIAlertAction(title: "확인", style: .cancel, handler: nil)
+        errorAlertController.addAction(errorAlertAction)
+        present(errorAlertController, animated: true, completion: nil)
     }
 
     func presentLocationAuthAlertController() {
@@ -94,6 +121,86 @@ class WeatherCitySearchViewController: UIViewController {
     }
 }
 
+// MARK: - SearchBar Protocol
+
+extension WeatherCitySearchViewController: UISearchBarDelegate {
+    func searchBar(_: UISearchBar, textDidChange searchText: String) {
+        completer.queryFragment = "\(searchText)"
+        completerDidUpdateResults(completer)
+    }
+}
+
+extension WeatherCitySearchViewController: UITableViewDelegate {
+    func tableView(_: UITableView, heightForRowAt _: IndexPath) -> CGFloat {
+        return WeatherCellHeight.citySearchTableView
+    }
+
+    func tableView(_: UITableView, heightForFooterInSection _: Int) -> CGFloat {
+        return WeatherViewHeight.citySearchTableFooterView
+    }
+
+    func tableView(_: UITableView, viewForFooterInSection _: Int) -> UIView? {
+        let separatorView = WeatherSeparatorView()
+        return separatorView
+    }
+
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+
+        geoCoder.geocodeAddressString(displayedResultList[indexPath.row]) { placemarks, _ in
+            guard let placemarks = placemarks,
+                let location = placemarks.first?.location
+            else {
+                self.presentLocationDataErrorAlertController()
+                return
+            }
+
+            CommonData.shared.addSubCityLocationList(location: location.coordinate)
+            CommonData.shared.setIsSearchedCityAdded(isSearchedCityAdded: true)
+
+            self.dismiss(animated: true)
+        }
+    }
+}
+
+extension WeatherCitySearchViewController: UITableViewDataSource {
+    func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
+        return displayedResultList.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let citySearchTableCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.citySearchTableCell, for: indexPath) as? CitySearchTableViewCell else { return UITableViewCell() }
+        if indexPath.row == 0 {
+            if displayedResultList.count == 0 {
+                citySearchTableCell.searchedCityLabel.text = "도시를 검색 중입니다..."
+            }
+        }
+
+        if displayedResultList.count == 0 {
+            return citySearchTableCell
+        }
+
+        citySearchTableCell.setCellData(cityText: displayedResultList[indexPath.row])
+
+        return citySearchTableCell
+    }
+}
+
+// MARK: MapKit Protocol
+
+extension WeatherCitySearchViewController: MKLocalSearchCompleterDelegate {
+    func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
+        displayedResultList = []
+        _ = completer.results.map { result in
+            let searchedCity = "\(result.title + ", " + result.subtitle)"
+            displayedResultList.append(searchedCity)
+        }
+        DispatchQueue.main.async {
+            self.weatherCitySearchView.citySearchTableView.reloadData()
+        }
+    }
+}
+
 // MARK: - CLLocationManager Protocol
 
 extension WeatherCitySearchViewController: CLLocationManagerDelegate {
@@ -105,5 +212,11 @@ extension WeatherCitySearchViewController: CLLocationManagerDelegate {
         default:
             break
         }
+    }
+}
+
+extension WeatherCitySearchViewController: CellSettingProtocol {
+    func registerCell() {
+        weatherCitySearchView.citySearchTableView.register(CitySearchTableViewCell.self, forCellReuseIdentifier: CellIdentifier.citySearchTableCell)
     }
 }

@@ -9,7 +9,7 @@
 import UIKit
 
 /// 24시간 날씨예보 정보 컬렉션뷰 셀
-class HourInfoCollectionViewCell: UICollectionViewCell {
+public class HourInfoCollectionViewCell: UICollectionViewCell {
     let cellImageView: UIImageView = {
         let cellImageView = UIImageView()
         cellImageView.contentMode = .scaleAspectFit
@@ -27,6 +27,7 @@ class HourInfoCollectionViewCell: UICollectionViewCell {
     let percentageLabel: UILabel = {
         let secondLabel = UILabel()
         secondLabel.text = ""
+        secondLabel.textColor = .blue
         secondLabel.font = .systemFont(ofSize: 10)
         secondLabel.textAlignment = .center
         return secondLabel

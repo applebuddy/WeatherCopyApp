@@ -154,16 +154,8 @@ class TodayInfoTableViewCell: UITableViewCell {
 
             // MARK: 체감
 
-            if titleInfo != 0 {
-                var feelingValue = titleInfo.roundedValue(roundSize: 0)
-                if feelingValue != 0 {
-                    if CommonData.shared.temperatureType == .celsius {
-                        feelingValue = feelingValue.changeTemperatureFToC().roundedValue(roundSize: 0)
-                        let apparentTemperature = Int(feelingValue)
-                        titleInfoText = "\(apparentTemperature)º"
-                    }
-                }
-            }
+            let feelingValue = CommonData.shared.calculateCelsius(celsius: titleInfo)
+            titleInfoText = "\(feelingValue)º"
         case .fourthRow:
 
             // MARK: 기압

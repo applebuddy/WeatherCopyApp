@@ -41,10 +41,26 @@ class WeatherMainViewController: UIViewController {
 
     override func viewWillAppear(_: Bool) {
         super.viewWillAppear(true)
+        if CommonData.shared.isSearchedCityAdded {
+            DispatchQueue.global().async {
+                CommonData.shared.setIsSearchedCityAdded(isSearchedCityAdded: false)
+                DispatchQueue.main.async {
+                    self.weatherMainView.weatherMainTableView.reloadData()
+                }
+            }
+        }
         checksLocationAuthority()
     }
 
+    override func viewDidAppear(_: Bool) {
+        super.viewDidAppear(true)
+    }
+
     // MARK: - Set Method
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
 
     func setLocationManager() {
         locationManager.delegate = self
@@ -140,14 +156,15 @@ extension WeatherMainViewController: UITableViewDelegate {
     }
 
     func tableView(_: UITableView, heightForRowAt _: IndexPath) -> CGFloat {
-        return WeatherCellHeight.MainTableViewCell
+        return WeatherCellHeight.mainTableViewCell
     }
 
     func tableView(_ tableView: UITableView, heightForFooterInSection _: Int) -> CGFloat {
         return WeatherViewHeight.weatherMainBottomView
     }
 
-    func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         CommonData.shared.setSelectedMainCellIndex(index: indexPath.row)
         dismiss(animated: true, completion: nil)
     }
@@ -165,12 +182,13 @@ extension WeatherMainViewController: UITableViewDataSource {
     }
 
     func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
-        return 1
+        return 1 + CommonData.shared.subCityLocationList.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let weatherMainCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherMainTableCell, for: indexPath) as? WeatherMainTableViewCell else { return UITableViewCell() }
+
         if indexPath.row == 0 {
-            guard let weatherMainCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherMainTableCell, for: indexPath) as? WeatherMainTableViewCell else { return UITableViewCell() }
             let mainWeatherData = CommonData.shared.mainWeatherData
             let cityName = CommonData.shared.mainCityName
 
@@ -180,7 +198,26 @@ extension WeatherMainViewController: UITableViewDataSource {
             weatherMainCell.setMainTableCellData(cityName: cityName, timeStamp: timeStamp, temperature: temperature)
             return weatherMainCell
         } else {
-            return UITableViewCell()
+            weatherMainCell.mainIndicatorImageView.image = nil
+            return weatherMainCell
+        }
+    }
+
+    func tableView(_: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        if indexPath.row == 0 {
+            return .none
+        } else {
+            return .delete
+        }
+    }
+
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if indexPath.row == 0 { return }
+
+        if editingStyle == .delete {
+            CommonData.shared.subCityLocationList.remove(at: indexPath.row - 1)
+            tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
+            print(CommonData.shared.subCityLocationList)
         }
     }
 }
@@ -191,7 +228,6 @@ extension WeatherMainViewController: CLLocationManagerDelegate {
     /// * **위치가 업데이트 될 때마다 실행 되는 델리게이트 메서드**
     func locationManager(_ manager: CLLocationManager, didUpdateLocations _: [CLLocation]) {
         if let nowCoordinate = manager.location?.coordinate {
-            print("latitude: \(nowCoordinate.latitude), longitude: \(nowCoordinate.longitude)")
             let didEnterForeground = CommonData.shared.getIsAppForegroundValue()
             let originLatitude = CommonData.shared.mainCoordinate.latitude.roundedValue(roundSize: 2)
             let originLongitude = CommonData.shared.mainCoordinate.longitude.roundedValue(roundSize: 2)
@@ -200,9 +236,7 @@ extension WeatherMainViewController: CLLocationManagerDelegate {
             if nowLatitude == originLatitude,
                 originLongitude == nowLongitude, didEnterForeground {
                 // 만약 최근 위도 경도와 소수점 한자리까지 결과값이 동일하면 API요청을 하지 않는다.
-                print("지금 위도 경도 같아 호출하지마")
             } else {
-                print("지금 위도 경도 최신화 필요해 호출해")
                 CommonData.shared.setMainCoordinate(latitude: nowCoordinate.latitude, longitude: nowCoordinate.longitude)
                 CommonData.shared.setMainCityName(coordinate: nowCoordinate)
                 let mainLatitude = CommonData.shared.mainCoordinate.latitude
