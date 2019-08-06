@@ -4,7 +4,7 @@
 //
 //  Created by MinKyeongTae on 31/07/2019.
 //  Copyright © 2019 MinKyeongTae. All rights reserved.
-//  // ** now sub Branch : Feature/AddCitySearchViewFunction **
+//  // ** now sub Branch : Feature/DisplaySubWeatherData **
 
 import UIKit
 
@@ -14,9 +14,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     func application(_: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
-        let weatherMainViewController = WeatherMainViewController()
+
         let weatherInfoViewController = WeatherInfoViewController()
-        let weatherCitySearchViewController = WeatherCitySearchViewController()
         let mainNavigationController = MainNavigationController(rootViewController: weatherInfoViewController)
         window?.rootViewController = mainNavigationController
         window?.makeKeyAndVisible()
