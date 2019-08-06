@@ -62,16 +62,15 @@ final class CommonData {
     public func setDateFormatter(dateFormatter: DateFormatter, timeZone: String, timeStamp: Double) -> String {
         let date = Date(timeIntervalSince1970: timeStamp)
         let newDateFormatter = dateFormatter
-        var timeZoneIdentifier = "KST"
 
-        for (key, value) in TimeZone.abbreviationDictionary {
-            if timeZone == value {
-                timeZoneIdentifier = key
-                break
-            }
-        }
+//        for (key, value) in TimeZone.abbreviationDictionary {
+//            if timeZone == value {
+//                timeZoneIdentifier = key
+//                break
+//            }
+//        }
 
-        newDateFormatter.timeZone = TimeZone(abbreviation: timeZoneIdentifier)
+        newDateFormatter.timeZone = TimeZone(identifier: timeZone)
         let formattedDate = newDateFormatter.string(from: date)
         return formattedDate
     }
