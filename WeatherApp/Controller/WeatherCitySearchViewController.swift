@@ -155,7 +155,7 @@ extension WeatherCitySearchViewController: UITableViewDelegate {
                 return
             }
 
-            CommonData.shared.addSubCityLocationList(location: location.coordinate)
+            CommonData.shared.addSubWeatherData(location: location.coordinate)
             CommonData.shared.setIsSearchedCityAdded(isSearchedCityAdded: true)
 
             self.dismiss(animated: true)

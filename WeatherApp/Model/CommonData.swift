@@ -14,9 +14,9 @@ final class CommonData {
 
     public var weatherURLString = "https://weather.com/ko-KR/weather/today/"
     public var mainCityName = "-"
+    public var subCityNameList = [String]()
+    public var subWeatherDataList = [SubWeatherData]()
     public var mainWeatherData: WeatherAPIData?
-    public var subWeatherList: [WeatherAPIData]?
-    public var subCityLocationList = [CLLocationCoordinate2D]()
 
     public var temperatureType: TemperatureType = .celsius
     public var mainCelsius: Double?
@@ -77,8 +77,11 @@ final class CommonData {
         mainCoordinate.longitude = longitude
     }
 
-    public func addSubCityLocationList(location: CLLocationCoordinate2D) {
-        subCityLocationList.append(location)
+    // MARK: Set SubWeatherDataList
+
+    public func addSubWeatherData(location: CLLocationCoordinate2D) {
+        let subWeatherData = SubWeatherData(subData: nil, subCityName: "", cityLocation: location)
+        subWeatherDataList.append(subWeatherData)
     }
 
     public func setMainCityName(coordinate: CLLocationCoordinate2D) {
@@ -98,8 +101,35 @@ final class CommonData {
         }
     }
 
+    public func setSubWeatherData(_ weatherData: WeatherAPIData, coordinate: CLLocationCoordinate2D, index: Int) {
+        let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+        let geoCoder = CLGeocoder()
+        let locale = Locale(identifier: "Ko-kr")
+        geoCoder.reverseGeocodeLocation(location, preferredLocale: locale) { placeMarks, error in
+
+            if error != nil {
+                print("\(error?.localizedDescription ?? "could not get cityName")")
+                return
+            }
+            guard let address = placeMarks?.first else { return }
+            let cityName = address.dictionaryWithValues(forKeys: ["locality"])["locality"]
+            guard let cityNameString = cityName as? String else { return }
+            self.subWeatherDataList[index].subCityName = cityNameString
+        }
+
+        subWeatherDataList[index].subData = weatherData
+    }
+
     public func setSelectedMainCellIndex(index: Int) {
         selectedMainCellIndex = index
+    }
+
+    public func initSubWeatherDataList() {
+        subWeatherDataList = [SubWeatherData]()
+    }
+
+    public func addSubWeatherList(weatherData: WeatherAPIData, index: Int) {
+        subWeatherDataList[index].subData = weatherData
     }
 
     public func changeTemperatureType() {

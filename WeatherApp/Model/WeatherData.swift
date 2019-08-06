@@ -6,11 +6,18 @@
 //  Copyright © 2019 MinKyeongTae. All rights reserved.
 //
 
+import CoreLocation
 import UIKit
 
+public struct SubWeatherData {
+    public var subData: WeatherAPIData?
+    public var subCityName: String
+    public var cityLocation: CLLocationCoordinate2D?
+}
+
 public struct WeatherCoordinate {
-    var latitude: Double
-    var longitude: Double
+    public var latitude: Double
+    public var longitude: Double
 }
 
 public enum TemperatureType: Int {

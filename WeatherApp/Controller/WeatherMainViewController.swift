@@ -44,8 +44,17 @@ class WeatherMainViewController: UIViewController {
         if CommonData.shared.isSearchedCityAdded {
             DispatchQueue.global().async {
                 CommonData.shared.setIsSearchedCityAdded(isSearchedCityAdded: false)
-                DispatchQueue.main.async {
-                    self.weatherMainView.weatherMainTableView.reloadData()
+                let subWeatherDataList = CommonData.shared.subWeatherDataList
+                for (index, value) in subWeatherDataList.enumerated() {
+                    guard let subCoordinate = value.cityLocation else { return }
+                    WeatherAPI.shared.requestAPI(latitude: subCoordinate.latitude, longitude: subCoordinate.longitude) { subWeatherAPIData in
+                        CommonData.shared.setSubWeatherData(subWeatherAPIData, coordinate: subCoordinate, index: index)
+                        if index == CommonData.shared.subWeatherDataList.count - 1 {
+                            DispatchQueue.main.async {
+                                self.weatherMainView.weatherMainTableView.reloadData()
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -138,9 +147,7 @@ class WeatherMainViewController: UIViewController {
 // MARK: - UITableView Protocol
 
 extension WeatherMainViewController: UITableViewDelegate {
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        makeWeatherMainTableViewEvent(scrollView, offsetY: scrollView.contentOffset.y)
-    }
+    func scrollViewDidScroll(_: UIScrollView) {}
 
     func tableView(_: UITableView, viewForHeaderInSection _: Int) -> UIView? {
         let headerView = WeatherSeparatorView()
@@ -182,7 +189,7 @@ extension WeatherMainViewController: UITableViewDataSource {
     }
 
     func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
-        return 1 + CommonData.shared.subCityLocationList.count
+        return 1 + CommonData.shared.subWeatherDataList.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -199,6 +206,7 @@ extension WeatherMainViewController: UITableViewDataSource {
             return weatherMainCell
         } else {
             weatherMainCell.mainIndicatorImageView.image = nil
+
             return weatherMainCell
         }
     }
@@ -215,9 +223,8 @@ extension WeatherMainViewController: UITableViewDataSource {
         if indexPath.row == 0 { return }
 
         if editingStyle == .delete {
-            CommonData.shared.subCityLocationList.remove(at: indexPath.row - 1)
-            tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
-            print(CommonData.shared.subCityLocationList)
+            CommonData.shared.subWeatherDataList.remove(at: indexPath.row - 1)
+            tableView.deleteRows(at: [indexPath], with: .automatic)
         }
     }
 }
@@ -244,8 +251,13 @@ extension WeatherMainViewController: CLLocationManagerDelegate {
 
                 WeatherAPI.shared.requestAPI(latitude: mainLatitude, longitude: mainLongitude) { weatherAPIData in
                     CommonData.shared.setMainWeatherData(weatherData: weatherAPIData)
-                    DispatchQueue.main.async {
-                        self.weatherMainView.weatherMainTableView.reloadData()
+
+                    if CommonData.shared.subWeatherDataList.isEmpty {
+                        DispatchQueue.main.async {
+                            self.weatherMainView.weatherMainTableView.reloadData()
+                        }
+                    } else {
+                        // >>??????
                     }
                 }
                 CommonData.shared.setIsAppForegroundValue(isForeground: true)
