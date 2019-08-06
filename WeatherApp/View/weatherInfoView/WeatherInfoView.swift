@@ -49,18 +49,18 @@ public class WeatherInfoView: UIView {
         weatherInfoTableView.activateAnchors()
         NSLayoutConstraint.activate([
             weatherInfoTableView.topAnchor.constraint(equalTo: weatherTitleView.bottomAnchor),
-            weatherInfoTableView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
-            weatherInfoTableView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor),
-            weatherInfoTableView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor),
+            weatherInfoTableView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            weatherInfoTableView.leftAnchor.constraint(equalTo: leftAnchor),
+            weatherInfoTableView.rightAnchor.constraint(equalTo: rightAnchor),
         ])
     }
 
     func setWeatherTitleViewContraint() {
         weatherTitleView.activateAnchors()
         NSLayoutConstraint.activate([
-            weatherTitleView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 0),
-            weatherTitleView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 0),
-            weatherTitleView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: 0),
+            weatherTitleView.topAnchor.constraint(equalTo: topAnchor, constant: 0),
+            weatherTitleView.leftAnchor.constraint(equalTo: leftAnchor, constant: 0),
+            weatherTitleView.rightAnchor.constraint(equalTo: rightAnchor, constant: 0),
             weatherTitleView.heightAnchor.constraint(equalToConstant: WeatherViewHeight.titleViewHeight),
         ])
     }

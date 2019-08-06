@@ -92,13 +92,6 @@ extension WeatherHourInfoTableViewCell: UICollectionViewDataSource {
 
 // MARK: - Controller Protocol
 
-extension WeatherInfoViewController: CellSettingProtocol {
-    func registerCell() {
-        weatherInfoView.weatherInfoTableView.register(WeatherHourInfoTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weatherHourInfoTableCell)
-        weatherInfoView.weatherInfoTableView.register(WeatherSubInfoTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weatherWeekInfoTableCell)
-    }
-}
-
 extension WeatherHourInfoTableViewCell: UIViewSettingProtocol {
     func makeSubviews() {
         addSubview(dayInfoCollectionView)
