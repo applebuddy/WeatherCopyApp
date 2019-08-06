@@ -88,7 +88,7 @@ extension WeekSubInfoView: UIViewSettingProtocol {
             dateLabel.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.2),
             dateLabel.heightAnchor.constraint(equalTo: heightAnchor),
             dateLabel.leftAnchor.constraint(equalTo: leftAnchor),
-            weatherImageView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.5),
+            weatherImageView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.45),
             weatherImageView.heightAnchor.constraint(equalTo: heightAnchor),
             maxCelsiusLabel.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.2),
             maxCelsiusLabel.heightAnchor.constraint(equalTo: heightAnchor),

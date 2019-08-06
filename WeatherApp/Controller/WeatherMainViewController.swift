@@ -202,6 +202,24 @@ extension WeatherMainViewController: UITableViewDataSource {
             return weatherMainCell
         }
     }
+
+    func tableView(_: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        if indexPath.row == 0 {
+            return .none
+        } else {
+            return .delete
+        }
+    }
+
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if indexPath.row == 0 { return }
+
+        if editingStyle == .delete {
+            CommonData.shared.subCityLocationList.remove(at: indexPath.row - 1)
+            tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
+            print(CommonData.shared.subCityLocationList)
+        }
+    }
 }
 
 // MARK: - CLLocationManager Protocol
@@ -210,7 +228,6 @@ extension WeatherMainViewController: CLLocationManagerDelegate {
     /// * **위치가 업데이트 될 때마다 실행 되는 델리게이트 메서드**
     func locationManager(_ manager: CLLocationManager, didUpdateLocations _: [CLLocation]) {
         if let nowCoordinate = manager.location?.coordinate {
-            print("latitude: \(nowCoordinate.latitude), longitude: \(nowCoordinate.longitude)")
             let didEnterForeground = CommonData.shared.getIsAppForegroundValue()
             let originLatitude = CommonData.shared.mainCoordinate.latitude.roundedValue(roundSize: 2)
             let originLongitude = CommonData.shared.mainCoordinate.longitude.roundedValue(roundSize: 2)

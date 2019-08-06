@@ -125,8 +125,6 @@ class WeatherCitySearchViewController: UIViewController {
 
 extension WeatherCitySearchViewController: UISearchBarDelegate {
     func searchBar(_: UISearchBar, textDidChange searchText: String) {
-        print("DidChange...b")
-        print("Text is...: \(searchText)")
         completer.queryFragment = "\(searchText)"
         completerDidUpdateResults(completer)
     }
@@ -157,14 +155,10 @@ extension WeatherCitySearchViewController: UITableViewDelegate {
                 return
             }
 
-            CommonData.shared.addSubCityLocationList(location: location)
+            CommonData.shared.addSubCityLocationList(location: location.coordinate)
             CommonData.shared.setIsSearchedCityAdded(isSearchedCityAdded: true)
 
             self.dismiss(animated: true)
-
-            // Use your location
-            print(location.coordinate.latitude)
-            print(location.coordinate.longitude)
         }
     }
 }
@@ -200,7 +194,6 @@ extension WeatherCitySearchViewController: MKLocalSearchCompleterDelegate {
         _ = completer.results.map { result in
             let searchedCity = "\(result.title + ", " + result.subtitle)"
             displayedResultList.append(searchedCity)
-            print("\(searchedCity)")
         }
         DispatchQueue.main.async {
             self.weatherCitySearchView.citySearchTableView.reloadData()

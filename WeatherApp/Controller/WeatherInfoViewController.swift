@@ -83,9 +83,9 @@ class WeatherInfoViewController: UIViewController {
 
     // MARK: - Set Method
 
-    override var preferredStatusBarStyle: UIStatusBarStyle {
-        return .lightContent
-    }
+//    override var preferredStatusBarStyle: UIStatusBarStyle {
+//        return .lightContent
+//    }
 
     func setLocationManager() {
         locationManager.delegate = self

@@ -324,12 +324,11 @@
 		07ED2A2E22F198F4003FB9C6 /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				07F7CCA922F96C4B00631396 /* Constant */,
-				07C324CE22F570D700DD1774 /* CommonExtension.swift */,
+				07F7CCBD22F96FEC00631396 /* WeatherAPI */,
 				0781805C22F6B0B400FB892C /* CommonData.swift */,
-				0781805E22F6DD0200FB892C /* WeatherAPI.swift */,
-				079321FF22F6FBFF00ABA394 /* WeatherAPIData.swift */,
 				0781806022F6ECE300FB892C /* WeatherData.swift */,
+				07F7CCBE22F9700600631396 /* Extension */,
+				07F7CCA922F96C4B00631396 /* Constant */,
 				077F5BDE22F2D3F50045391B /* Protocol */,
 			);
 			path = Model;
@@ -361,6 +360,23 @@
 				07F7CCAD22F96C8500631396 /* CommonInset.swift */,
 			);
 			path = Constant;
+			sourceTree = "<group>";
+		};
+		07F7CCBD22F96FEC00631396 /* WeatherAPI */ = {
+			isa = PBXGroup;
+			children = (
+				0781805E22F6DD0200FB892C /* WeatherAPI.swift */,
+				079321FF22F6FBFF00ABA394 /* WeatherAPIData.swift */,
+			);
+			path = WeatherAPI;
+			sourceTree = "<group>";
+		};
+		07F7CCBE22F9700600631396 /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				07C324CE22F570D700DD1774 /* CommonExtension.swift */,
+			);
+			path = Extension;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

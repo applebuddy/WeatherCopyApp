@@ -16,7 +16,7 @@ final class CommonData {
     public var mainCityName = "-"
     public var mainWeatherData: WeatherAPIData?
     public var subWeatherList: [WeatherAPIData]?
-    public var subCityLocationList = [CLLocation]()
+    public var subCityLocationList = [CLLocationCoordinate2D]()
 
     public var temperatureType: TemperatureType = .celsius
     public var mainCelsius: Double?
@@ -77,7 +77,7 @@ final class CommonData {
         mainCoordinate.longitude = longitude
     }
 
-    public func addSubCityLocationList(location: CLLocation) {
+    public func addSubCityLocationList(location: CLLocationCoordinate2D) {
         subCityLocationList.append(location)
     }
 
