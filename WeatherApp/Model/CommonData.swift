@@ -25,12 +25,13 @@ final class CommonData {
     public var selectedMainCellIndex = 0
 
     public var isAppForeground = false
+    public var isSearchedCityAdded = false
 
     public let locationManager = CLLocationManager()
 
     public let mainDateFormatter: DateFormatter = {
         let mainDateFormatter = DateFormatter()
-        mainDateFormatter.dateFormat = "a HH:mm"
+        mainDateFormatter.dateFormat = "a h:mm"
         mainDateFormatter.locale = Locale(identifier: "ko_KR")
         return mainDateFormatter
     }()
@@ -57,6 +58,10 @@ final class CommonData {
     }()
 
     // MARK: - Set Method
+
+    public func setIsSearchedCityAdded(isSearchedCityAdded: Bool) {
+        self.isSearchedCityAdded = isSearchedCityAdded
+    }
 
     public func setMainCelsius(celsius: String) {
         mainCelsius = Double(celsius)

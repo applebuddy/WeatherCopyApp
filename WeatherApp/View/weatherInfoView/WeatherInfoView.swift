@@ -66,10 +66,11 @@ public class WeatherInfoView: UIView {
     }
 
     func setInfoHeaderViewContraint() {
+        weatherInfoTableHeaderView.activateAnchors()
         NSLayoutConstraint.activate([
             weatherInfoTableHeaderView.centerXAnchor.constraint(equalTo: centerXAnchor),
             weatherInfoTableHeaderView.topAnchor.constraint(equalTo: weatherTitleView.bottomAnchor),
-            weatherInfoTableHeaderView.widthAnchor.constraint(equalTo: widthAnchor),
+            weatherInfoTableHeaderView.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width),
             weatherInfoTableHeaderView.heightAnchor.constraint(equalToConstant: WeatherCellHeight.infoTableHeaderCell),
         ])
     }

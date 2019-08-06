@@ -57,6 +57,10 @@ class WeatherCitySearchViewController: UIViewController {
 
     // MARK: Set Location Method
 
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+
     func requestLocationAuthority() {
         // 현재 위치권한이 있는지 유무를 확인한다.
         let locationAuthStatus = CLLocationManager.authorizationStatus()
@@ -154,6 +158,8 @@ extension WeatherCitySearchViewController: UITableViewDelegate {
             }
 
             CommonData.shared.addSubCityLocationList(location: location)
+            CommonData.shared.setIsSearchedCityAdded(isSearchedCityAdded: true)
+
             self.dismiss(animated: true)
 
             // Use your location

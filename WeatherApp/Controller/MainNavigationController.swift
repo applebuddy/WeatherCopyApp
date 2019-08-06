@@ -34,5 +34,9 @@ public class MainNavigationController: UINavigationController {
 
     func setNavigationBar() {
         isNavigationBarHidden = true
+        navigationBar.barStyle = .default
+        navigationBar.barTintColor = .white
+        navigationBar.tintColor = .white
+        navigationBar.backgroundColor = .white
     }
 }

@@ -41,9 +41,15 @@ class WeatherMainViewController: UIViewController {
 
     override func viewWillAppear(_: Bool) {
         super.viewWillAppear(true)
+        if CommonData.shared.isSearchedCityAdded {
+            DispatchQueue.global().async {
+                CommonData.shared.setIsSearchedCityAdded(isSearchedCityAdded: false)
+                DispatchQueue.main.async {
+                    self.weatherMainView.weatherMainTableView.reloadData()
+                }
+            }
+        }
         checksLocationAuthority()
-        let count = CommonData.shared.subCityLocationList
-        print(CommonData.shared.subCityLocationList.count)
     }
 
     override func viewDidAppear(_: Bool) {
@@ -51,6 +57,10 @@ class WeatherMainViewController: UIViewController {
     }
 
     // MARK: - Set Method
+
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
 
     func setLocationManager() {
         locationManager.delegate = self
@@ -172,12 +182,13 @@ extension WeatherMainViewController: UITableViewDataSource {
     }
 
     func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
-        return 1
+        return 1 + CommonData.shared.subCityLocationList.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        guard let weatherMainCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherMainTableCell, for: indexPath) as? WeatherMainTableViewCell else { return UITableViewCell() }
+
         if indexPath.row == 0 {
-            guard let weatherMainCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherMainTableCell, for: indexPath) as? WeatherMainTableViewCell else { return UITableViewCell() }
             let mainWeatherData = CommonData.shared.mainWeatherData
             let cityName = CommonData.shared.mainCityName
 
@@ -187,7 +198,8 @@ extension WeatherMainViewController: UITableViewDataSource {
             weatherMainCell.setMainTableCellData(cityName: cityName, timeStamp: timeStamp, temperature: temperature)
             return weatherMainCell
         } else {
-            return UITableViewCell()
+            weatherMainCell.mainIndicatorImageView.image = nil
+            return weatherMainCell
         }
     }
 }
