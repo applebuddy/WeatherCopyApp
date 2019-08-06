@@ -42,6 +42,12 @@ class WeatherMainViewController: UIViewController {
     override func viewWillAppear(_: Bool) {
         super.viewWillAppear(true)
         checksLocationAuthority()
+        let count = CommonData.shared.subCityLocationList
+        print(CommonData.shared.subCityLocationList.count)
+    }
+
+    override func viewDidAppear(_: Bool) {
+        super.viewDidAppear(true)
     }
 
     // MARK: - Set Method
@@ -147,7 +153,8 @@ extension WeatherMainViewController: UITableViewDelegate {
         return WeatherViewHeight.weatherMainBottomView
     }
 
-    func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         CommonData.shared.setSelectedMainCellIndex(index: indexPath.row)
         dismiss(animated: true, completion: nil)
     }

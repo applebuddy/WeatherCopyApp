@@ -12,15 +12,20 @@ import UIKit
 final class CommonData {
     static let shared = CommonData()
 
+    public var weatherURLString = "https://weather.com/ko-KR/weather/today/"
+    public var mainCityName = "-"
+    public var mainWeatherData: WeatherAPIData?
+    public var subWeatherList: [WeatherAPIData]?
+    public var subCityLocationList = [CLLocation]()
+
     public var temperatureType: TemperatureType = .celsius
     public var mainCelsius: Double?
     public var isLocationAuthority = UserDefaults.standard.bool(forKey: DataIdentifier.isLocationAuthority)
     public var mainCoordinate = WeatherCoordinate(latitude: 0, longitude: 0)
     public var selectedMainCellIndex = 0
-    public var mainCityName = "-"
-    public var weatherURLString = "https://weather.com/ko-KR/weather/today/"
+
     public var isAppForeground = false
-    public var mainWeatherData: WeatherAPIData?
+
     public let locationManager = CLLocationManager()
 
     public let mainDateFormatter: DateFormatter = {
@@ -65,6 +70,10 @@ final class CommonData {
     public func setMainCoordinate(latitude: Double, longitude: Double) {
         mainCoordinate.latitude = latitude
         mainCoordinate.longitude = longitude
+    }
+
+    public func addSubCityLocationList(location: CLLocation) {
+        subCityLocationList.append(location)
     }
 
     public func setMainCityName(coordinate: CLLocationCoordinate2D) {

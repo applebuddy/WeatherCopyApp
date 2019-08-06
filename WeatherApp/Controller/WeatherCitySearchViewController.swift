@@ -18,6 +18,8 @@ class WeatherCitySearchViewController: UIViewController {
     let completer = MKLocalSearchCompleter()
     var searchCiryList = [String: CLLocationCoordinate2D]()
     var displayedResultList = [String]()
+    var selectedCityLocationData: CLLocation?
+    var citySearchBar: UISearchBar?
 
     // MARK: - UI
 
@@ -25,8 +27,6 @@ class WeatherCitySearchViewController: UIViewController {
         let weatherCitySearchView = WeatherCitySearchView()
         return weatherCitySearchView
     }()
-
-    var citySearchBar: UISearchBar?
 
     // MARK: - Life Cycle
 
@@ -87,6 +87,15 @@ class WeatherCitySearchViewController: UIViewController {
         citySearchBar?.delegate = self
     }
 
+    // MARK: - Alert Event
+
+    func presentLocationDataErrorAlertController() {
+        let errorAlertController = UIAlertController(title: "위치정보 흭득실패", message: "해당 위치정보를 얻는데 실패했습니다. 다른 지역을 선택해주세요.", preferredStyle: .alert)
+        let errorAlertAction = UIAlertAction(title: "확인", style: .cancel, handler: nil)
+        errorAlertController.addAction(errorAlertAction)
+        present(errorAlertController, animated: true, completion: nil)
+    }
+
     func presentLocationAuthAlertController() {
         guard let appSettingURL = URL(string: UIApplication.openSettingsURLString) else { return }
 
@@ -133,14 +142,19 @@ extension WeatherCitySearchViewController: UITableViewDelegate {
         return separatorView
     }
 
-    func tableView(_: UITableView, didSelectRowAt indexPath: IndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
+
         geoCoder.geocodeAddressString(displayedResultList[indexPath.row]) { placemarks, _ in
             guard let placemarks = placemarks,
                 let location = placemarks.first?.location
             else {
-                print("Couldn't found Coordinate.")
+                self.presentLocationDataErrorAlertController()
                 return
             }
+
+            CommonData.shared.addSubCityLocationList(location: location)
+            self.dismiss(animated: true)
 
             // Use your location
             print(location.coordinate.latitude)
