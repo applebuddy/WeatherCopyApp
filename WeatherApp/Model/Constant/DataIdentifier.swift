@@ -11,4 +11,6 @@ import UIKit
 public struct DataIdentifier {
     static let isLocationAuthority = "isLocationAuthority"
     static let weatherCoordinate = "weatherCoordinate"
+    static let subWeatherDataList = "subWeatherDataList"
+    static let subLocationDataList = "subLocationDataList"
 }

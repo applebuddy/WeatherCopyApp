@@ -46,7 +46,7 @@ class TodayInfoTableViewCell: UITableViewCell {
 
     let leftInfoTitleValueLabel: UILabel = {
         let leftInfoTitleSubLabel = UILabel()
-        leftInfoTitleSubLabel.text = "새벽 3:57"
+        leftInfoTitleSubLabel.text = ""
         leftInfoTitleSubLabel.font = .boldSystemFont(ofSize: 25)
         return leftInfoTitleSubLabel
     }()
@@ -62,7 +62,7 @@ class TodayInfoTableViewCell: UITableViewCell {
 
     let rightInfoTitleValueLabel: UILabel = {
         let todayInfoTitleSubLabel = UILabel()
-        todayInfoTitleSubLabel.text = "오전 5:36"
+        todayInfoTitleSubLabel.text = ""
         todayInfoTitleSubLabel.font = .boldSystemFont(ofSize: 25)
         return todayInfoTitleSubLabel
     }()

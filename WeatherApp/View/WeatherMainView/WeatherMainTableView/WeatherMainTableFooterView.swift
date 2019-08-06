@@ -13,7 +13,7 @@ import UIKit
 public class WeatherMainTableFooterView: UIView {
     let weatherLinkButton: UIButton = {
         let weatherLinkButton = UIButton(type: .custom)
-        weatherLinkButton.setImage(#imageLiteral(resourceName: "weatherLink"), for: .normal)
+        weatherLinkButton.setImage(UIImage(named: AssetIdentifier.Image.weatherLink), for: .normal)
         weatherLinkButton.contentMode = .scaleAspectFit
         return weatherLinkButton
     }()
@@ -26,7 +26,7 @@ public class WeatherMainTableFooterView: UIView {
 
     let addCityButton: UIButton = {
         let addCityButton = UIButton(type: .custom)
-        addCityButton.setImage(#imageLiteral(resourceName: "addCity"), for: .normal)
+        addCityButton.setImage(UIImage(named: AssetIdentifier.Image.addCity), for: .normal)
         addCityButton.contentMode = .scaleAspectFit
         return addCityButton
     }()
@@ -47,9 +47,9 @@ public class WeatherMainTableFooterView: UIView {
         let buttonType = CommonData.shared.temperatureType
         switch buttonType {
         case .celsius:
-            celsiusToggleButton.setImage(#imageLiteral(resourceName: "toggleButton_C"), for: .normal)
+            celsiusToggleButton.setImage(UIImage(named: AssetIdentifier.Image.toggleButtonC), for: .normal)
         case .fahrenheit:
-            celsiusToggleButton.setImage(#imageLiteral(resourceName: "toggleButton_F"), for: .normal)
+            celsiusToggleButton.setImage(UIImage(named: AssetIdentifier.Image.toggleButtonF), for: .normal)
         }
     }
 }

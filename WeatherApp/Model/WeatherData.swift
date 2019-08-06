@@ -9,10 +9,14 @@
 import CoreLocation
 import UIKit
 
-public struct SubWeatherData {
-    public var subData: WeatherAPIData?
-    public var subCityName: String
-    public var cityLocation: CLLocationCoordinate2D?
+struct SubWeatherData: Codable {
+    var subData: WeatherAPIData?
+    var subCityName: String?
+}
+
+struct SubLocationData: Codable {
+    var latitude: Double
+    var longitude: Double
 }
 
 public struct WeatherCoordinate {

@@ -18,7 +18,7 @@ public class HourInfoCollectionViewCell: UICollectionViewCell {
 
     let titleLabel: UILabel = {
         let firstLabel = UILabel()
-        firstLabel.text = "지금"
+        firstLabel.text = ""
         firstLabel.font = .boldSystemFont(ofSize: 15)
         firstLabel.textAlignment = .center
         return firstLabel

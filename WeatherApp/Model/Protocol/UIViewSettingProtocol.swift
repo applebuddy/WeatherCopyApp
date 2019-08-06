@@ -13,3 +13,9 @@ protocol UIViewSettingProtocol {
     func makeSubviews()
     func makeConstraints()
 }
+
+protocol WeatherAPIDelegate {
+    func weatherAPIDidRequested(_ weatherApi: WeatherAPI)
+    func weatherAPIDidFinished(_ weatherApi: WeatherAPI)
+    func weatherAPIDidError(_ weatherApi: WeatherAPI)
+}
