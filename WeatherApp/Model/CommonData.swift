@@ -14,9 +14,10 @@ final class CommonData {
 
     public var weatherURLString = "https://weather.com/ko-KR/weather/today/"
     public var mainCityName = "-"
+    public var subCityNameList = [String]()
+    public var subWeatherDataList = [SubWeatherData]()
+    public var subLocationDataList = [SubLocationData]()
     public var mainWeatherData: WeatherAPIData?
-    public var subWeatherList: [WeatherAPIData]?
-    public var subCityLocationList = [CLLocationCoordinate2D]()
 
     public var temperatureType: TemperatureType = .celsius
     public var mainCelsius: Double?
@@ -25,7 +26,6 @@ final class CommonData {
     public var selectedMainCellIndex = 0
 
     public var isAppForeground = false
-    public var isSearchedCityAdded = false
 
     public let locationManager = CLLocationManager()
 
@@ -59,8 +59,21 @@ final class CommonData {
 
     // MARK: - Set Method
 
-    public func setIsSearchedCityAdded(isSearchedCityAdded: Bool) {
-        self.isSearchedCityAdded = isSearchedCityAdded
+    public func setDateFormatter(dateFormatter: DateFormatter, timeZone: String, timeStamp: Double) -> String {
+        let date = Date(timeIntervalSince1970: timeStamp)
+        let newDateFormatter = dateFormatter
+        var timeZoneIdentifier = "KST"
+
+        for (key, value) in TimeZone.abbreviationDictionary {
+            if timeZone == value {
+                timeZoneIdentifier = key
+                break
+            }
+        }
+
+        newDateFormatter.timeZone = TimeZone(abbreviation: timeZoneIdentifier)
+        let formattedDate = newDateFormatter.string(from: date)
+        return formattedDate
     }
 
     public func setMainCelsius(celsius: String) {
@@ -77,12 +90,41 @@ final class CommonData {
         mainCoordinate.longitude = longitude
     }
 
-    public func addSubCityLocationList(location: CLLocationCoordinate2D) {
-        subCityLocationList.append(location)
+    // MARK: Set SubWeatherDataList
+
+    public func addSubWeatherData(coordinate: CLLocationCoordinate2D, defaultCityName _: String, completion: @escaping () -> Void) {
+        var weatherData = SubWeatherData(subData: nil, subCityName: "")
+
+        let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+        let subLocationData = SubLocationData(latitude: coordinate.latitude, longitude: coordinate.longitude)
+
+        let geoCoder = CLGeocoder()
+
+        let locale = Locale(identifier: "Ko-kr")
+        geoCoder.reverseGeocodeLocation(location, preferredLocale: locale) { placeMarks, error in
+
+            if error != nil {
+                print("\(error?.localizedDescription ?? "could not get cityName")")
+                return
+            }
+
+            guard let address = placeMarks?.first else { return }
+            let cityName = address.dictionaryWithValues(forKeys: ["locality"])["locality"]
+            guard let cityNameString = cityName as? String else {
+                self.subWeatherDataList.append(weatherData)
+                self.subLocationDataList.append(subLocationData)
+                completion()
+                return
+            }
+            weatherData.subCityName = cityNameString
+            self.subWeatherDataList.append(weatherData)
+            self.subLocationDataList.append(subLocationData)
+            completion()
+        }
     }
 
-    public func setMainCityName(coordinate: CLLocationCoordinate2D) {
-        let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+    public func setMainCityName(latitude: Double, longitude: Double) {
+        let location = CLLocation(latitude: latitude, longitude: longitude)
         let geoCoder = CLGeocoder()
         let locale = Locale(identifier: "Ko-kr")
         geoCoder.reverseGeocodeLocation(location, preferredLocale: locale) { placeMarks, error in
@@ -98,8 +140,46 @@ final class CommonData {
         }
     }
 
+    public func setSubWeatherData(_ weatherData: WeatherAPIData, index: Int) {
+        if subWeatherDataList.count - 1 >= index {
+            subWeatherDataList[index].subData = weatherData
+        }
+    }
+
+    public func saveSubWeatherDataList() {
+        if let subWeatherData = try? JSONEncoder().encode(subWeatherDataList) {
+            UserDefaults.standard.set(subWeatherData, forKey: DataIdentifier.subWeatherDataList)
+        }
+
+        if let subLocationData = try? JSONEncoder().encode(subLocationDataList) {
+            UserDefaults.standard.set(subLocationData, forKey: DataIdentifier.subLocationDataList)
+        }
+    }
+
+    public func setSubWeatherDataList() {
+        if let subData = UserDefaults.standard.value(forKey: DataIdentifier.subWeatherDataList) as? Data,
+            let subDataList = try? JSONDecoder().decode([SubWeatherData].self, from: subData) {
+            subWeatherDataList = subDataList
+        }
+    }
+
+    public func setSubWeatherLocationList() {
+        if let subData = UserDefaults.standard.value(forKey: DataIdentifier.subLocationDataList) as? Data,
+            let subLocationList = try? JSONDecoder().decode([SubLocationData].self, from: subData) {
+            subLocationDataList = subLocationList
+        }
+    }
+
     public func setSelectedMainCellIndex(index: Int) {
         selectedMainCellIndex = index
+    }
+
+    public func initSubWeatherDataList() {
+        subWeatherDataList = [SubWeatherData]()
+    }
+
+    public func addSubWeatherList(weatherData: WeatherAPIData, index: Int) {
+        subWeatherDataList[index].subData = weatherData
     }
 
     public func changeTemperatureType() {

@@ -16,9 +16,7 @@ class WeatherCitySearchViewController: UIViewController {
     let locationManager = CLLocationManager()
     let geoCoder = CLGeocoder()
     let completer = MKLocalSearchCompleter()
-    var searchCiryList = [String: CLLocationCoordinate2D]()
     var displayedResultList = [String]()
-    var selectedCityLocationData: CLLocation?
     var citySearchBar: UISearchBar?
 
     // MARK: - UI
@@ -61,6 +59,21 @@ class WeatherCitySearchViewController: UIViewController {
         return .lightContent
     }
 
+    func calculateDefaultCityName(placeMarks: [CLPlacemark]) -> String {
+        var defaultCityName = "-"
+        if let cityName = placeMarks.first?.dictionaryWithValues(forKeys: ["locality"])["locality"] {
+            if let cityName = cityName as? String {
+                defaultCityName = cityName
+            }
+        } else {
+            if let cityName = placeMarks.first?.administrativeArea {
+                defaultCityName = cityName
+            }
+        }
+
+        return defaultCityName
+    }
+
     func requestLocationAuthority() {
         // 현재 위치권한이 있는지 유무를 확인한다.
         let locationAuthStatus = CLLocationManager.authorizationStatus()
@@ -91,10 +104,14 @@ class WeatherCitySearchViewController: UIViewController {
         citySearchBar?.delegate = self
     }
 
+    func resetDisplayedCityList() {
+        displayedResultList = []
+    }
+
     // MARK: - Alert Event
 
     func presentLocationDataErrorAlertController() {
-        let errorAlertController = UIAlertController(title: "위치정보 흭득실패", message: "해당 위치정보를 얻는데 실패했습니다. 다른 지역을 선택해주세요.", preferredStyle: .alert)
+        let errorAlertController = UIAlertController(title: "위치정보 흭득실패", message: "해당 위치정보를 얻는데 실패했습니다. 정확한 지역, 다른 지역을 선택해주세요.", preferredStyle: .alert)
         let errorAlertAction = UIAlertAction(title: "확인", style: .cancel, handler: nil)
         errorAlertController.addAction(errorAlertAction)
         present(errorAlertController, animated: true, completion: nil)
@@ -125,6 +142,7 @@ class WeatherCitySearchViewController: UIViewController {
 
 extension WeatherCitySearchViewController: UISearchBarDelegate {
     func searchBar(_: UISearchBar, textDidChange searchText: String) {
+        resetDisplayedCityList()
         completer.queryFragment = "\(searchText)"
         completerDidUpdateResults(completer)
     }
@@ -147,18 +165,24 @@ extension WeatherCitySearchViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
 
-        geoCoder.geocodeAddressString(displayedResultList[indexPath.row]) { placemarks, _ in
+        geoCoder.geocodeAddressString(displayedResultList[indexPath.row]) { placemarks, error in
+
+            if error != nil {
+                self.presentLocationDataErrorAlertController()
+            }
+
             guard let placemarks = placemarks,
-                let location = placemarks.first?.location
-            else {
+                let location = placemarks.first?.location else {
                 self.presentLocationDataErrorAlertController()
                 return
             }
 
-            CommonData.shared.addSubCityLocationList(location: location.coordinate)
-            CommonData.shared.setIsSearchedCityAdded(isSearchedCityAdded: true)
+            let defaultCityName = self.calculateDefaultCityName(placeMarks: placemarks)
 
-            self.dismiss(animated: true)
+            CommonData.shared.addSubWeatherData(coordinate: location.coordinate, defaultCityName: defaultCityName) {
+                CommonData.shared.saveSubWeatherDataList()
+                self.dismiss(animated: true)
+            }
         }
     }
 }
@@ -172,7 +196,7 @@ extension WeatherCitySearchViewController: UITableViewDataSource {
         guard let citySearchTableCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.citySearchTableCell, for: indexPath) as? CitySearchTableViewCell else { return UITableViewCell() }
         if indexPath.row == 0 {
             if displayedResultList.count == 0 {
-                citySearchTableCell.searchedCityLabel.text = "도시를 검색 중입니다..."
+                citySearchTableCell.searchedCityLabel.text = "검색 된 결과가 현재 없습니다."
             }
         }
 
@@ -190,7 +214,6 @@ extension WeatherCitySearchViewController: UITableViewDataSource {
 
 extension WeatherCitySearchViewController: MKLocalSearchCompleterDelegate {
     func completerDidUpdateResults(_ completer: MKLocalSearchCompleter) {
-        displayedResultList = []
         _ = completer.results.map { result in
             let searchedCity = "\(result.title + ", " + result.subtitle)"
             displayedResultList.append(searchedCity)

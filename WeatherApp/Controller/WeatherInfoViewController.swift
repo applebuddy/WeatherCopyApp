@@ -27,13 +27,13 @@ class WeatherInfoViewController: UIViewController {
 
     let linkBarButton: UIButton = {
         let linkBarButton = UIButton(type: .custom)
-        linkBarButton.setImage(#imageLiteral(resourceName: "weatherLink"), for: .normal)
+        linkBarButton.setImage(UIImage(named: AssetIdentifier.Image.weatherLink), for: .normal)
         return linkBarButton
     }()
 
     let listBarButton: UIButton = {
         let listBarButton = UIButton(type: .custom)
-        listBarButton.setImage(#imageLiteral(resourceName: "weatherList"), for: .normal)
+        listBarButton.setImage(UIImage(named: AssetIdentifier.Image.weatherList), for: .normal)
         return listBarButton
     }()
 
@@ -251,7 +251,7 @@ extension WeatherInfoViewController: CLLocationManagerDelegate {
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations _: [CLLocation]) {
         if let nowCoordinate = manager.location?.coordinate {
-            CommonData.shared.setMainCityName(coordinate: nowCoordinate)
+            CommonData.shared.setMainCityName(latitude: nowCoordinate.latitude, longitude: nowCoordinate.longitude)
             let nowLatitude = nowCoordinate.latitude.roundedValue(roundSize: 2)
             let nowLongitude = nowCoordinate.longitude.roundedValue(roundSize: 2)
 
@@ -287,6 +287,7 @@ extension WeatherInfoViewController: UIViewSettingProtocol {
             linkBarButton.heightAnchor.constraint(equalToConstant: CommonSize.defaultButtonSize.height),
             linkBarButton.widthAnchor.constraint(equalTo: linkBarButton.heightAnchor, multiplier: 1.0),
         ])
+
         listBarButton.activateAnchors()
         NSLayoutConstraint.activate([
             listBarButton.heightAnchor.constraint(equalToConstant: CommonSize.defaultButtonSize.height),

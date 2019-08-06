@@ -43,7 +43,6 @@ class WeatherMainTableViewCell: UITableViewCell {
 
     let mainIndicatorImageView: UIImageView = {
         let mainIndicatorImageView = UIImageView()
-        mainIndicatorImageView.image = #imageLiteral(resourceName: "mainIndicator")
         return mainIndicatorImageView
     }()
 
@@ -58,12 +57,11 @@ class WeatherMainTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func setMainTableCellData(cityName: String, timeStamp: Int, temperature: Double) {
+    func setMainTableCellData(cityName: String, timeStamp: Int, timeZone: String, temperature: Double) {
         cityTitleLabel.text = "\(cityName)"
-        if timeStamp != 0 {
-            let date = Date(timeIntervalSince1970: Double(timeStamp))
-            nowTimeLabel.text = "\(CommonData.shared.mainDateFormatter.string(from: date))"
-        }
+        let dateFormatter = CommonData.shared.mainDateFormatter
+        let nowTime = CommonData.shared.setDateFormatter(dateFormatter: dateFormatter, timeZone: timeZone, timeStamp: Double(timeStamp))
+        nowTimeLabel.text = "\(nowTime)"
 
         let celsius = CommonData.shared.calculateCelsius(celsius: temperature)
         cityCelsiusLabel.text = "\(celsius)º"

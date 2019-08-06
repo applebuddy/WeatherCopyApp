@@ -15,9 +15,10 @@ public class WeatherAPI {
     public let urlSession = URLSession(configuration: .default)
     public var dataTask = URLSessionDataTask()
     public var baseURL = "https://api.darksky.net/forecast/"
-    public let APIToken = "447da2f0774b0e23418285c52c5ec67b/"
+    public let APIToken = "f208cdfecc2c1bb235726f7c98131d10/"
     public let APISubURL = "?lang=ko&exclude=minutely,alerts,flags"
     public var errorMessage = ""
+    internal var delegate: WeatherAPIDelegate?
 
     init() {
         // STEP 2) BaseURL에 API토큰을 추가한다.
@@ -26,6 +27,7 @@ public class WeatherAPI {
 
     // completion: @escaping weatherResult
     public func requestAPI(latitude: Double, longitude: Double, completion: @escaping (WeatherAPIData) -> Void) {
+        delegate?.weatherAPIDidRequested(self)
         let APIUrlString = "\(baseURL)\(latitude),\(longitude)\(APISubURL)"
         print("APIUrlString: \(APIUrlString)")
         guard let APIUrl = URL(string: APIUrlString) else { return }
@@ -35,6 +37,7 @@ public class WeatherAPI {
             // STEP 4-2) 데이터 요청 간 에러유무를 판별한다.
             if let error = error {
                 self.errorMessage = "\(error.localizedDescription)"
+                self.delegate?.weatherAPIDidError(self)
             }
 
             // STEP 4-2) HTTP URL 요청 시 응답이 있는지 확인한다.
@@ -44,16 +47,21 @@ public class WeatherAPI {
                     guard let data = data else { return }
                     do {
                         let weatherAPIData = try JSONDecoder().decode(WeatherAPIData.self, from: data)
+                        self.delegate?.weatherAPIDidFinished(self)
                         completion(weatherAPIData)
                     } catch let DecodingError.keyNotFound(key, _) {
                         print("Missing key in JSON: \(key).")
+                        self.delegate?.weatherAPIDidError(self)
                     } catch let DecodingError.typeMismatch(type, context) {
                         print("Wring type in JSON: \(type) \(context)")
+                        self.delegate?.weatherAPIDidError(self)
                     } catch {
                         print("Unable to parse JSON: \(error.localizedDescription)")
+                        self.delegate?.weatherAPIDidError(self)
                     }
                 } else {
                     self.errorMessage = "응답코드 오류 : \(response.statusCode)"
+                    self.delegate?.weatherAPIDidError(self)
                 }
             }
 
