@@ -29,7 +29,7 @@
 
 **Protocol**
 * UIViewSettingProtocol : 서브뷰 추가, 제약값 설정 등 중복되는 메서드를 정리한 프로토콜
-* WeatherAPIDelegate : Weather API 요청 시 시점을 감지하기 위한 델리게이트 프로토콜
+* WeatherAPIDelegate : Weather API 요청 간 다양한 시점을 감지하기 위한 델리게이트 프로토콜
 * CellSettingProtocol : 셀 셋팅 관련 중복 메서드를 정리한 프로토콜 
 
 <br>
