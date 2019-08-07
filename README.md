@@ -9,10 +9,10 @@
 ### Model
 
 **WeatherAPI**
-* WeatherAPI : 날씨 API는 DarkSky를 활용했습니다. API를 처리하고 결과에 따른 결과값을 반환하는 싱글턴 클래스
+* WeatherAPI : 날씨 API는 DarkSky를 활용, API를 처리하고 결과에 따른 결과값을 반환하는 싱글턴 클래스
 * WeatherAPIData : 날씨 API Codable 데이터 포맷
 
-* CommonData : 전반적인 앱 실행 간 활용 될 수 있는 공용 싱글턴 클래스입니다.
+* CommonData : 전반적인 앱 실행 간 활용 될 수 있는 공용 싱글턴 클래스
 * WeatherData : 날씨관련 수치를 표현하는 구조체 모음
   - SubWeatherData, SubLocationData는 UserDefault를 통한 데이터 저장 시 사용하는 포맷
 
