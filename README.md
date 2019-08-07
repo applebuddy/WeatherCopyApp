@@ -16,13 +16,13 @@
 * WeatherData : 날씨관련 수치를 표현하는 구조체 모음
   - SubWeatherData, SubLocationData는 UserDefault를 통한 데이터 저장 시 사용하는 포맷
 
-** Constant **
+**Constant**
 * 변하지 않는 데이터 값 그룹
 
-** Extension **
+**Extension**
 * 범용으로 사용되는 Extension 그룹
 
-** Protocol **
+**Protocol**
 * UIViewSettingProtocol : 서브뷰 추가, 제약값 설정 등 중복되는 메서드를 정리한 프로토콜
 * CellSettingProtocol : 셀 셋팅 관련 중복 메서드를 정리한 프로토콜 
 
@@ -36,3 +36,19 @@
 * WeatherCitySearchViewController : 도시 검색 및 날씨정보 추가를 하는 뷰 컨트롤러
 
 ### View
+
+**WeatherCitySearchView** 도시검색기능, WeatherCitySearchViewController 뷰
+* CitySearchTableView : 도시 검색결과를 보여주는 테이블 뷰
+* CitySearchTableViewCell : 도시 검색결과를 보여주는 테이블 뷰 셀
+
+**WeatherMainView** 도시 별 날씨정보, WeatherMainViewController 뷰
+* WeatherActivityIndicatorView : 네트워킹 작업 진행 중 실행되는 중앙 인디케이터
+    **WeatherMaintableView**
+    * WeatherMainTableViewCell : 도시 별 간략정보를 표시하는 테이블 뷰 셀
+    * WeatherMainTableFooterView : 테이블 뷰 하단 여백을 주기 위한 테이블 푸터뷰
+
+**WeatherInfoView** 도시 세부 날씨정보, WeatherMainViewController 뷰
+
+
+**WeatherSeparatorView** 셀 간 여백 구현 목적 사용, WeatherSeparatorView 뷰
+* WeatherSeparatorTableViewCell : 여백 구현 목적으로 사용한 테이블 셀 
