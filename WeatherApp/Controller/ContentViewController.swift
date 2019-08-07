@@ -26,12 +26,6 @@ class ContentViewController: UIViewController {
         return weatherMainViewController
     }()
 
-    let linkBarButton: UIButton = {
-        let linkBarButton = UIButton(type: .custom)
-        linkBarButton.setImage(UIImage(named: AssetIdentifier.Image.weatherLink), for: .normal)
-        return linkBarButton
-    }()
-
     let listBarButton: UIButton = {
         let listBarButton = UIButton(type: .custom)
         listBarButton.setImage(UIImage(named: AssetIdentifier.Image.weatherList), for: .normal)
@@ -62,7 +56,6 @@ class ContentViewController: UIViewController {
         setInfoViewController()
         setInfoView()
         registerCell()
-        setButtonTarget()
         setTableHeaderView()
         makeConstraints()
     }
@@ -71,18 +64,24 @@ class ContentViewController: UIViewController {
         super.viewWillAppear(true)
         setWeatherTitleViewData()
         isAppearViewController = false
+        view.layoutIfNeeded()
+        contentView.layoutIfNeeded()
         DispatchQueue.main.async {
-            self.view.layoutIfNeeded()
-            self.contentView.layoutIfNeeded()
             self.contentView.weatherInfoTableView.reloadData()
         }
     }
 
     // MARK: - Set Method
 
-    //    override var preferredStatusBarStyle: UIStatusBarStyle {
-    //        return .lightContent
-    //    }
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+
+    func setLocationManager() {
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.startUpdatingLocation()
+    }
 
     func setWeatherTitleViewData() {
         let weatherViewIndex = CommonData.shared.selectedMainCellIndex
@@ -92,6 +91,11 @@ class ContentViewController: UIViewController {
             guard let infoViewSubTitle = nowWeatherData?.currently.summary else { return }
             contentView.setInfoViewData(title: infoViewTitle,
                                         subTitle: infoViewSubTitle)
+        } else {
+            guard let nowWeatherData = CommonData.shared.subWeatherDataList[weatherViewIndex - 1].subData,
+                let infoViewTitle = CommonData.shared.subWeatherDataList[weatherViewIndex - 1].subCityName else { return }
+            let infoViewSubTitle = nowWeatherData.currently.summary
+            contentView.setInfoViewData(title: infoViewTitle, subTitle: infoViewSubTitle)
         }
     }
 
@@ -102,12 +106,6 @@ class ContentViewController: UIViewController {
     func setInfoView() {
         contentView.weatherInfoTableView.dataSource = self
         contentView.weatherInfoTableView.delegate = self
-    }
-
-    func setButtonTarget() {
-        linkBarButton.addTarget(self, action: #selector(linkButtonPressed(_:)), for: .touchUpInside)
-        presentViewButton.addTarget(self, action: #selector(presentViewButtonPressed(_:)), for: .touchUpInside)
-        listBarButton.addTarget(self, action: #selector(listButtonPressed(_:)), for: .touchUpInside)
     }
 
     func setTableHeaderView() {
@@ -128,18 +126,19 @@ class ContentViewController: UIViewController {
 
     // MARK: - Button Event
 
-    @objc func linkButtonPressed(_: UIButton) {
-        // ✭ URL 링크주소는 파싱구현 이후 다시 수정한다.
-        let latitude = CommonData.shared.mainCoordinate.latitude
-        let longitude = CommonData.shared.mainCoordinate.longitude
-        CommonData.shared.openWeatherURL(latitude: latitude, longitude: longitude)
-    }
-
-    @objc func listButtonPressed(_: UIButton) {
-        present(weatherMainViewController, animated: true, completion: nil)
-    }
-
-    @objc func presentViewButtonPressed(_: UIButton) {}
+//
+//    @objc func linkButtonPressed(_: UIButton) {
+//        // ✭ URL 링크주소는 파싱구현 이후 다시 수정한다.
+//        let latitude = CommonData.shared.mainCoordinate.latitude
+//        let longitude = CommonData.shared.mainCoordinate.longitude
+//        CommonData.shared.openWeatherURL(latitude: latitude, longitude: longitude)
+//    }
+//
+//    @objc func listButtonPressed(_: UIButton) {
+//        present(weatherMainViewController, animated: true, completion: nil)
+//    }
+//
+//    @objc func presentViewButtonPressed(_: UIButton) {}
 }
 
 // MARK: - UITableView Protocol
@@ -220,23 +219,53 @@ extension ContentViewController: UITableViewDataSource {
     }
 }
 
+extension ContentViewController: CLLocationManagerDelegate {
+    /// * **위치가 업데이트 될 때마다 실행 되는 델리게이트 메서드**
+
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations _: [CLLocation]) {
+        if let nowCoordinate = manager.location?.coordinate {
+            CommonData.shared.setMainCityName(latitude: nowCoordinate.latitude, longitude: nowCoordinate.longitude)
+            let nowLatitude = nowCoordinate.latitude.roundedValue(roundSize: 2)
+            let nowLongitude = nowCoordinate.longitude.roundedValue(roundSize: 2)
+
+            if !isAppearViewController {
+                CommonData.shared.setMainCoordinate(latitude: nowLatitude, longitude: nowLongitude)
+                let mainLatitude = CommonData.shared.mainCoordinate.latitude
+                let mainLongitude = CommonData.shared.mainCoordinate.longitude
+
+                WeatherAPI.shared.requestAPI(latitude: mainLatitude, longitude: mainLongitude) { weatherAPIData in
+                    CommonData.shared.setMainWeatherData(weatherData: weatherAPIData)
+
+                    DispatchQueue.main.async {
+                        self.setWeatherTitleViewData()
+                        self.view.layoutIfNeeded()
+                        self.contentView.layoutIfNeeded()
+                        self.contentView.weatherInfoTableView.reloadData()
+                    }
+                }
+                isAppearViewController = true
+            }
+        }
+    }
+}
+
 // MARK: - Custom View Protocol
 
 extension ContentViewController: UIViewSettingProtocol {
     func makeSubviews() {}
 
     func makeConstraints() {
-        linkBarButton.activateAnchors()
-        NSLayoutConstraint.activate([
-            linkBarButton.heightAnchor.constraint(equalToConstant: CommonSize.defaultButtonSize.height),
-            linkBarButton.widthAnchor.constraint(equalTo: linkBarButton.heightAnchor, multiplier: 1.0),
-        ])
-
-        listBarButton.activateAnchors()
-        NSLayoutConstraint.activate([
-            listBarButton.heightAnchor.constraint(equalToConstant: CommonSize.defaultButtonSize.height),
-            listBarButton.widthAnchor.constraint(equalTo: listBarButton.heightAnchor, multiplier: 1.0),
-        ])
+//        linkBarButton.activateAnchors()
+//        NSLayoutConstraint.activate([
+//            linkBarButton.heightAnchor.constraint(equalToConstant: CommonSize.defaultButtonSize.height),
+//            linkBarButton.widthAnchor.constraint(equalTo: linkBarButton.heightAnchor, multiplier: 1.0),
+//        ])
+//
+//        listBarButton.activateAnchors()
+//        NSLayoutConstraint.activate([
+//            listBarButton.heightAnchor.constraint(equalToConstant: CommonSize.defaultButtonSize.height),
+//            listBarButton.widthAnchor.constraint(equalTo: listBarButton.heightAnchor, multiplier: 1.0),
+//        ])
     }
 }
 

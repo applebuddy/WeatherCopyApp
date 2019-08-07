@@ -92,8 +92,6 @@ final class CommonData {
     // MARK: Set SubWeatherDataList
 
     public func addSubWeatherData(coordinate: CLLocationCoordinate2D, defaultCityName _: String, completion: @escaping (Bool) -> Void) {
-        var weatherData = SubWeatherData(subData: nil, subCityName: "")
-
         let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
         let subLocationData = SubLocationData(latitude: coordinate.latitude, longitude: coordinate.longitude)
 
@@ -113,10 +111,16 @@ final class CommonData {
                 completion(false)
                 return
             }
-            weatherData.subCityName = cityNameString
-            self.subWeatherDataList.append(weatherData)
-            self.subLocationDataList.append(subLocationData)
-            completion(true)
+
+            WeatherAPI.shared.requestAPI(latitude: coordinate.latitude, longitude: coordinate.longitude) { weatherAPIData in
+
+                let weatherData = SubWeatherData(subData: weatherAPIData, subCityName: cityNameString)
+                self.subWeatherDataList.append(weatherData)
+                self.subLocationDataList.append(subLocationData)
+                print(self.subWeatherDataList.count)
+                print(self.subLocationDataList.count)
+                completion(true)
+            }
         }
     }
 

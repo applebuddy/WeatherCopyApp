@@ -45,7 +45,6 @@ extension CitySearchTableViewCell: UIViewSettingProtocol {
             searchedCityLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
             searchedCityLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: CommonInset.leftInset * 2),
             searchedCityLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: -CommonInset.rightInset),
-
         ])
     }
 }
