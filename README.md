@@ -57,25 +57,25 @@
 * CitySearchTableViewCell : 도시 검색결과를 보여주는 테이블 뷰 셀
 
 **WeatherMainView** 도시 별 날씨정보, WeatherMainViewController 뷰
-* WeatherActivityIndicatorView : 네트워킹 작업 진행 중 실행되는 중앙 인디케이터
+* WeatherActivityIndicatorView : 네트워킹 작업 진행 중 실행되는 중앙 인디케이터<br>
     **WeatherMaintableView**
     * WeatherMainTableViewCell : 도시 별 간략정보를 표시하는 테이블 뷰 셀
     * WeatherMainTableFooterView : 테이블 뷰 하단 여백을 주기 위한 테이블 푸터뷰
 
 **WeatherInfoView** 도시 세부 날씨정보, WeatherMainViewController 뷰
-* WeatherTitleView : 뷰 최상단의 도시명과 날씨요약정보를 표시하는 뷰
+* WeatherTitleView : 뷰 최상단의 도시명과 날씨요약정보를 표시하는 뷰<br>
     **WeatherInfoTableView** 날씨세부정보를 보여주는 메인 테이블 뷰
     * WeatherInfoTableHeaderView : 스크롤 시 높이가 변동되는 상단 Stretched 헤더뷰
     * WeatherHourInfoTableViewCell : 서브 콜렉션 뷰를 가진 시간 별 날씨정보 테이블 뷰 셀
-     -  DayInfoCollectionView의 프로토콜을 사용한다.
+     -  DayInfoCollectionView의 프로토콜을 사용한다.<br>
         **DayInfoCollectionView** 시간 별 날씨정보 컬렉션 뷰
         * HourInfoCollectionViewCell : 시간 별 날씨정보을 수평으로 배치하는 컬렉션 뷰 셀
-    * WeatherSubInfoTableViewCell : 시간 별 날씨정보 하단의 세부 날씨정보 서브 테이블뷰
+    * WeatherSubInfoTableViewCell : 시간 별 날씨정보 하단의 세부 날씨정보 서브 테이블뷰<br>
         **WeatherSubInfoTableView** 뷰 하단 세부 날씨정보 테이블 뷰
             **WeekInfoTableViewCell** 일주일 간 요약 날씨정보 테이블 뷰 셀
-            * WeekSubInfoView : WeekInfoTableViewCell의 날씨 정보 컨텐츠를 가진 뷰
+            * WeekSubInfoView : WeekInfoTableViewCell의 날씨 정보 컨텐츠를 가진 뷰<br>
             **TodayInfoTableViewCell** 금일 세부 날씨지표 테이블 뷰 셀
-            * TodayInfoTableView 상단의 오늘의 날씨를 요약설명하는 헤더뷰
+            * TodayInfoTableView 상단의 오늘의 날씨를 요약설명하는 헤더뷰<br>
 
 **WeatherSeparatorView** 셀 간 여백 구현 목적 사용, WeatherSeparatorView 뷰
 * WeatherSeparatorTableViewCell : 여백 구현 목적으로 사용한 테이블 셀 
