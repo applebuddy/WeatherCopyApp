@@ -49,17 +49,13 @@ class WeatherAPI {
                         self.delegate?.weatherAPIDidFinished(self)
                         completion(weatherAPIData)
                     } catch let DecodingError.keyNotFound(key, _) {
-                        print("Missing key in JSON: \(key).")
                         self.delegate?.weatherAPIDidError(self)
                     } catch let DecodingError.typeMismatch(type, context) {
-                        print("Wring type in JSON: \(type) \(context)")
                         self.delegate?.weatherAPIDidError(self)
                     } catch {
-                        print("Unable to parse JSON: \(error.localizedDescription)")
                         self.delegate?.weatherAPIDidError(self)
                     }
                 } else {
-                    self.errorMessage = "응답코드 오류 : \(response.statusCode)"
                     self.delegate?.weatherAPIDidError(self)
                 }
             }

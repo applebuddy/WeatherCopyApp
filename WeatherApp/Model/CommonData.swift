@@ -101,7 +101,6 @@ final class CommonData {
         geoCoder.reverseGeocodeLocation(location, preferredLocale: locale) { placeMarks, error in
 
             if error != nil {
-                print("\(error?.localizedDescription ?? "could not get cityName")")
                 return
             }
 
@@ -117,8 +116,6 @@ final class CommonData {
                 let weatherData = SubWeatherData(subData: weatherAPIData, subCityName: cityNameString)
                 self.subWeatherDataList.append(weatherData)
                 self.subLocationDataList.append(subLocationData)
-                print(self.subWeatherDataList.count)
-                print(self.subLocationDataList.count)
                 completion(true)
             }
         }
@@ -131,7 +128,6 @@ final class CommonData {
         geoCoder.reverseGeocodeLocation(location, preferredLocale: locale) { placeMarks, error in
 
             if error != nil {
-                print("\(error?.localizedDescription ?? "could not get cityName")")
                 return
             }
             guard let address = placeMarks?.first else { return }

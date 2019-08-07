@@ -82,14 +82,23 @@ class WeatherInfoViewController: UIViewController {
     override func viewWillAppear(_: Bool) {
         super.viewWillAppear(true)
 
-        setWeatherTitleViewData()
+        setWeatherData()
         isAppearViewController = false
 
+        let latitude = CommonData.shared.mainCoordinate.latitude
+        let longitude = CommonData.shared.mainCoordinate.longitude
+        CommonData.shared.setMainCityName(latitude: latitude, longitude: longitude)
+    }
+
+    override func viewDidAppear(_: Bool) {
+        super.viewDidAppear(true)
+
         DispatchQueue.main.async {
-            self.setWeatherTitleViewData()
-            self.view.layoutIfNeeded()
-            self.weatherInfoView.layoutIfNeeded()
+            self.weatherPageViewController?.view.layoutIfNeeded()
             self.weatherInfoView.weatherInfoTableView.reloadData()
+            self.weatherInfoView.layoutIfNeeded()
+            self.view.layoutIfNeeded()
+            self.weatherInfoView.weatherTitleView.layoutIfNeeded()
         }
     }
 
@@ -104,7 +113,6 @@ class WeatherInfoViewController: UIViewController {
         mainPageViewController.view.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height)
         weatherPageViewController = mainPageViewController
 
-        //        let viewControllerSize = CommonData.shared.subLocationDataList.count
         if let rootViewController = makeContentViewController(index: 0),
             let unWrappingPageViewController = self.weatherPageViewController {
             let viewControllers = [rootViewController]
@@ -145,7 +153,8 @@ class WeatherInfoViewController: UIViewController {
         locationManager.startUpdatingLocation()
     }
 
-    func setWeatherTitleViewData() {
+    /// * 인덱스에 따른 날씨정보 셋팅 메서드
+    func setWeatherData() {
         let weatherViewIndex = CommonData.shared.selectedMainCellIndex
         if weatherViewIndex == 0 {
             nowWeatherData = CommonData.shared.mainWeatherData
@@ -363,6 +372,7 @@ extension WeatherInfoViewController: CLLocationManagerDelegate {
             let nowLatitude = nowCoordinate.latitude.roundedValue(roundSize: 2)
             let nowLongitude = nowCoordinate.longitude.roundedValue(roundSize: 2)
 
+            CommonData.shared.setMainCityName(latitude: nowLatitude, longitude: nowLongitude)
             if !isAppearViewController {
                 CommonData.shared.setMainCoordinate(latitude: nowLatitude, longitude: nowLongitude)
                 let mainLatitude = CommonData.shared.mainCoordinate.latitude
@@ -372,8 +382,9 @@ extension WeatherInfoViewController: CLLocationManagerDelegate {
                     CommonData.shared.setMainWeatherData(weatherData: weatherAPIData)
 
                     DispatchQueue.main.async {
-                        self.setWeatherTitleViewData()
+                        self.setWeatherData()
                         self.view.layoutIfNeeded()
+                        self.weatherInfoView.weatherTitleView.layoutIfNeeded()
                         self.weatherInfoView.layoutIfNeeded()
                         self.weatherInfoView.weatherInfoTableView.reloadData()
                     }

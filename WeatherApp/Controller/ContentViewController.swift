@@ -62,11 +62,14 @@ class ContentViewController: UIViewController {
 
     override func viewWillAppear(_: Bool) {
         super.viewWillAppear(true)
-        setWeatherTitleViewData()
+        setWeatherData()
         isAppearViewController = false
-        view.layoutIfNeeded()
-        contentView.layoutIfNeeded()
+
         DispatchQueue.main.async {
+            self.setWeatherData()
+            self.view.layoutIfNeeded()
+            self.contentView.weatherTitleView.layoutIfNeeded()
+            self.contentView.layoutIfNeeded()
             self.contentView.weatherInfoTableView.reloadData()
         }
     }
@@ -83,7 +86,7 @@ class ContentViewController: UIViewController {
         locationManager.startUpdatingLocation()
     }
 
-    func setWeatherTitleViewData() {
+    func setWeatherData() {
         let weatherViewIndex = CommonData.shared.selectedMainCellIndex
         if weatherViewIndex == 0 {
             nowWeatherData = CommonData.shared.mainWeatherData
@@ -228,6 +231,7 @@ extension ContentViewController: CLLocationManagerDelegate {
             let nowLatitude = nowCoordinate.latitude.roundedValue(roundSize: 2)
             let nowLongitude = nowCoordinate.longitude.roundedValue(roundSize: 2)
 
+            CommonData.shared.setMainCityName(latitude: nowLatitude, longitude: nowLongitude)
             if !isAppearViewController {
                 CommonData.shared.setMainCoordinate(latitude: nowLatitude, longitude: nowLongitude)
                 let mainLatitude = CommonData.shared.mainCoordinate.latitude
@@ -237,8 +241,9 @@ extension ContentViewController: CLLocationManagerDelegate {
                     CommonData.shared.setMainWeatherData(weatherData: weatherAPIData)
 
                     DispatchQueue.main.async {
-                        self.setWeatherTitleViewData()
+                        self.setWeatherData()
                         self.view.layoutIfNeeded()
+                        self.contentView.weatherTitleView.layoutIfNeeded()
                         self.contentView.layoutIfNeeded()
                         self.contentView.weatherInfoTableView.reloadData()
                     }
