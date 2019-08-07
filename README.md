@@ -70,7 +70,7 @@
 
 
 ### 구현 이미지
-* 페이지뷰 미구현으로 WeatherInfoViewController PageViewController 데이터갱신 및 뷰컨트롤러 페이징 이벤트 제한
+* 페이지뷰 구현 부족으로 WeatherInfoViewController PageViewController 데이터갱신 및 뷰컨트롤러 페이징 이벤트 제한
 
 <div>
 <img width="300" src="https://user-images.githubusercontent.com/4410021/62603585-32e64a80-b931-11e9-88c3-86c960f40922.jpeg"> <img width="300" src="https://user-images.githubusercontent.com/4410021/62603608-3bd71c00-b931-11e9-8b46-ea0c7b2dfc79.jpeg"> 
