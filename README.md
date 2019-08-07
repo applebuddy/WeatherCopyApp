@@ -71,10 +71,10 @@
         **DayInfoCollectionView** 시간 별 날씨정보 컬렉션 뷰
         * HourInfoCollectionViewCell : 시간 별 날씨정보을 수평으로 배치하는 컬렉션 뷰 셀
     * WeatherSubInfoTableViewCell : 시간 별 날씨정보 하단의 세부 날씨정보 서브 테이블뷰<br>
-        **WeatherSubInfoTableView** 뷰 하단 세부 날씨정보 테이블 뷰
-            **WeekInfoTableViewCell** 일주일 간 요약 날씨정보 테이블 뷰 셀
+        **WeatherSubInfoTableView** 뷰 하단 세부 날씨정보 테이블 뷰<br>
+            **WeekInfoTableViewCell** 일주일 간 요약 날씨정보 테이블 뷰 셀<br>
             * WeekSubInfoView : WeekInfoTableViewCell의 날씨 정보 컨텐츠를 가진 뷰<br>
-            **TodayInfoTableViewCell** 금일 세부 날씨지표 테이블 뷰 셀
+            **TodayInfoTableViewCell** 금일 세부 날씨지표 테이블 뷰 셀<br>
             * TodayInfoTableView 상단의 오늘의 날씨를 요약설명하는 헤더뷰<br>
 
 **WeatherSeparatorView** 셀 간 여백 구현 목적 사용, WeatherSeparatorView 뷰
