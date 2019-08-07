@@ -33,8 +33,8 @@
   -  WeatherMainTableView의 프로토콜을 채택해 사용한다.
 * WeatherInfoViewController : 도시 별 상세 날씨정보를 보여주는 뷰 컨트롤러
   -  WeatherInfoTableView의 프로토콜을 채택해 사용한다.
-  - *(미구현)*페이지뷰 기능을 관리
-* *(미구현)*WeatherContentViewController : 페이지뷰 컨텐츠 뷰컨트롤러
+  - '미구현' 페이지뷰 기능을 관리
+* '미구현' WeatherContentViewController : 페이지뷰 컨텐츠 뷰컨트롤러
 * WeatherCitySearchViewController : 도시 검색 및 날씨정보 추가를 하는 뷰 컨트롤러
   -  CitySearchTableView의 프로토콜을 채택해 사용한다.
 
