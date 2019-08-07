@@ -82,7 +82,7 @@
 <br>
 <br>
   
-### 날씨앱 실행 
+### 날씨 앱 실행 예시
 * 페이지뷰 구현 부족으로 WeatherInfoViewController PageViewController 데이터갱신 및 뷰컨트롤러 페이징 이벤트 제한
 
 <div>
