@@ -62,16 +62,15 @@ final class CommonData {
     public func setDateFormatter(dateFormatter: DateFormatter, timeZone: String, timeStamp: Double) -> String {
         let date = Date(timeIntervalSince1970: timeStamp)
         let newDateFormatter = dateFormatter
-        var timeZoneIdentifier = "KST"
 
-        for (key, value) in TimeZone.abbreviationDictionary {
-            if timeZone == value {
-                timeZoneIdentifier = key
-                break
-            }
-        }
+//        for (key, value) in TimeZone.abbreviationDictionary {
+//            if timeZone == value {
+//                timeZoneIdentifier = key
+//                break
+//            }
+//        }
 
-        newDateFormatter.timeZone = TimeZone(abbreviation: timeZoneIdentifier)
+        newDateFormatter.timeZone = TimeZone(identifier: timeZone)
         let formattedDate = newDateFormatter.string(from: date)
         return formattedDate
     }
@@ -92,9 +91,7 @@ final class CommonData {
 
     // MARK: Set SubWeatherDataList
 
-    public func addSubWeatherData(coordinate: CLLocationCoordinate2D, defaultCityName _: String, completion: @escaping () -> Void) {
-        var weatherData = SubWeatherData(subData: nil, subCityName: "")
-
+    public func addSubWeatherData(coordinate: CLLocationCoordinate2D, defaultCityName _: String, completion: @escaping (Bool) -> Void) {
         let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
         let subLocationData = SubLocationData(latitude: coordinate.latitude, longitude: coordinate.longitude)
 
@@ -104,22 +101,23 @@ final class CommonData {
         geoCoder.reverseGeocodeLocation(location, preferredLocale: locale) { placeMarks, error in
 
             if error != nil {
-                print("\(error?.localizedDescription ?? "could not get cityName")")
                 return
             }
 
             guard let address = placeMarks?.first else { return }
             let cityName = address.dictionaryWithValues(forKeys: ["locality"])["locality"]
             guard let cityNameString = cityName as? String else {
-                self.subWeatherDataList.append(weatherData)
-                self.subLocationDataList.append(subLocationData)
-                completion()
+                completion(false)
                 return
             }
-            weatherData.subCityName = cityNameString
-            self.subWeatherDataList.append(weatherData)
-            self.subLocationDataList.append(subLocationData)
-            completion()
+
+            WeatherAPI.shared.requestAPI(latitude: coordinate.latitude, longitude: coordinate.longitude) { weatherAPIData in
+
+                let weatherData = SubWeatherData(subData: weatherAPIData, subCityName: cityNameString)
+                self.subWeatherDataList.append(weatherData)
+                self.subLocationDataList.append(subLocationData)
+                completion(true)
+            }
         }
     }
 
@@ -130,7 +128,6 @@ final class CommonData {
         geoCoder.reverseGeocodeLocation(location, preferredLocale: locale) { placeMarks, error in
 
             if error != nil {
-                print("\(error?.localizedDescription ?? "could not get cityName")")
                 return
             }
             guard let address = placeMarks?.first else { return }

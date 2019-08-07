@@ -17,12 +17,28 @@ class WeatherInfoViewController: UIViewController {
     var headerHeightConstraint: NSLayoutConstraint?
     var nowWeatherData: WeatherAPIData?
     var isAppearViewController = false
+    var currentPageViewIndex = 0
 
     // MARK: - UI
+
+    /// WeatherPageViewController
+    /// * 설정한 지역 별 날씨정보를 보여준다.
+    var weatherPageViewController: UIPageViewController?
 
     lazy var weatherMainViewController: WeatherMainViewController = {
         let weatherMainViewController = WeatherMainViewController()
         return weatherMainViewController
+    }()
+
+    let weatherPageControl: UIPageControl = {
+        let weatherPageControl = UIPageControl(frame: CGRect(x: 0, y: UIScreen.main.bounds.maxY, width: UIScreen.main.bounds.width, height: 50))
+        weatherPageControl.numberOfPages = 1 + CommonData.shared.subWeatherDataList.count
+        weatherPageControl.hidesForSinglePage = false
+        weatherPageControl.currentPage = 0
+        weatherPageControl.tintColor = .black
+        weatherPageControl.pageIndicatorTintColor = .black
+        weatherPageControl.currentPageIndicatorTintColor = .blue
+        return weatherPageControl
     }()
 
     let linkBarButton: UIButton = {
@@ -35,13 +51,6 @@ class WeatherInfoViewController: UIViewController {
         let listBarButton = UIButton(type: .custom)
         listBarButton.setImage(UIImage(named: AssetIdentifier.Image.weatherList), for: .normal)
         return listBarButton
-    }()
-
-    let presentViewButton: UIButton = {
-        let presentViewButton = UIButton(type: .custom)
-        presentViewButton.setTitleColor(.lightGray, for: .normal)
-        presentViewButton.backgroundColor = .white
-        return presentViewButton
     }()
 
     let weatherInfoView: WeatherInfoView = {
@@ -58,10 +67,11 @@ class WeatherInfoViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        makeSubviews()
         setInfoViewController()
-        registerCell()
         setLocationManager()
         setInfoView()
+        registerCell()
         setButtonTarget()
         setToolBarButtonItem()
         setTableHeaderView()
@@ -71,20 +81,71 @@ class WeatherInfoViewController: UIViewController {
 
     override func viewWillAppear(_: Bool) {
         super.viewWillAppear(true)
-        setWeatherTitleViewData()
+
+        setWeatherData()
         isAppearViewController = false
+
+        let latitude = CommonData.shared.mainCoordinate.latitude
+        let longitude = CommonData.shared.mainCoordinate.longitude
+        CommonData.shared.setMainCityName(latitude: latitude, longitude: longitude)
+    }
+
+    override func viewDidAppear(_: Bool) {
+        super.viewDidAppear(true)
+
         DispatchQueue.main.async {
-            self.view.layoutIfNeeded()
-            self.weatherInfoView.layoutIfNeeded()
+            self.weatherPageViewController?.view.layoutIfNeeded()
             self.weatherInfoView.weatherInfoTableView.reloadData()
+            self.weatherInfoView.layoutIfNeeded()
+            self.view.layoutIfNeeded()
+            self.weatherInfoView.weatherTitleView.layoutIfNeeded()
         }
     }
 
     // MARK: - Set Method
 
-//    override var preferredStatusBarStyle: UIStatusBarStyle {
-//        return .lightContent
-//    }
+    //    override var preferredStatusBarStyle: UIStatusBarStyle {
+    //        return .lightContent
+    //    }
+
+    func setWeatherPageViewController() {
+        let mainPageViewController = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
+        mainPageViewController.view.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height)
+        weatherPageViewController = mainPageViewController
+
+        if let rootViewController = makeContentViewController(index: 0),
+            let unWrappingPageViewController = self.weatherPageViewController {
+            let viewControllers = [rootViewController]
+            unWrappingPageViewController.setViewControllers(viewControllers, direction: .reverse, animated: true, completion: nil)
+        }
+
+        let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
+        let barButtonItem = UIBarButtonItem(customView: linkBarButton)
+        let barButtonItem3 = UIBarButtonItem(customView: listBarButton)
+        let toolBarItems = [barButtonItem, flexibleSpace, flexibleSpace, flexibleSpace, flexibleSpace, flexibleSpace, barButtonItem3]
+
+        mainPageViewController.toolbarItems = toolBarItems
+        mainPageViewController.view.addSubview(linkBarButton)
+        view.addSubview(mainPageViewController.view)
+        addChild(mainPageViewController)
+        mainPageViewController.didMove(toParent: self)
+        mainPageViewController.delegate = self
+        mainPageViewController.dataSource = self
+        mainPageViewController.view.backgroundColor = .black
+
+        toolbarItems = toolBarItems
+        navigationController?.setToolbarHidden(true, animated: false)
+        hidesBottomBarWhenPushed = false
+    }
+
+    func setPageControl() {}
+
+    func makeContentViewController(index: Int) -> ContentViewController? {
+        let contentViewController = ContentViewController()
+        contentViewController.pageViewControllerIndex = index
+
+        return contentViewController
+    }
 
     func setLocationManager() {
         locationManager.delegate = self
@@ -92,7 +153,8 @@ class WeatherInfoViewController: UIViewController {
         locationManager.startUpdatingLocation()
     }
 
-    func setWeatherTitleViewData() {
+    /// * 인덱스에 따른 날씨정보 셋팅 메서드
+    func setWeatherData() {
         let weatherViewIndex = CommonData.shared.selectedMainCellIndex
         if weatherViewIndex == 0 {
             nowWeatherData = CommonData.shared.mainWeatherData
@@ -100,11 +162,17 @@ class WeatherInfoViewController: UIViewController {
             guard let infoViewSubTitle = nowWeatherData?.currently.summary else { return }
             weatherInfoView.setInfoViewData(title: infoViewTitle,
                                             subTitle: infoViewSubTitle)
+        } else {
+            guard let nowWeatherData = CommonData.shared.subWeatherDataList[weatherViewIndex - 1].subData,
+                let infoViewTitle = CommonData.shared.subWeatherDataList[weatherViewIndex - 1].subCityName else { return }
+            let infoViewSubTitle = nowWeatherData.currently.summary
+            weatherInfoView.setInfoViewData(title: infoViewTitle, subTitle: infoViewSubTitle)
         }
     }
 
     func setInfoViewController() {
         view.backgroundColor = CommonColor.weatherInfoView
+        setWeatherPageViewController()
     }
 
     func setInfoView() {
@@ -114,7 +182,6 @@ class WeatherInfoViewController: UIViewController {
 
     func setButtonTarget() {
         linkBarButton.addTarget(self, action: #selector(linkButtonPressed(_:)), for: .touchUpInside)
-        presentViewButton.addTarget(self, action: #selector(presentViewButtonPressed(_:)), for: .touchUpInside)
         listBarButton.addTarget(self, action: #selector(listButtonPressed(_:)), for: .touchUpInside)
     }
 
@@ -126,9 +193,8 @@ class WeatherInfoViewController: UIViewController {
     func setToolBarButtonItem() {
         let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
         let barButtonItem = UIBarButtonItem(customView: linkBarButton)
-        let barButtonItem2 = UIBarButtonItem(customView: presentViewButton)
         let barButtonItem3 = UIBarButtonItem(customView: listBarButton)
-        let toolBarItems = [barButtonItem, flexibleSpace, barButtonItem2, flexibleSpace, barButtonItem3]
+        let toolBarItems = [barButtonItem, flexibleSpace, flexibleSpace, flexibleSpace, barButtonItem3]
         toolbarItems = toolBarItems
         navigationController?.setToolbarHidden(false, animated: false)
         hidesBottomBarWhenPushed = false
@@ -161,8 +227,6 @@ class WeatherInfoViewController: UIViewController {
     @objc func listButtonPressed(_: UIButton) {
         present(weatherMainViewController, animated: true, completion: nil)
     }
-
-    @objc func presentViewButtonPressed(_: UIButton) {}
 }
 
 // MARK: - UITableView Protocol
@@ -178,7 +242,11 @@ extension WeatherInfoViewController: UITableViewDelegate {
 
         switch rowIndex {
         case .hourInfoRow:
-            guard let dayInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherHourInfoTableCell, for: indexPath) as? WeatherHourInfoTableViewCell else { return }
+            guard let hourInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherHourInfoTableCell, for: indexPath) as? WeatherHourInfoTableViewCell else { return }
+            DispatchQueue.main.async {
+                hourInfoCell.dayInfoCollectionView.reloadData()
+            }
+
         default: break
         }
     }
@@ -227,19 +295,69 @@ extension WeatherInfoViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let weatherHourInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherHourInfoTableCell, for: indexPath) as? WeatherHourInfoTableViewCell,
-            let weatherWeekInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherWeekInfoTableCell, for: indexPath) as? WeatherSubInfoTableViewCell,
-            let rowIndex = WeatherInfoTableViewRow(rawValue: indexPath.row) else { return UITableViewCell() }
+        guard let rowIndex = WeatherInfoTableViewRow(rawValue: indexPath.row) else { return UITableViewCell() }
 
         switch rowIndex {
         case .hourInfoRow:
+            guard let weatherHourInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherHourInfoTableCell, for: indexPath) as? WeatherHourInfoTableViewCell else { return UITableViewCell() }
             weatherHourInfoCell.setCellData()
-
             return weatherHourInfoCell
         case .separatorRow: return WeatherSeparatorTableViewCell()
         case .weekInfoRow:
+            guard let weatherWeekInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherWeekInfoTableCell, for: indexPath) as? WeatherSubInfoTableViewCell else { return UITableViewCell() }
             return weatherWeekInfoCell
         }
+    }
+}
+
+// MARK: - PageView Protocol
+
+extension WeatherInfoViewController: UIPageViewControllerDelegate {
+    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating _: Bool, previousViewControllers _: [UIViewController], transitionCompleted completed: Bool) {
+        if completed {
+            if let currentViewController = pageViewController.viewControllers?[0] as? ContentViewController {
+                currentPageViewIndex = currentViewController.pageViewControllerIndex
+            }
+        }
+    }
+}
+
+extension WeatherInfoViewController: UIPageViewControllerDataSource {
+    func pageViewController(_: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
+        guard let targetViewController = viewController as? ContentViewController else { return nil }
+
+        var previousIndex = targetViewController.pageViewControllerIndex
+
+        if previousIndex == 0 {
+            previousIndex = CommonData.shared.subWeatherDataList.count
+        } else {
+            previousIndex -= 1
+        }
+        CommonData.shared.setSelectedMainCellIndex(index: previousIndex)
+        return makeContentViewController(index: previousIndex)
+    }
+
+    func pageViewController(_: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
+        guard let targetViewController = viewController as? ContentViewController else { return nil }
+
+        var nextIndex = targetViewController.pageViewControllerIndex
+
+        if nextIndex == CommonData.shared.subWeatherDataList.count {
+            nextIndex = 0
+        } else {
+            nextIndex += 1
+        }
+        CommonData.shared.setSelectedMainCellIndex(index: nextIndex)
+        return makeContentViewController(index: nextIndex)
+    }
+
+    func presentationCount(for _: UIPageViewController) -> Int {
+        return 1 + CommonData.shared.subWeatherDataList.count
+    }
+
+    // 인디케이터의 초기 값
+    func presentationIndex(for _: UIPageViewController) -> Int {
+        return CommonData.shared.selectedMainCellIndex
     }
 }
 
@@ -254,8 +372,7 @@ extension WeatherInfoViewController: CLLocationManagerDelegate {
             let nowLatitude = nowCoordinate.latitude.roundedValue(roundSize: 2)
             let nowLongitude = nowCoordinate.longitude.roundedValue(roundSize: 2)
 
-            setWeatherTitleViewData()
-            view.layoutIfNeeded()
+            CommonData.shared.setMainCityName(latitude: nowLatitude, longitude: nowLongitude)
             if !isAppearViewController {
                 CommonData.shared.setMainCoordinate(latitude: nowLatitude, longitude: nowLongitude)
                 let mainLatitude = CommonData.shared.mainCoordinate.latitude
@@ -265,6 +382,9 @@ extension WeatherInfoViewController: CLLocationManagerDelegate {
                     CommonData.shared.setMainWeatherData(weatherData: weatherAPIData)
 
                     DispatchQueue.main.async {
+                        self.setWeatherData()
+                        self.view.layoutIfNeeded()
+                        self.weatherInfoView.weatherTitleView.layoutIfNeeded()
                         self.weatherInfoView.layoutIfNeeded()
                         self.weatherInfoView.weatherInfoTableView.reloadData()
                     }
@@ -278,7 +398,9 @@ extension WeatherInfoViewController: CLLocationManagerDelegate {
 // MARK: - Custom View Protocol
 
 extension WeatherInfoViewController: UIViewSettingProtocol {
-    func makeSubviews() {}
+    func makeSubviews() {
+        view.addSubview(weatherPageControl)
+    }
 
     func makeConstraints() {
         linkBarButton.activateAnchors()
@@ -292,5 +414,12 @@ extension WeatherInfoViewController: UIViewSettingProtocol {
             listBarButton.heightAnchor.constraint(equalToConstant: CommonSize.defaultButtonSize.height),
             listBarButton.widthAnchor.constraint(equalTo: listBarButton.heightAnchor, multiplier: 1.0),
         ])
+    }
+}
+
+extension WeatherInfoViewController: CellSettingProtocol {
+    func registerCell() {
+        weatherInfoView.weatherInfoTableView.register(WeatherHourInfoTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weatherHourInfoTableCell)
+        weatherInfoView.weatherInfoTableView.register(WeatherSubInfoTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weatherWeekInfoTableCell)
     }
 }

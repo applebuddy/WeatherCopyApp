@@ -8,7 +8,7 @@
 
 import UIKit
 
-public class WeatherAPI {
+class WeatherAPI {
     static let shared = WeatherAPI()
 
     // STEP 1) JSON데이터를 받기 위해 사용할 변수와 API토큰을 준비한다.
@@ -49,17 +49,13 @@ public class WeatherAPI {
                         self.delegate?.weatherAPIDidFinished(self)
                         completion(weatherAPIData)
                     } catch let DecodingError.keyNotFound(key, _) {
-                        print("Missing key in JSON: \(key).")
                         self.delegate?.weatherAPIDidError(self)
                     } catch let DecodingError.typeMismatch(type, context) {
-                        print("Wring type in JSON: \(type) \(context)")
                         self.delegate?.weatherAPIDidError(self)
                     } catch {
-                        print("Unable to parse JSON: \(error.localizedDescription)")
                         self.delegate?.weatherAPIDidError(self)
                     }
                 } else {
-                    self.errorMessage = "응답코드 오류 : \(response.statusCode)"
                     self.delegate?.weatherAPIDidError(self)
                 }
             }

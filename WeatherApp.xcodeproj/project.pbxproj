@@ -58,6 +58,7 @@
 		07F7CCBC22F96D2500631396 /* TodayInfoCellData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07F7CCBB22F96D2500631396 /* TodayInfoCellData.swift */; };
 		07F7CCC022F9AF1200631396 /* WeatherActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07F7CCBF22F9AF1200631396 /* WeatherActivityIndicatorView.swift */; };
 		07F7CCC222FA107400631396 /* AssetIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07F7CCC122FA107400631396 /* AssetIdentifier.swift */; };
+		07F7CCC622FA34DC00631396 /* ContentViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07F7CCC522FA34DC00631396 /* ContentViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -135,6 +136,7 @@
 		07F7CCBB22F96D2500631396 /* TodayInfoCellData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TodayInfoCellData.swift; sourceTree = "<group>"; };
 		07F7CCBF22F9AF1200631396 /* WeatherActivityIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherActivityIndicatorView.swift; sourceTree = "<group>"; };
 		07F7CCC122FA107400631396 /* AssetIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AssetIdentifier.swift; sourceTree = "<group>"; };
+		07F7CCC522FA34DC00631396 /* ContentViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -321,6 +323,7 @@
 				07ED2A2922F19534003FB9C6 /* MainNavigationController.swift */,
 				07E4345B22F3475600C0E246 /* WeatherMainViewController.swift */,
 				07ED29FD22F18F44003FB9C6 /* WeatherInfoViewController.swift */,
+				07F7CCC522FA34DC00631396 /* ContentViewController.swift */,
 				07C324D322F5AB9C00DD1774 /* WeatherCitySearchViewController.swift */,
 			);
 			path = Controller;
@@ -530,6 +533,7 @@
 				077F5BDA22F2C16C0045391B /* UIViewSettingProtocol.swift in Sources */,
 				07E8F19322F41E7C00B5F8DE /* WeekSubInfoView.swift in Sources */,
 				07F7CCAE22F96C8500631396 /* CommonInset.swift in Sources */,
+				07F7CCC622FA34DC00631396 /* ContentViewController.swift in Sources */,
 				07C324D122F594FD00DD1774 /* WeatherMainTableFooterView.swift in Sources */,
 				07F7CCAB22F96C5B00631396 /* CommonSize.swift in Sources */,
 				07E4346322F3481600C0E246 /* WeatherMainTableViewCell.swift in Sources */,

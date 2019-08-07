@@ -319,6 +319,7 @@ extension WeatherMainViewController: UITableViewDataSource {
 
         if editingStyle == .delete {
             CommonData.shared.subWeatherDataList.remove(at: indexPath.row - 1)
+            CommonData.shared.subLocationDataList.remove(at: indexPath.row - 1)
             CommonData.shared.saveSubWeatherDataList()
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
