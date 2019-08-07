@@ -8,7 +8,7 @@
 
 import UIKit
 
-class WeatherAPI {
+final class WeatherAPI {
     static let shared = WeatherAPI()
 
     // STEP 1) JSON데이터를 받기 위해 사용할 변수와 API토큰을 준비한다.
