@@ -2,11 +2,13 @@
 
 애플 기본날씨앱 따라하기 프로젝트
 
+<p>
 
 ## 개요
 
 사전과제인 애플날씨앱 프로젝트입니다. 스토리보드 없이 코드로만 진행하여 클래스 별 간단한 사용목적을 정리했습니다.
 
+<p>
 
 ### Model
 
@@ -28,7 +30,8 @@
 * UIViewSettingProtocol : 서브뷰 추가, 제약값 설정 등 중복되는 메서드를 정리한 프로토콜
 * CellSettingProtocol : 셀 셋팅 관련 중복 메서드를 정리한 프로토콜 
 
-
+<p>
+  
 ### Controller
 
 * MainNavigationController : 메인으로 사용하는 네비게이션 뷰 컨트롤러
@@ -41,7 +44,8 @@
 * WeatherCitySearchViewController : 도시 검색 및 날씨정보 추가를 하는 뷰 컨트롤러
   -  CitySearchTableView의 프로토콜을 채택해 사용한다.
   
-
+<p>
+  
 ### View
 
 **WeatherCitySearchView** 도시검색기능, WeatherCitySearchViewController 뷰
@@ -72,7 +76,8 @@
 **WeatherSeparatorView** 셀 간 여백 구현 목적 사용, WeatherSeparatorView 뷰
 * WeatherSeparatorTableViewCell : 여백 구현 목적으로 사용한 테이블 셀 
 
-
+<p>
+  
 ### 구현 이미지
 * 페이지뷰 구현 부족으로 WeatherInfoViewController PageViewController 데이터갱신 및 뷰컨트롤러 페이징 이벤트 제한
 
