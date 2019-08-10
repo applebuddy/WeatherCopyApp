@@ -93,13 +93,13 @@ class WeatherInfoViewController: UIViewController {
     override func viewDidAppear(_: Bool) {
         super.viewDidAppear(true)
 
-        DispatchQueue.main.async {
-            self.weatherPageViewController?.view.layoutIfNeeded()
-            self.weatherInfoView.weatherInfoTableView.reloadData()
-            self.weatherInfoView.layoutIfNeeded()
-            self.view.layoutIfNeeded()
-            self.weatherInfoView.weatherTitleView.layoutIfNeeded()
-        }
+//        DispatchQueue.main.async {
+//            self.weatherPageViewController?.view.layoutIfNeeded()
+//            self.weatherInfoView.weatherInfoTableView.reloadData()
+//            self.weatherInfoView.layoutIfNeeded()
+//            self.view.layoutIfNeeded()
+//            self.weatherInfoView.weatherTitleView.layoutIfNeeded()
+//        }
     }
 
     // MARK: - Set Method
@@ -158,18 +158,10 @@ class WeatherInfoViewController: UIViewController {
     /// * 인덱스에 따른 날씨정보 셋팅 메서드
     func setWeatherData() {
         let weatherViewIndex = CommonData.shared.selectedMainCellIndex
-        if weatherViewIndex == 0 {
-            nowWeatherData = CommonData.shared.weatherDataList[0].subData
-            let infoViewTitle = CommonData.shared.mainCityName
-            guard let infoViewSubTitle = nowWeatherData?.currently.summary else { return }
-            weatherInfoView.setInfoViewData(title: infoViewTitle,
-                                            subTitle: infoViewSubTitle)
-        } else {
             guard let nowWeatherData = CommonData.shared.weatherDataList[weatherViewIndex].subData,
                 let infoViewTitle = CommonData.shared.weatherDataList[weatherViewIndex].subCityName else { return }
             let infoViewSubTitle = nowWeatherData.currently.summary
             weatherInfoView.setInfoViewData(title: infoViewTitle, subTitle: infoViewSubTitle)
-        }
     }
 
     func setInfoViewController() {
@@ -239,13 +231,14 @@ extension WeatherInfoViewController: UIPageViewControllerDelegate {
 }
 
 extension WeatherInfoViewController: UIPageViewControllerDataSource {
+    
     func pageViewController(_: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         guard let targetViewController = viewController as? ContentViewController else { return nil }
-
+        let contentViewControllerMaxIndex = CommonData.shared.weatherDataList.count - 1
         var previousIndex = targetViewController.pageViewControllerIndex
 
         if previousIndex == 0 {
-            previousIndex = CommonData.shared.weatherDataList.count
+            previousIndex = contentViewControllerMaxIndex
         } else {
             previousIndex -= 1
         }
@@ -256,9 +249,10 @@ extension WeatherInfoViewController: UIPageViewControllerDataSource {
     func pageViewController(_: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
         guard let targetViewController = viewController as? ContentViewController else { return nil }
 
+        let contentViewControllerMaxIndex = CommonData.shared.weatherDataList.count - 1
         var nextIndex = targetViewController.pageViewControllerIndex
 
-        if nextIndex == CommonData.shared.weatherDataList.count {
+        if nextIndex == contentViewControllerMaxIndex {
             nextIndex = 0
         } else {
             nextIndex += 1
@@ -268,7 +262,7 @@ extension WeatherInfoViewController: UIPageViewControllerDataSource {
     }
 
     func presentationCount(for _: UIPageViewController) -> Int {
-        return 1 + CommonData.shared.weatherDataList.count
+        return CommonData.shared.weatherDataList.count
     }
 
     // 인디케이터의 초기 값
