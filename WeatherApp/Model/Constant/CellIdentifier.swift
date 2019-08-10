@@ -9,7 +9,7 @@
 import UIKit
 
 /// * WeatherApp 셀 식별자
-public struct CellIdentifier {
+struct CellIdentifier {
     static let weatherHourInfoTableCell: String = "weatherHourInfoTableViewCell"
     static let weatherWeekInfoTableCell: String = "weatherWeekInfoTableViewCell"
     static let HourInfoCollectionCell: String = "hourInfoCollectionViewCell"

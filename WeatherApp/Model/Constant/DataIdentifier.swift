@@ -8,7 +8,7 @@
 
 import UIKit
 
-public struct DataIdentifier {
+struct DataIdentifier {
     static let isLocationAuthority = "isLocationAuthority"
     static let weatherCoordinate = "weatherCoordinate"
     static let subWeatherDataList = "subWeatherDataList"

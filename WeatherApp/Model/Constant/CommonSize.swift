@@ -8,6 +8,6 @@
 
 import UIKit
 
-public struct CommonSize {
+struct CommonSize {
     static let defaultButtonSize = CGSize(width: 30, height: 30)
 }

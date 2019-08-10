@@ -19,12 +19,12 @@ struct SubLocationData: Codable {
     var longitude: Double
 }
 
-public struct WeatherCoordinate {
+struct WeatherCoordinate {
     public var latitude: Double
     public var longitude: Double
 }
 
-public enum TemperatureType: Int {
+enum TemperatureType: Int {
     case celsius = 0
     case fahrenheit = 1
 }

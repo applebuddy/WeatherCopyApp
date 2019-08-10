@@ -8,7 +8,7 @@
 
 import UIKit
 
-public struct CommonColor {
+struct CommonColor {
     static let separator = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
     static let weatherMainView = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
     static let weatherMainTableFooterView = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)

@@ -8,7 +8,7 @@
 
 import UIKit
 
-public struct CommonInset {
+struct CommonInset {
     static let leftInset: CGFloat = 20
     static let rightInset: CGFloat = 20
     static let topInset: CGFloat = 5

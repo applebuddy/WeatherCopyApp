@@ -8,7 +8,7 @@
 
 import UIKit
 
-public struct AssetIdentifier {
+struct AssetIdentifier {
     struct Image {
         static let mainIndicator = "mainIndicator"
         static let weatherLink = "weatherLink"

@@ -8,7 +8,7 @@
 
 import UIKit
 
-public struct WeatherInfoCellCount {
+struct WeatherInfoCellCount {
     static let weekInfoCell = 8
     static let dayInfoCell = 24
     static let todayInfoCell = 5

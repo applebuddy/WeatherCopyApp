@@ -9,7 +9,7 @@
 import UIKit
 
 /// * TableView Cell Heights
-public struct WeatherCellHeight {
+struct WeatherCellHeight {
     static let hourInfoTableCell: CGFloat = 120
     static let infoTableHeaderCell: CGFloat = 150
     static let hourInfoCollectionCell: CGFloat = 120
