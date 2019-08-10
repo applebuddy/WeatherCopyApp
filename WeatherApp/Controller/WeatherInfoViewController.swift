@@ -113,11 +113,19 @@ class WeatherInfoViewController: UIViewController {
         mainPageViewController.view.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height)
         weatherPageViewController = mainPageViewController
 
-        if let rootViewController = makeContentViewController(index: 0),
-            let unWrappingPageViewController = self.weatherPageViewController {
-            let viewControllers = [rootViewController]
-            unWrappingPageViewController.setViewControllers(viewControllers, direction: .reverse, animated: true, completion: nil)
+        let viewControllerCount = CommonData.shared.weatherDataList.count
+
+        var viewControllers = [ContentViewController](repeatElement(ContentViewController(), count: viewControllerCount))
+
+        let unWrappingPageViewController = weatherPageViewController
+
+        for i in 0 ..< CommonData.shared.weatherDataList.count {
+            if let contentViewController = makeContentViewController(index: i) {
+                viewControllers[i] = contentViewController
+            }
         }
+
+        unWrappingPageViewController?.setViewControllers(viewControllers, direction: .reverse, animated: true, completion: nil)
 
         let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
         let barButtonItem = UIBarButtonItem(customView: linkBarButton)
