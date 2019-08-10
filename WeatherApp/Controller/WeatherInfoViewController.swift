@@ -32,7 +32,7 @@ class WeatherInfoViewController: UIViewController {
 
     let weatherPageControl: UIPageControl = {
         let weatherPageControl = UIPageControl(frame: CGRect(x: 0, y: UIScreen.main.bounds.maxY, width: UIScreen.main.bounds.width, height: 50))
-        weatherPageControl.numberOfPages = 1 + CommonData.shared.subWeatherDataList.count
+        weatherPageControl.numberOfPages = 1 + CommonData.shared.weatherDataList.count
         weatherPageControl.hidesForSinglePage = false
         weatherPageControl.currentPage = 0
         weatherPageControl.tintColor = .black
@@ -67,9 +67,11 @@ class WeatherInfoViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        let subWeatherDataSize = CommonData.shared.weatherLocationDataList.count
+        CommonData.shared.setWeatherDataListSize(count: 1 + subWeatherDataSize)
         makeSubviews()
         setInfoViewController()
-
         setButtonTarget()
         setToolBarButtonItem()
         setTableHeaderView()
@@ -149,14 +151,14 @@ class WeatherInfoViewController: UIViewController {
     func setWeatherData() {
         let weatherViewIndex = CommonData.shared.selectedMainCellIndex
         if weatherViewIndex == 0 {
-            nowWeatherData = CommonData.shared.mainWeatherData
+            nowWeatherData = CommonData.shared.weatherDataList[0].subData
             let infoViewTitle = CommonData.shared.mainCityName
             guard let infoViewSubTitle = nowWeatherData?.currently.summary else { return }
             weatherInfoView.setInfoViewData(title: infoViewTitle,
                                             subTitle: infoViewSubTitle)
         } else {
-            guard let nowWeatherData = CommonData.shared.subWeatherDataList[weatherViewIndex - 1].subData,
-                let infoViewTitle = CommonData.shared.subWeatherDataList[weatherViewIndex - 1].subCityName else { return }
+            guard let nowWeatherData = CommonData.shared.weatherDataList[weatherViewIndex].subData,
+                let infoViewTitle = CommonData.shared.weatherDataList[weatherViewIndex].subCityName else { return }
             let infoViewSubTitle = nowWeatherData.currently.summary
             weatherInfoView.setInfoViewData(title: infoViewTitle, subTitle: infoViewSubTitle)
         }
@@ -235,7 +237,7 @@ extension WeatherInfoViewController: UIPageViewControllerDataSource {
         var previousIndex = targetViewController.pageViewControllerIndex
 
         if previousIndex == 0 {
-            previousIndex = CommonData.shared.subWeatherDataList.count
+            previousIndex = CommonData.shared.weatherDataList.count
         } else {
             previousIndex -= 1
         }
@@ -248,7 +250,7 @@ extension WeatherInfoViewController: UIPageViewControllerDataSource {
 
         var nextIndex = targetViewController.pageViewControllerIndex
 
-        if nextIndex == CommonData.shared.subWeatherDataList.count {
+        if nextIndex == CommonData.shared.weatherDataList.count {
             nextIndex = 0
         } else {
             nextIndex += 1
@@ -258,7 +260,7 @@ extension WeatherInfoViewController: UIPageViewControllerDataSource {
     }
 
     func presentationCount(for _: UIPageViewController) -> Int {
-        return 1 + CommonData.shared.subWeatherDataList.count
+        return 1 + CommonData.shared.weatherDataList.count
     }
 
     // 인디케이터의 초기 값

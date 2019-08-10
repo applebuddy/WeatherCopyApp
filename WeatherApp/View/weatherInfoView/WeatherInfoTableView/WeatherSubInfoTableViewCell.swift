@@ -110,7 +110,7 @@ extension WeatherSubInfoTableViewCell: UITableViewDelegate {
             return WeatherSeparatorView()
         case .todayInfoSection:
             let todayInfoHeaderView = TodayInfoTableHeaderView()
-            let weatherData = CommonData.shared.mainWeatherData
+            let weatherData = CommonData.shared.weatherDataList[0].subData
             let textViewText = weatherData?.daily.summary ?? ""
             todayInfoHeaderView.setInfoHeaderViewData(textViewText: textViewText)
             return todayInfoHeaderView
@@ -138,7 +138,7 @@ extension WeatherSubInfoTableViewCell: UITableViewDataSource {
             guard let weekInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weekInfoTableCell, for: indexPath) as? WeekInfoTableViewCell else { return UITableViewCell() }
             let selectedWeatherIndex = CommonData.shared.selectedMainCellIndex
             if selectedWeatherIndex == 0 {
-                let weatherData = CommonData.shared.mainWeatherData
+                let weatherData = CommonData.shared.weatherDataList[0].subData
                 guard let timeStamp = weatherData?.daily.data[indexPath.row].time,
                     let weatherType = weatherData?.daily.data[indexPath.row].icon,
                     let maxCelsius = weatherData?.daily.data[indexPath.row].temperatureMax,
@@ -156,46 +156,47 @@ extension WeatherSubInfoTableViewCell: UITableViewDataSource {
                 leftTitle: TodayInfoCellData.cellLeftLabelText[indexPath.row],
                 rightTitle: TodayInfoCellData.cellRightLabelText[indexPath.row]
             )
+            let mainIndex = CommonData.shared.selectedMainCellIndex
             todayInfoCell.cellBottomBorderView.backgroundColor = CommonColor.separator
             switch todayInfoRowIndex {
             case .firstRow:
 
                 // MARK: 일출 정보, 일몰 정보
 
-                let sunRiseTime = Double(CommonData.shared.mainWeatherData?.daily.data[0].sunriseTime ?? 0)
-                let sunSetTime = Double(CommonData.shared.mainWeatherData?.daily.data[0].sunsetTime ?? 0)
+                let sunRiseTime = Double(CommonData.shared.weatherDataList[mainIndex].subData?.daily.data[0].sunriseTime ?? 0)
+                let sunSetTime = Double(CommonData.shared.weatherDataList[mainIndex].subData?.daily.data[0].sunsetTime ?? 0)
                 todayInfoCell.setLeftStackViewData(titleInfo: sunRiseTime, rowIndex: indexPath.row)
                 todayInfoCell.setRightStackViewData(titleInfo: sunSetTime, rowIndex: indexPath.row)
             case .secondRow:
 
                 // MARK: 비 올 확률, 습도
 
-                let precipProbability = Double(CommonData.shared.mainWeatherData?.daily.data[0].precipProbability ?? 0)
-                let humidity = Double(CommonData.shared.mainWeatherData?.daily.data[0].humidity ?? 0)
+                let precipProbability = Double(CommonData.shared.weatherDataList[mainIndex].subData?.daily.data[0].precipProbability ?? 0)
+                let humidity = Double(CommonData.shared.weatherDataList[mainIndex].subData?.daily.data[0].humidity ?? 0)
                 todayInfoCell.setLeftStackViewData(titleInfo: precipProbability, rowIndex: indexPath.row)
                 todayInfoCell.setRightStackViewData(titleInfo: humidity, rowIndex: indexPath.row)
             case .thirdRow:
 
                 // MARK: 바람, 체감
 
-                let windSpeed = Double(CommonData.shared.mainWeatherData?.daily.data[0].windSpeed ?? 0)
-                let apparentTemperature = Double(CommonData.shared.mainWeatherData?.currently.apparentTemperature ?? 0)
+                let windSpeed = Double(CommonData.shared.weatherDataList[mainIndex].subData?.daily.data[0].windSpeed ?? 0)
+                let apparentTemperature = Double(CommonData.shared.weatherDataList[mainIndex].subData?.currently.apparentTemperature ?? 0)
                 todayInfoCell.setLeftStackViewData(titleInfo: windSpeed, rowIndex: indexPath.row)
                 todayInfoCell.setRightStackViewData(titleInfo: apparentTemperature, rowIndex: indexPath.row)
             case .fourthRow:
 
                 // MARK: 강수량, 기압
 
-                let precipIntensity = Double(CommonData.shared.mainWeatherData?.daily.data[0].precipIntensity ?? 0)
-                let pressure = Double(CommonData.shared.mainWeatherData?.daily.data[0].pressure ?? 0)
+                let precipIntensity = Double(CommonData.shared.weatherDataList[mainIndex].subData?.daily.data[0].precipIntensity ?? 0)
+                let pressure = Double(CommonData.shared.weatherDataList[mainIndex].subData?.daily.data[0].pressure ?? 0)
                 todayInfoCell.setLeftStackViewData(titleInfo: precipIntensity, rowIndex: indexPath.row)
                 todayInfoCell.setRightStackViewData(titleInfo: pressure, rowIndex: indexPath.row)
             case .fifthRow:
 
                 // MARK: 가시 거리, 자외선 지수
 
-                let visibility = Double(CommonData.shared.mainWeatherData?.daily.data[0].visibility ?? 0)
-                let uvIndex = Double(CommonData.shared.mainWeatherData?.daily.data[0].uvIndex ?? 0)
+                let visibility = Double(CommonData.shared.weatherDataList[mainIndex].subData?.daily.data[0].visibility ?? 0)
+                let uvIndex = Double(CommonData.shared.weatherDataList[mainIndex].subData?.daily.data[0].uvIndex ?? 0)
                 todayInfoCell.setLeftStackViewData(titleInfo: visibility, rowIndex: indexPath.row)
                 todayInfoCell.setRightStackViewData(titleInfo: uvIndex, rowIndex: indexPath.row)
                 todayInfoCell.cellBottomBorderView.backgroundColor = .clear

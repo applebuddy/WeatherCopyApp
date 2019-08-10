@@ -89,14 +89,14 @@ class ContentViewController: UIViewController {
     func setWeatherData() {
         let weatherViewIndex = CommonData.shared.selectedMainCellIndex
         if weatherViewIndex == 0 {
-            nowWeatherData = CommonData.shared.mainWeatherData
+            nowWeatherData = CommonData.shared.weatherDataList[0].subData
             let infoViewTitle = CommonData.shared.mainCityName
             guard let infoViewSubTitle = nowWeatherData?.currently.summary else { return }
             contentView.setInfoViewData(title: infoViewTitle,
                                         subTitle: infoViewSubTitle)
         } else {
-            guard let nowWeatherData = CommonData.shared.subWeatherDataList[weatherViewIndex - 1].subData,
-                let infoViewTitle = CommonData.shared.subWeatherDataList[weatherViewIndex - 1].subCityName else { return }
+            guard let nowWeatherData = CommonData.shared.weatherDataList[weatherViewIndex].subData,
+                let infoViewTitle = CommonData.shared.weatherDataList[weatherViewIndex].subCityName else { return }
             let infoViewSubTitle = nowWeatherData.currently.summary
             contentView.setInfoViewData(title: infoViewTitle, subTitle: infoViewSubTitle)
         }
@@ -167,7 +167,7 @@ extension ContentViewController: UITableViewDelegate {
         switch sectionIndex {
         case .mainSection:
             let weatherInfoTableHeaderView = contentView.weatherInfoTableHeaderView
-            let weatherData = CommonData.shared.mainWeatherData
+            let weatherData = CommonData.shared.weatherDataList[0].subData
             guard let mainCelsius = weatherData?.currently.temperature,
                 let minCelsius = weatherData?.daily.data[0].temperatureLow,
                 let maxCelsius = weatherData?.daily.data[0].temperatureHigh,

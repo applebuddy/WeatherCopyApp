@@ -89,7 +89,7 @@ class WeatherMainViewController: UIViewController {
 
     func requestSubWeatherData() {
         DispatchQueue.global().async {
-            let subWeatherLocationList = CommonData.shared.subLocationDataList
+            let subWeatherLocationList = CommonData.shared.weatherLocationDataList
             for (index, value) in subWeatherLocationList.enumerated() {
                 let subCoordinate = value
                 WeatherAPI.shared.requestAPI(latitude: subCoordinate.latitude, longitude: subCoordinate.longitude) { subWeatherAPIData in
@@ -271,7 +271,7 @@ extension WeatherMainViewController: UITableViewDataSource {
     }
 
     func tableView(_: UITableView, numberOfRowsInSection _: Int) -> Int {
-        return 1 + CommonData.shared.subWeatherDataList.count
+        return CommonData.shared.weatherDataList.count
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -280,7 +280,7 @@ extension WeatherMainViewController: UITableViewDataSource {
         if indexPath.row == 0 {
             weatherMainCell.mainIndicatorImageView.image = UIImage(named: AssetIdentifier.Image.mainIndicator)
 
-            let mainWeatherData = CommonData.shared.mainWeatherData
+            let mainWeatherData = CommonData.shared.weatherDataList[0].subData
             let cityName = CommonData.shared.mainCityName
             guard let timeStamp = mainWeatherData?.currently.time,
                 let temperature = mainWeatherData?.hourly.data[0].temperature,
@@ -291,8 +291,8 @@ extension WeatherMainViewController: UITableViewDataSource {
             weatherMainCell.setMainTableCellData(cityName: cityName, timeStamp: timeStamp, timeZone: timeZone, temperature: temperature)
             return weatherMainCell
         } else {
-            let subWeatherData = CommonData.shared.subWeatherDataList[indexPath.row - 1]
-            guard let temperature = CommonData.shared.subWeatherDataList[indexPath.row - 1].subData?.currently.temperature,
+            let subWeatherData = CommonData.shared.weatherDataList[indexPath.row]
+            guard let temperature = CommonData.shared.weatherDataList[indexPath.row].subData?.currently.temperature,
                 let cityName = subWeatherData.subCityName,
                 let timeStamp = subWeatherData.subData?.currently.time,
                 let timeZone = subWeatherData.subData?.timezone else {
@@ -318,8 +318,8 @@ extension WeatherMainViewController: UITableViewDataSource {
         if indexPath.row == 0 { return }
 
         if editingStyle == .delete {
-            CommonData.shared.subWeatherDataList.remove(at: indexPath.row - 1)
-            CommonData.shared.subLocationDataList.remove(at: indexPath.row - 1)
+            CommonData.shared.weatherDataList.remove(at: indexPath.row)
+            CommonData.shared.weatherLocationDataList.remove(at: indexPath.row)
             CommonData.shared.saveSubWeatherDataList()
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }

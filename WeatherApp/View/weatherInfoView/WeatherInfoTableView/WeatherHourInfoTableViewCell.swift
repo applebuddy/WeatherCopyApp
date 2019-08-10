@@ -58,7 +58,7 @@ extension WeatherHourInfoTableViewCell: UICollectionViewDelegate {
         let weatherIndex = CommonData.shared.selectedMainCellIndex
 
         if weatherIndex == 0 {
-            let weatherData = CommonData.shared.mainWeatherData
+            let weatherData = CommonData.shared.weatherDataList[0].subData
 
             var dateTitle = ""
             guard let precipitation = weatherData?.hourly.data[indexPath.item].precipProbability,
