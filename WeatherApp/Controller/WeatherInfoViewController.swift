@@ -68,8 +68,12 @@ class WeatherInfoViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let subWeatherDataSize = CommonData.shared.weatherLocationDataList.count
-        CommonData.shared.setWeatherDataListSize(count: 1 + subWeatherDataSize)
+        // ** 날씨데이터 저장 방식 **
+        CommonData.shared.initWeatherDataListSize() // 맨 처음 메인데이터가 들어갈 크기를 공간 설정하고,
+        CommonData.shared.setUserDefaultsData() // 저장 된 서브 날씨데이터를 추가한다.
+
+        print("initial weatherDataListSize : \(CommonData.shared.weatherDataList.count)")
+        print("initial weatherLocationDataListSize : \(CommonData.shared.weatherLocationDataList.count)")
         makeSubviews()
         setInfoViewController()
         setButtonTarget()
@@ -77,29 +81,6 @@ class WeatherInfoViewController: UIViewController {
         setTableHeaderView()
         makeConstraints()
         presentToMainView()
-    }
-
-    override func viewWillAppear(_: Bool) {
-        super.viewWillAppear(true)
-
-        setWeatherData()
-        isAppearViewController = false
-
-        let latitude = CommonData.shared.mainCoordinate.latitude
-        let longitude = CommonData.shared.mainCoordinate.longitude
-        CommonData.shared.setMainCityName(latitude: latitude, longitude: longitude)
-    }
-
-    override func viewDidAppear(_: Bool) {
-        super.viewDidAppear(true)
-
-//        DispatchQueue.main.async {
-//            self.weatherPageViewController?.view.layoutIfNeeded()
-//            self.weatherInfoView.weatherInfoTableView.reloadData()
-//            self.weatherInfoView.layoutIfNeeded()
-//            self.view.layoutIfNeeded()
-//            self.weatherInfoView.weatherTitleView.layoutIfNeeded()
-//        }
     }
 
     // MARK: - Set Method
@@ -115,17 +96,12 @@ class WeatherInfoViewController: UIViewController {
 
         let viewControllerCount = CommonData.shared.weatherDataList.count
 
-        var viewControllers = [ContentViewController](repeatElement(ContentViewController(), count: viewControllerCount))
+        // 뷰 컨트롤러 하나만 먼저 준비, 데이터소스에서 나머지 컨텐츠 뷰 컨트롤러를 설정한다.
+        var contentViewController = ContentViewController()
 
         let unWrappingPageViewController = weatherPageViewController
 
-        for i in 0 ..< CommonData.shared.weatherDataList.count {
-            if let contentViewController = makeContentViewController(index: i) {
-                viewControllers[i] = contentViewController
-            }
-        }
-
-        unWrappingPageViewController?.setViewControllers(viewControllers, direction: .reverse, animated: true, completion: nil)
+        unWrappingPageViewController?.setViewControllers([contentViewController], direction: .reverse, animated: true, completion: nil)
 
         let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
         let barButtonItem = UIBarButtonItem(customView: linkBarButton)
@@ -153,15 +129,6 @@ class WeatherInfoViewController: UIViewController {
         contentViewController.pageViewControllerIndex = index
 
         return contentViewController
-    }
-
-    /// * 인덱스에 따른 날씨정보 셋팅 메서드
-    func setWeatherData() {
-        let weatherViewIndex = CommonData.shared.selectedMainCellIndex
-            guard let nowWeatherData = CommonData.shared.weatherDataList[weatherViewIndex].subData,
-                let infoViewTitle = CommonData.shared.weatherDataList[weatherViewIndex].subCityName else { return }
-            let infoViewSubTitle = nowWeatherData.currently.summary
-            weatherInfoView.setInfoViewData(title: infoViewTitle, subTitle: infoViewSubTitle)
     }
 
     func setInfoViewController() {
@@ -231,19 +198,18 @@ extension WeatherInfoViewController: UIPageViewControllerDelegate {
 }
 
 extension WeatherInfoViewController: UIPageViewControllerDataSource {
-    
+    // 이전으로 넘길때 컨텐츠 뷰 컨트롤러 데이터 전달
     func pageViewController(_: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         guard let targetViewController = viewController as? ContentViewController else { return nil }
         let contentViewControllerMaxIndex = CommonData.shared.weatherDataList.count - 1
-        var previousIndex = targetViewController.pageViewControllerIndex
+        let previousIndex = targetViewController.pageViewControllerIndex
 
-        if previousIndex == 0 {
-            previousIndex = contentViewControllerMaxIndex
+        if previousIndex < 1 {
+            return nil
         } else {
-            previousIndex -= 1
+            CommonData.shared.setSelectedMainCellIndex(index: previousIndex - 1)
+            return makeContentViewController(index: previousIndex - 1)
         }
-        CommonData.shared.setSelectedMainCellIndex(index: previousIndex)
-        return makeContentViewController(index: previousIndex)
     }
 
     func pageViewController(_: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
@@ -253,12 +219,11 @@ extension WeatherInfoViewController: UIPageViewControllerDataSource {
         var nextIndex = targetViewController.pageViewControllerIndex
 
         if nextIndex == contentViewControllerMaxIndex {
-            nextIndex = 0
+            return nil
         } else {
-            nextIndex += 1
+            CommonData.shared.setSelectedMainCellIndex(index: nextIndex + 1)
+            return makeContentViewController(index: nextIndex + 1)
         }
-        CommonData.shared.setSelectedMainCellIndex(index: nextIndex)
-        return makeContentViewController(index: nextIndex)
     }
 
     func presentationCount(for _: UIPageViewController) -> Int {

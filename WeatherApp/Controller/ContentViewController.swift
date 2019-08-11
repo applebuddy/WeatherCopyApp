@@ -166,7 +166,7 @@ extension ContentViewController: UITableViewDelegate {
         guard let sectionIndex = WeatherInfoTableViewSection(rawValue: section) else { return UIView() }
         switch sectionIndex {
         case .mainSection:
-            
+
             let weatherInfoTableHeaderView = contentView.weatherInfoTableHeaderView
             let weatherData = CommonData.shared.weatherDataList[0].subData
             guard let mainCelsius = weatherData?.currently.temperature,

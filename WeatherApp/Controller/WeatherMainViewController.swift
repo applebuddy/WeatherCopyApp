@@ -47,7 +47,6 @@ class WeatherMainViewController: UIViewController {
         super.viewDidLoad()
         setMainViewController()
         setActivityIndicatorContainerView()
-        setUserDefaultsData()
         registerCell()
         setWeatherDataRefreshControl()
     }
@@ -78,11 +77,6 @@ class WeatherMainViewController: UIViewController {
         weatherMainView.weatherMainTableView.refreshControl = weatherDataRefreshControl
     }
 
-    func setUserDefaultsData() {
-        CommonData.shared.setSubWeatherLocationList()
-        CommonData.shared.setSubWeatherDataList()
-    }
-
     func setWeatherDataCheckTimer() {
         weatherDataCheckTimer = Timer.scheduledTimer(timeInterval: weatherDataCheckInterval, target: self, selector: #selector(refreshWeatherDataTimeDidStarted(_:)), userInfo: nil, repeats: true)
     }
@@ -91,9 +85,10 @@ class WeatherMainViewController: UIViewController {
         DispatchQueue.global().async {
             let subWeatherLocationList = CommonData.shared.weatherLocationDataList
             for (index, value) in subWeatherLocationList.enumerated() {
-                let subCoordinate = value
-                WeatherAPI.shared.requestAPI(latitude: subCoordinate.latitude, longitude: subCoordinate.longitude) { subWeatherAPIData in
-                    CommonData.shared.setSubWeatherData(subWeatherAPIData, index: index)
+                guard let latitude = value.latitude,
+                    let longitude = value.longitude else { return }
+                WeatherAPI.shared.requestAPI(latitude: latitude, longitude: longitude) { subWeatherAPIData in
+                    CommonData.shared.setWeatherData(subWeatherAPIData, index: index)
                     DispatchQueue.main.async {
                         self.weatherMainView.weatherMainTableView.reloadData()
                         self.stopIndicatorAnimating()
@@ -320,7 +315,7 @@ extension WeatherMainViewController: UITableViewDataSource {
         if editingStyle == .delete {
             CommonData.shared.weatherDataList.remove(at: indexPath.row)
             CommonData.shared.weatherLocationDataList.remove(at: indexPath.row)
-            CommonData.shared.saveSubWeatherDataList()
+            CommonData.shared.saveWeatherDataList()
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
     }
