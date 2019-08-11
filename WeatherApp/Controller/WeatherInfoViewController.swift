@@ -94,10 +94,10 @@ class WeatherInfoViewController: UIViewController {
         mainPageViewController.view.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height)
         weatherPageViewController = mainPageViewController
 
-        let viewControllerCount = CommonData.shared.weatherDataList.count
+//        let viewControllerCount = CommonData.shared.weatherDataList.count
 
         // 뷰 컨트롤러 하나만 먼저 준비, 데이터소스에서 나머지 컨텐츠 뷰 컨트롤러를 설정한다.
-        var contentViewController = ContentViewController()
+        let contentViewController = ContentViewController()
 
         let unWrappingPageViewController = weatherPageViewController
 
