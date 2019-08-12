@@ -119,8 +119,6 @@ final class CommonData {
                 let weatherData = SubWeatherData(subData: weatherAPIData, subCityName: cityNameString)
                 self.weatherDataList.append(weatherData)
                 self.weatherLocationDataList.append(subLocationData)
-                print("weatherDataListSize : \(self.weatherDataList.count)")
-                print("weatherLocationDataListSize : \(self.weatherLocationDataList.count)")
                 completion(true)
             }
         }

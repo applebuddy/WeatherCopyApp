@@ -69,8 +69,6 @@ class WeatherInfoViewController: UIViewController {
         CommonData.shared.initWeatherDataListSize() // 맨 처음 메인데이터가 들어갈 크기를 공간 설정하고,
         CommonData.shared.setUserDefaultsData() // 저장 된 서브 날씨데이터를 추가한다.
 
-        print("initial weatherDataListSize : \(CommonData.shared.weatherDataList.count)")
-        print("initial weatherLocationDataListSize : \(CommonData.shared.weatherLocationDataList.count)")
         makeSubviews()
         setInfoViewController()
         setButtonTarget()
@@ -215,7 +213,6 @@ extension WeatherInfoViewController: UIPageViewControllerDataSource {
 
     // 인디케이터의 초기 값
     func presentationIndex(for _: UIPageViewController) -> Int {
-        print("씨발 : \(CommonData.shared.selectedMainCellIndex)")
         return CommonData.shared.selectedMainCellIndex
     }
 }
