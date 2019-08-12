@@ -15,8 +15,8 @@ struct SubWeatherData: Codable {
 }
 
 struct SubLocationData: Codable {
-    var latitude: Double
-    var longitude: Double
+    var latitude: Double?
+    var longitude: Double?
 }
 
 struct WeatherCoordinate {

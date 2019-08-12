@@ -13,14 +13,17 @@ final class CommonData {
     static let shared = CommonData()
 
     var weatherURLString = "https://weather.com/ko-KR/weather/today/"
+
     var mainCityName = "-"
+    var mainCelsius: Double?
+
     var subCityNameList = [String]()
     var weatherDataList = [SubWeatherData]()
     var subWeatherDataList = [SubWeatherData]()
     var weatherLocationDataList = [SubLocationData]()
 
     var temperatureType: TemperatureType = .celsius
-    var mainCelsius: Double?
+
     var isLocationAuthority = UserDefaults.standard.bool(forKey: DataIdentifier.isLocationAuthority)
     var mainCoordinate = WeatherCoordinate(latitude: 0, longitude: 0)
     var selectedMainCellIndex = 0
@@ -59,20 +62,16 @@ final class CommonData {
 
     // MARK: - Set Method
 
-    func setWeatherDataListSize(count: Int) {
-        weatherDataList = [SubWeatherData](repeating: SubWeatherData(), count: count)
+    func initWeatherDataListSize() {}
+
+    func setUserDefaultsData() {
+        setWeatherLocationList()
+        setWeatherDataList()
     }
 
     func setDateFormatter(dateFormatter: DateFormatter, timeZone: String, timeStamp: Double) -> String {
         let date = Date(timeIntervalSince1970: timeStamp)
         let newDateFormatter = dateFormatter
-
-//        for (key, value) in TimeZone.abbreviationDictionary {
-//            if timeZone == value {
-//                timeZoneIdentifier = key
-//                break
-//            }
-//        }
 
         newDateFormatter.timeZone = TimeZone(identifier: timeZone)
         let formattedDate = newDateFormatter.string(from: date)
@@ -120,6 +119,8 @@ final class CommonData {
                 let weatherData = SubWeatherData(subData: weatherAPIData, subCityName: cityNameString)
                 self.weatherDataList.append(weatherData)
                 self.weatherLocationDataList.append(subLocationData)
+                print("weatherDataListSize : \(self.weatherDataList.count)")
+                print("weatherLocationDataListSize : \(self.weatherLocationDataList.count)")
                 completion(true)
             }
         }
@@ -141,33 +142,40 @@ final class CommonData {
         }
     }
 
-    func setSubWeatherData(_ weatherData: WeatherAPIData, index: Int) {
-//        if weatherDataList.count - 1 >= index {
+    func setWeatherData(_ weatherData: WeatherAPIData, index: Int) {
         weatherDataList[index].subData = weatherData
-//        }
     }
 
-    func saveSubWeatherDataList() {
+    // 저장 구현 준비중
+    func saveWeatherDataList() {
         if let subWeatherData = try? JSONEncoder().encode(weatherDataList) {
-            UserDefaults.standard.set(subWeatherData, forKey: DataIdentifier.subWeatherDataList)
+            UserDefaults.standard.set(subWeatherData, forKey: DataIdentifier.weatherDataList)
         }
 
         if let subLocationData = try? JSONEncoder().encode(weatherLocationDataList) {
-            UserDefaults.standard.set(subLocationData, forKey: DataIdentifier.subLocationDataList)
+            UserDefaults.standard.set(subLocationData, forKey: DataIdentifier.locationDataList)
         }
     }
 
-    func setSubWeatherDataList() {
-        if let subData = UserDefaults.standard.value(forKey: DataIdentifier.subWeatherDataList) as? Data,
-            let subDataList = try? JSONDecoder().decode([SubWeatherData].self, from: subData) {
-            weatherDataList = subDataList
+    func setWeatherDataList() {
+        if let subData = UserDefaults.standard.value(forKey: DataIdentifier.weatherDataList) as? Data,
+            let dataList = try? JSONDecoder().decode([SubWeatherData].self, from: subData) {
+            for data in dataList {
+                weatherDataList.append(data)
+            }
+        } else {
+            weatherDataList = [SubWeatherData](repeating: SubWeatherData(), count: 1)
         }
     }
 
-    func setSubWeatherLocationList() {
-        if let subData = UserDefaults.standard.value(forKey: DataIdentifier.subLocationDataList) as? Data,
-            let subLocationList = try? JSONDecoder().decode([SubLocationData].self, from: subData) {
-            weatherLocationDataList = subLocationList
+    func setWeatherLocationList() {
+        if let subData = UserDefaults.standard.value(forKey: DataIdentifier.locationDataList) as? Data,
+            let locationList = try? JSONDecoder().decode([SubLocationData].self, from: subData) {
+            for locationData in locationList {
+                weatherLocationDataList.append(locationData)
+            }
+        } else {
+            weatherLocationDataList = [SubLocationData](repeating: SubLocationData(), count: 1)
         }
     }
 
@@ -193,6 +201,7 @@ final class CommonData {
     }
 
     func setMainWeatherData(weatherData: WeatherAPIData) {
+        weatherDataList[0].subCityName = mainCityName
         weatherDataList[0].subData = weatherData
     }
 

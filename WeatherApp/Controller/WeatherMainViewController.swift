@@ -15,7 +15,7 @@ class WeatherMainViewController: UIViewController {
     let locationManager = CLLocationManager()
     let weatherDataRefreshControl: UIRefreshControl = UIRefreshControl()
     var isTimeToCheckWeatherData: Bool = true
-    let weatherDataCheckInterval: Double = 30.0
+    let weatherDataCheckInterval: Double = 5
 
     var weatherDataCheckTimer: Timer = {
         let weatherDataCheckTimer = Timer()
@@ -47,7 +47,6 @@ class WeatherMainViewController: UIViewController {
         super.viewDidLoad()
         setMainViewController()
         setActivityIndicatorContainerView()
-        setUserDefaultsData()
         registerCell()
         setWeatherDataRefreshControl()
     }
@@ -60,10 +59,6 @@ class WeatherMainViewController: UIViewController {
     override func viewWillAppear(_: Bool) {
         super.viewWillAppear(true)
         checksLocationAuthority()
-    }
-
-    override func viewDidAppear(_: Bool) {
-        super.viewDidAppear(true)
         requestSubWeatherData()
     }
 
@@ -78,11 +73,6 @@ class WeatherMainViewController: UIViewController {
         weatherMainView.weatherMainTableView.refreshControl = weatherDataRefreshControl
     }
 
-    func setUserDefaultsData() {
-        CommonData.shared.setSubWeatherLocationList()
-        CommonData.shared.setSubWeatherDataList()
-    }
-
     func setWeatherDataCheckTimer() {
         weatherDataCheckTimer = Timer.scheduledTimer(timeInterval: weatherDataCheckInterval, target: self, selector: #selector(refreshWeatherDataTimeDidStarted(_:)), userInfo: nil, repeats: true)
     }
@@ -91,30 +81,30 @@ class WeatherMainViewController: UIViewController {
         DispatchQueue.global().async {
             let subWeatherLocationList = CommonData.shared.weatherLocationDataList
             for (index, value) in subWeatherLocationList.enumerated() {
-                let subCoordinate = value
-                WeatherAPI.shared.requestAPI(latitude: subCoordinate.latitude, longitude: subCoordinate.longitude) { subWeatherAPIData in
-                    CommonData.shared.setSubWeatherData(subWeatherAPIData, index: index)
-                    DispatchQueue.main.async {
-                        self.weatherMainView.weatherMainTableView.reloadData()
-                        self.stopIndicatorAnimating()
+                guard let latitude = value.latitude,
+                    let longitude = value.longitude else { return }
+                WeatherAPI.shared.requestAPI(latitude: latitude, longitude: longitude) { subWeatherAPIData in
+                    CommonData.shared.setWeatherData(subWeatherAPIData, index: index)
+
+                    DispatchQueue.global().async {
+                        self.isTimeToCheckWeatherData = false
+                        DispatchQueue.main.async {
+                            self.weatherMainView.weatherMainTableView.reloadData()
+                            self.stopIndicatorAnimating()
+                        }
                     }
                 }
             }
         }
     }
 
-    func requestMainWeatherData(latitude: Double, longitude: Double, isRequestTime: Bool) {
-        CommonData.shared.setMainCoordinate(latitude: latitude, longitude: longitude)
-        CommonData.shared.setMainCityName(latitude: latitude, longitude: longitude)
+    func requestMainWeatherData() {
+        let mainLatitude = CommonData.shared.mainCoordinate.latitude
+        let mainLongitude = CommonData.shared.mainCoordinate.longitude
 
-        if isRequestTime {
-            let mainLatitude = CommonData.shared.mainCoordinate.latitude
-            let mainLongitude = CommonData.shared.mainCoordinate.longitude
-
-            WeatherAPI.shared.requestAPI(latitude: mainLatitude, longitude: mainLongitude) { weatherAPIData in
-                CommonData.shared.setMainWeatherData(weatherData: weatherAPIData)
-                self.isTimeToCheckWeatherData = false
-            }
+        WeatherAPI.shared.requestAPI(latitude: mainLatitude, longitude: mainLongitude) { weatherAPIData in
+            CommonData.shared.setMainWeatherData(weatherData: weatherAPIData)
+            self.requestSubWeatherData()
         }
     }
 
@@ -198,11 +188,12 @@ class WeatherMainViewController: UIViewController {
     // MARK: - Animation Event
 
     @objc func refreshWeatherTableViewData(_: UIRefreshControl) {
-        requestSubWeatherData()
+        weatherDataRefreshControl.isHidden = false
+        weatherDataRefreshControl.beginRefreshing()
+        requestMainWeatherData()
     }
 
     func startIndicatorAnimating() {
-        weatherDataRefreshControl.beginRefreshing()
         activityIndicatorContainerView.isHidden = false
         activityIndicatorContainerView.activityIndicatorView.isHidden = false
         activityIndicatorContainerView.activityIndicatorView.startAnimating()
@@ -211,7 +202,6 @@ class WeatherMainViewController: UIViewController {
     func stopIndicatorAnimating() {
         activityIndicatorContainerView.isHidden = true
         activityIndicatorContainerView.activityIndicatorView.isHidden = true
-        weatherDataRefreshControl.endRefreshing()
         activityIndicatorContainerView.activityIndicatorView.stopAnimating()
     }
 
@@ -320,7 +310,7 @@ extension WeatherMainViewController: UITableViewDataSource {
         if editingStyle == .delete {
             CommonData.shared.weatherDataList.remove(at: indexPath.row)
             CommonData.shared.weatherLocationDataList.remove(at: indexPath.row)
-            CommonData.shared.saveSubWeatherDataList()
+            CommonData.shared.saveWeatherDataList()
             tableView.deleteRows(at: [indexPath], with: .automatic)
         }
     }
@@ -334,20 +324,26 @@ extension WeatherMainViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations _: [CLLocation]) {
         guard let latitude = manager.location?.coordinate.latitude,
             let longitude = manager.location?.coordinate.longitude else { return }
-
-        CommonData.shared.setMainCityName(latitude: latitude, longitude: longitude)
-        CommonData.shared.setMainCoordinate(latitude: latitude, longitude: longitude)
-        requestMainWeatherData(latitude: latitude, longitude: longitude, isRequestTime: isTimeToCheckWeatherData)
+        if isTimeToCheckWeatherData {
+            CommonData.shared.setMainCityName(latitude: latitude, longitude: longitude)
+            CommonData.shared.setMainCoordinate(latitude: latitude, longitude: longitude)
+            requestMainWeatherData()
+        }
     }
 
     func locationManagerDidResumeLocationUpdates(_: CLLocationManager) {}
 }
 
 extension WeatherMainViewController: WeatherAPIDelegate {
-    func weatherAPIDidError(_: WeatherAPI) {}
+    func weatherAPIDidError(_: WeatherAPI) {
+        isTimeToCheckWeatherData = false
+        weatherDataRefreshControl.endRefreshing()
+    }
 
     func weatherAPIDidFinished(_: WeatherAPI) {
         DispatchQueue.main.async {
+            self.weatherDataRefreshControl.endRefreshing()
+            self.weatherDataRefreshControl.isHidden = true
             self.stopIndicatorAnimating()
             self.weatherMainView.weatherMainTableView.reloadData()
         }

@@ -181,7 +181,7 @@ extension WeatherCitySearchViewController: UITableViewDelegate {
 
             CommonData.shared.addSubWeatherData(coordinate: location.coordinate, defaultCityName: defaultCityName) { isSucceed in
                 if isSucceed {
-                    CommonData.shared.saveSubWeatherDataList()
+                    CommonData.shared.saveWeatherDataList()
                     self.dismiss(animated: true)
                 } else {
                     self.presentLocationDataErrorAlertController()

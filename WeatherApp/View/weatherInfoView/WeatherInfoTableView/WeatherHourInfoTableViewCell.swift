@@ -57,24 +57,22 @@ extension WeatherHourInfoTableViewCell: UICollectionViewDelegate {
         guard let hourInfoCollectionCell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifier.HourInfoCollectionCell, for: indexPath) as? HourInfoCollectionViewCell else { return UICollectionViewCell() }
         let weatherIndex = CommonData.shared.selectedMainCellIndex
 
-        if weatherIndex == 0 {
-            let weatherData = CommonData.shared.weatherDataList[0].subData
+        let weatherData = CommonData.shared.weatherDataList[weatherIndex].subData
 
-            var dateTitle = ""
-            guard let precipitation = weatherData?.hourly.data[indexPath.item].precipProbability,
-                let imageType = weatherData?.hourly.data[indexPath.item].icon,
-                let celsius = weatherData?.hourly.data[indexPath.item].temperature,
-                let timeStamp = weatherData?.hourly.data[indexPath.item].time else { return hourInfoCollectionCell }
+        var dateTitle = ""
+        guard let precipitation = weatherData?.hourly.data[indexPath.item].precipProbability,
+            let imageType = weatherData?.hourly.data[indexPath.item].icon,
+            let celsius = weatherData?.hourly.data[indexPath.item].temperature,
+            let timeStamp = weatherData?.hourly.data[indexPath.item].time else { return hourInfoCollectionCell }
 
-            if indexPath.item == 0 {
-                dateTitle = "지금"
-            } else {
-                let date = Date(timeIntervalSince1970: Double(timeStamp))
-                dateTitle = CommonData.shared.hourInfoDateFormatter.string(from: date)
-            }
-
-            hourInfoCollectionCell.setDayInfoCollectionCellData(title: dateTitle, precipitation: precipitation, imageType: imageType, celsius: celsius)
+        if indexPath.item == 0 {
+            dateTitle = "지금"
+        } else {
+            let date = Date(timeIntervalSince1970: Double(timeStamp))
+            dateTitle = CommonData.shared.hourInfoDateFormatter.string(from: date)
         }
+
+        hourInfoCollectionCell.setDayInfoCollectionCellData(title: dateTitle, precipitation: precipitation, imageType: imageType, celsius: celsius)
 
         return hourInfoCollectionCell
     }
