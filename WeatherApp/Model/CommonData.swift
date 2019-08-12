@@ -201,6 +201,7 @@ final class CommonData {
     }
 
     func setMainWeatherData(weatherData: WeatherAPIData) {
+        weatherDataList[0].subCityName = mainCityName
         weatherDataList[0].subData = weatherData
     }
 

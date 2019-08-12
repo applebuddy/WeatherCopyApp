@@ -16,8 +16,8 @@ class ContentViewController: UIViewController {
     let locationManager = CLLocationManager()
     var headerHeightConstraint: NSLayoutConstraint?
     var nowWeatherData: WeatherAPIData?
-    var pageViewControllerIndex = 0
     var isAppearViewController = false
+    var pageViewControllerIndex = 0
 
     // MARK: - UI
 
@@ -87,19 +87,11 @@ class ContentViewController: UIViewController {
     }
 
     func setWeatherData() {
-        let weatherViewIndex = CommonData.shared.selectedMainCellIndex
-        if weatherViewIndex == 0 {
-            nowWeatherData = CommonData.shared.weatherDataList[0].subData
-            let infoViewTitle = CommonData.shared.mainCityName
-            guard let infoViewSubTitle = nowWeatherData?.currently.summary else { return }
-            contentView.setInfoViewData(title: infoViewTitle,
-                                        subTitle: infoViewSubTitle)
-        } else {
-            guard let nowWeatherData = CommonData.shared.weatherDataList[weatherViewIndex].subData,
-                let infoViewTitle = CommonData.shared.weatherDataList[weatherViewIndex].subCityName else { return }
-            let infoViewSubTitle = nowWeatherData.currently.summary
-            contentView.setInfoViewData(title: infoViewTitle, subTitle: infoViewSubTitle)
-        }
+        let weatherViewIndex = pageViewControllerIndex
+        guard let nowWeatherData = CommonData.shared.weatherDataList[weatherViewIndex].subData,
+            let infoViewTitle = CommonData.shared.weatherDataList[weatherViewIndex].subCityName else { return }
+        let infoViewSubTitle = nowWeatherData.currently.summary
+        contentView.setInfoViewData(title: infoViewTitle, subTitle: infoViewSubTitle)
     }
 
     func setInfoViewController() {
@@ -156,8 +148,8 @@ extension ContentViewController: UITableViewDelegate {
         guard let rowIndex = WeatherInfoTableViewRow(rawValue: indexPath.row) else { return }
 
         switch rowIndex {
-        case .hourInfoRow:
-            guard let dayInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherHourInfoTableCell, for: indexPath) as? WeatherHourInfoTableViewCell else { return }
+        case .hourInfoRow: break
+//            guard let dayInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherHourInfoTableCell, for: indexPath) as? WeatherHourInfoTableViewCell else { return }
         default: break
         }
     }
@@ -260,19 +252,7 @@ extension ContentViewController: CLLocationManagerDelegate {
 extension ContentViewController: UIViewSettingProtocol {
     func makeSubviews() {}
 
-    func makeConstraints() {
-//        linkBarButton.activateAnchors()
-//        NSLayoutConstraint.activate([
-//            linkBarButton.heightAnchor.constraint(equalToConstant: CommonSize.defaultButtonSize.height),
-//            linkBarButton.widthAnchor.constraint(equalTo: linkBarButton.heightAnchor, multiplier: 1.0),
-//        ])
-//
-//        listBarButton.activateAnchors()
-//        NSLayoutConstraint.activate([
-//            listBarButton.heightAnchor.constraint(equalToConstant: CommonSize.defaultButtonSize.height),
-//            listBarButton.widthAnchor.constraint(equalTo: listBarButton.heightAnchor, multiplier: 1.0),
-//        ])
-    }
+    func makeConstraints() {}
 }
 
 extension ContentViewController: CellSettingProtocol {
