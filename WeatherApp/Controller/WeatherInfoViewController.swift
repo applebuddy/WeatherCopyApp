@@ -97,8 +97,7 @@ class WeatherInfoViewController: UIViewController {
         weatherPageViewController = mainPageViewController
 
         // 뷰 컨트롤러 하나만 먼저 준비, 데이터소스에서 나머지 컨텐츠 뷰 컨트롤러를 설정한다.
-        let contentViewController = ContentViewController()
-        contentViewController.pageViewControllerIndex = CommonData.shared.selectedMainCellIndex
+        guard let contentViewController = makeContentViewController(index: CommonData.shared.selectedMainCellIndex) else { return }
 
         let unWrappingPageViewController = weatherPageViewController
 
@@ -117,7 +116,11 @@ class WeatherInfoViewController: UIViewController {
 
     func makeContentViewController(index: Int) -> ContentViewController? {
         let contentViewController = ContentViewController()
-        contentViewController.pageViewControllerIndex = index
+        if index >= CommonData.shared.weatherDataList.count {
+            contentViewController.pageViewControllerIndex = CommonData.shared.selectedMainCellIndex
+        } else {
+            contentViewController.pageViewControllerIndex = index
+        }
 
         return contentViewController
     }

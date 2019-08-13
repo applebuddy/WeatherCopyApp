@@ -336,8 +336,12 @@ extension WeatherMainViewController: CLLocationManagerDelegate {
 
 extension WeatherMainViewController: WeatherAPIDelegate {
     func weatherAPIDidError(_: WeatherAPI) {
-        isTimeToCheckWeatherData = false
-        weatherDataRefreshControl.endRefreshing()
+        DispatchQueue.global().async {
+            self.isTimeToCheckWeatherData = false
+            DispatchQueue.main.async {
+                self.weatherDataRefreshControl.endRefreshing()
+            }
+        }
     }
 
     func weatherAPIDidFinished(_: WeatherAPI) {
