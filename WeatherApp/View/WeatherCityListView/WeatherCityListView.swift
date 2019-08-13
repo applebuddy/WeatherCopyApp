@@ -1,5 +1,5 @@
 //
-//  WeatherMainView.swift
+//  WeatherCityListView.swift
 //  WeatherApp
 //
 //  Created by MinKyeongTae on 02/08/2019.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-/// WeatherMainViewController 메인 뷰
+/// WeatherCityListViewController 메인 뷰
 /// * **설정 한 장소목록 및 날씨정보를 나타낸다.**
 class WeatherCityListView: UIView {
     // MARK: - UI
@@ -20,7 +20,7 @@ class WeatherCityListView: UIView {
 
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = CommonColor.weatherMainView
+        backgroundColor = CommonColor.weatherCityListView
         makeSubviews()
         makeConstraints()
     }

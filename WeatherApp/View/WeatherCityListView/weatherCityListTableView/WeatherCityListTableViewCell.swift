@@ -8,7 +8,7 @@
 
 import UIKit
 
-/// WeatherMainViewController 메인 테이블뷰 셀
+/// WeatherCityListViewController 메인 테이블뷰 셀
 class WeatherCityListTableViewCell: UITableViewCell {
     // MARK: - Property
 

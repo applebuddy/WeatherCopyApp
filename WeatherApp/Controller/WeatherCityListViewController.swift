@@ -29,9 +29,9 @@ class WeatherCityListViewController: UIViewController {
         return weatherCitySearchViewController
     }()
 
-    let weatherMainView: WeatherCityListView = {
-        let weatherMainView = WeatherCityListView()
-        return weatherMainView
+    let weatherCityListView: WeatherCityListView = {
+        let weatherCityListView = WeatherCityListView()
+        return weatherCityListView
     }()
 
     let activityIndicatorContainerView: WeatherActivityIndicatorView = {
@@ -45,7 +45,7 @@ class WeatherCityListViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setMainViewController()
+        setCityListViewController()
         setActivityIndicatorContainerView()
         registerCell()
         setWeatherDataRefreshControl()
@@ -53,7 +53,7 @@ class WeatherCityListViewController: UIViewController {
 
     override func loadView() {
         super.loadView()
-        view = weatherMainView
+        view = weatherCityListView
     }
 
     override func viewWillAppear(_: Bool) {
@@ -70,7 +70,7 @@ class WeatherCityListViewController: UIViewController {
 
     func setWeatherDataRefreshControl() {
         weatherDataRefreshControl.addTarget(self, action: #selector(refreshWeatherTableViewData(_:)), for: .valueChanged)
-        weatherMainView.weatherMainTableView.refreshControl = weatherDataRefreshControl
+        weatherCityListView.weatherMainTableView.refreshControl = weatherDataRefreshControl
     }
 
     func setWeatherDataCheckTimer() {
@@ -89,7 +89,7 @@ class WeatherCityListViewController: UIViewController {
                     DispatchQueue.global().async {
                         self.isTimeToCheckWeatherData = false
                         DispatchQueue.main.async {
-                            self.weatherMainView.weatherMainTableView.reloadData()
+                            self.weatherCityListView.weatherMainTableView.reloadData()
                             self.stopIndicatorAnimating()
                         }
                     }
@@ -114,10 +114,10 @@ class WeatherCityListViewController: UIViewController {
         locationManager.startUpdatingLocation()
     }
 
-    func setMainViewController() {
+    func setCityListViewController() {
         makeSubviews()
-        weatherMainView.weatherMainTableView.delegate = self
-        weatherMainView.weatherMainTableView.dataSource = self
+        weatherCityListView.weatherMainTableView.delegate = self
+        weatherCityListView.weatherMainTableView.dataSource = self
         WeatherAPI.shared.delegate = self
     }
 
@@ -171,7 +171,7 @@ class WeatherCityListViewController: UIViewController {
 
         DispatchQueue.main.async {
             self.stopIndicatorAnimating()
-            self.weatherMainView.weatherMainTableView.reloadData()
+            self.weatherCityListView.weatherMainTableView.reloadData()
         }
     }
 
@@ -227,7 +227,7 @@ extension WeatherCityListViewController: UITableViewDelegate {
 
     func tableView(_: UITableView, viewForFooterInSection _: Int) -> UIView? {
         let footerView = WeatherCityListTableFooterView()
-        footerView.backgroundColor = CommonColor.weatherMainTableFooterView
+        footerView.backgroundColor = CommonColor.weatherCityListTableFooterView
         setFooterViewButtonTarget(footerView: footerView)
         return footerView
     }
@@ -349,7 +349,7 @@ extension WeatherCityListViewController: WeatherAPIDelegate {
             self.weatherDataRefreshControl.endRefreshing()
             self.weatherDataRefreshControl.isHidden = true
             self.stopIndicatorAnimating()
-            self.weatherMainView.weatherMainTableView.reloadData()
+            self.weatherCityListView.weatherMainTableView.reloadData()
         }
     }
 
@@ -370,6 +370,6 @@ extension WeatherCityListViewController: UIViewSettingProtocol {
 
 extension WeatherCityListViewController: CellSettingProtocol {
     func registerCell() {
-        weatherMainView.weatherMainTableView.register(WeatherCityListTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weatherCityListTableCell)
+        weatherCityListView.weatherMainTableView.register(WeatherCityListTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weatherCityListTableCell)
     }
 }

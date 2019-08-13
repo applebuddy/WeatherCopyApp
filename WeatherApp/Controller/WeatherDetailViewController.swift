@@ -22,9 +22,9 @@ class WeatherDetailViewController: UIViewController {
     /// * 설정한 지역 별 날씨정보를 보여준다.
     var weatherPageViewController: UIPageViewController?
 
-    lazy var weatherMainViewController: WeatherCityListViewController = {
-        let weatherMainViewController = WeatherCityListViewController()
-        return weatherMainViewController
+    lazy var weatherCityListViewController: WeatherCityListViewController = {
+        let weatherCityListViewController = WeatherCityListViewController()
+        return weatherCityListViewController
     }()
 
     let weatherPageControl: UIPageControl = {
@@ -50,16 +50,16 @@ class WeatherDetailViewController: UIViewController {
         return listBarButton
     }()
 
-    let weatherInfoView: weatherDetailView = {
-        let weatherInfoView = weatherDetailView()
-        return weatherInfoView
+    let weatherDetailView: WeatherDetailView = {
+        let weatherDetailView = WeatherDetailView()
+        return weatherDetailView
     }()
 
     // MARK: - Life Cycle
 
     override func loadView() {
         super.loadView()
-        view = weatherInfoView
+        view = weatherDetailView
     }
 
     override func viewDidLoad() {
@@ -70,18 +70,17 @@ class WeatherDetailViewController: UIViewController {
         CommonData.shared.setUserDefaultsData() // 저장 된 서브 날씨데이터를 추가한다.
 
         makeSubviews()
-        setInfoViewController()
+        setDetailViewController()
         setButtonTarget()
         setToolBarButtonItem()
         makeConstraints()
-        presentToMainView()
+        presentToCityListView()
     }
 
     override func viewWillAppear(_: Bool) {
         super.viewWillAppear(true)
 
         // 페이지뷰 컨트롤러 갱신
-
         setWeatherPageViewController()
     }
 
@@ -125,8 +124,8 @@ class WeatherDetailViewController: UIViewController {
         return contentViewController
     }
 
-    func setInfoViewController() {
-        view.backgroundColor = CommonColor.weatherInfoView
+    func setDetailViewController() {
+        view.backgroundColor = CommonColor.weatherDetailView
         setWeatherPageViewController()
     }
 
@@ -151,13 +150,13 @@ class WeatherDetailViewController: UIViewController {
         }
         let height = CGFloat(max(0, WeatherCellHeight.detailTableHeaderCell - max(0, scrollView.contentOffset.y)))
         let alphaValue = pow(height / WeatherCellHeight.detailTableHeaderCell, 10)
-        weatherInfoView.weatherInfoTableHeaderView.setTableHeaderViewAlpha(alpha: CGFloat(alphaValue))
+        weatherDetailView.weatherInfoTableHeaderView.setTableHeaderViewAlpha(alpha: CGFloat(alphaValue))
     }
 
     // MARK: Check Event
 
-    func presentToMainView() {
-        present(weatherMainViewController, animated: true)
+    func presentToCityListView() {
+        present(weatherCityListViewController, animated: true)
     }
 
     // MARK: - Button Event
@@ -170,7 +169,7 @@ class WeatherDetailViewController: UIViewController {
     }
 
     @objc func listButtonPressed(_: UIButton) {
-        present(weatherMainViewController, animated: true, completion: nil)
+        present(weatherCityListViewController, animated: true, completion: nil)
     }
 }
 

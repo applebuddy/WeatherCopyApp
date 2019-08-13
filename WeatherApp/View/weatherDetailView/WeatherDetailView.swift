@@ -1,5 +1,5 @@
 //
-//  WeatherInfoView.swift
+//  WeatherDetailView.swift
 //  WeatherApp
 //
 //  Created by MinKyeongTae on 31/07/2019.
@@ -8,8 +8,8 @@
 
 import UIKit
 
-/// WeatherInfoViewController 메인타이틀 정보 뷰
-class weatherDetailView: UIView {
+/// WeatherDetailViewController 메인타이틀 정보 뷰
+class WeatherDetailView: UIView {
     let weatherTitleView: weatherDetailTitleView = {
         let weatherTitleView = weatherDetailTitleView()
         weatherTitleView.backgroundColor = .black
@@ -40,7 +40,7 @@ class weatherDetailView: UIView {
 
     // MARK: - Set Method
 
-    func setInfoViewData(title: String, subTitle: String) {
+    func setDetailViewData(title: String, subTitle: String) {
         weatherTitleView.weatherTitleLabel.text = "\(title)"
         weatherTitleView.weatherSubTitleLabel.text = "\(subTitle)"
     }
@@ -76,7 +76,7 @@ class weatherDetailView: UIView {
     }
 }
 
-extension weatherDetailView: UIViewSettingProtocol {
+extension WeatherDetailView: UIViewSettingProtocol {
     func makeSubviews() {
         addSubview(weatherTitleView)
         addSubview(weatherInfoTableView)

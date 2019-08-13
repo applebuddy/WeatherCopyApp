@@ -21,11 +21,6 @@ class WeatherDetailContentViewController: UIViewController {
 
     // MARK: - UI
 
-    lazy var weatherMainViewController: WeatherCityListViewController = {
-        let weatherMainViewController = WeatherCityListViewController()
-        return weatherMainViewController
-    }()
-
     let listBarButton: UIButton = {
         let listBarButton = UIButton(type: .custom)
         listBarButton.setImage(UIImage(named: AssetIdentifier.Image.weatherList), for: .normal)
@@ -39,22 +34,22 @@ class WeatherDetailContentViewController: UIViewController {
         return presentViewButton
     }()
 
-    let contentView: weatherDetailView = {
-        let contentView = weatherDetailView()
-        return contentView
+    let weatherDetailContentView: WeatherDetailView = {
+        let weatherDetailContentView = WeatherDetailView()
+        return weatherDetailContentView
     }()
 
     // MARK: - Life Cycle
 
     override func loadView() {
         super.loadView()
-        view = contentView
+        view = weatherDetailContentView
     }
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        setInfoViewController()
-        setInfoView()
+        setDetailViewController()
+        setDetailView()
         registerCell()
         setTableHeaderView()
         makeConstraints()
@@ -66,8 +61,8 @@ class WeatherDetailContentViewController: UIViewController {
 
         DispatchQueue.main.async {
             self.setWeatherData()
-            self.contentView.weatherTitleView.layoutIfNeeded()
-            self.contentView.layoutIfNeeded()
+            self.weatherDetailContentView.weatherTitleView.layoutIfNeeded()
+            self.weatherDetailContentView.layoutIfNeeded()
         }
     }
 
@@ -85,22 +80,22 @@ class WeatherDetailContentViewController: UIViewController {
 
     func setWeatherData() {
         guard let nowWeatherData = CommonData.shared.weatherDataList[CommonData.shared.selectedMainCellIndex].subData,
-            let infoViewTitle = CommonData.shared.weatherDataList[CommonData.shared.selectedMainCellIndex].subCityName else { return }
-        let infoViewSubTitle = nowWeatherData.currently.summary
-        contentView.setInfoViewData(title: infoViewTitle, subTitle: infoViewSubTitle)
+            let detailViewTitle = CommonData.shared.weatherDataList[CommonData.shared.selectedMainCellIndex].subCityName else { return }
+        let detailViewSubTitle = nowWeatherData.currently.summary
+        weatherDetailContentView.setDetailViewData(title: detailViewTitle, subTitle: detailViewSubTitle)
     }
 
-    func setInfoViewController() {
-        view.backgroundColor = CommonColor.weatherInfoView
+    func setDetailViewController() {
+        view.backgroundColor = CommonColor.weatherDetailView
     }
 
-    func setInfoView() {
-        contentView.weatherInfoTableView.dataSource = self
-        contentView.weatherInfoTableView.delegate = self
+    func setDetailView() {
+        weatherDetailContentView.weatherInfoTableView.dataSource = self
+        weatherDetailContentView.weatherInfoTableView.delegate = self
     }
 
     func setTableHeaderView() {
-        headerHeightConstraint = contentView.weatherInfoTableHeaderView.heightAnchor.constraint(equalToConstant: WeatherCellHeight.detailTableHeaderCell)
+        headerHeightConstraint = weatherDetailContentView.weatherInfoTableHeaderView.heightAnchor.constraint(equalToConstant: WeatherCellHeight.detailTableHeaderCell)
         headerHeightConstraint?.isActive = true
     }
 
@@ -110,26 +105,12 @@ class WeatherDetailContentViewController: UIViewController {
         }
         let height = CGFloat(max(0, WeatherCellHeight.detailTableHeaderCell - max(0, scrollView.contentOffset.y)))
         let alphaValue = pow(height / WeatherCellHeight.detailTableHeaderCell, 10)
-        contentView.weatherInfoTableHeaderView.setTableHeaderViewAlpha(alpha: CGFloat(alphaValue))
+        weatherDetailContentView.weatherInfoTableHeaderView.setTableHeaderViewAlpha(alpha: CGFloat(alphaValue))
     }
 
     // MARK: Check Event
 
     // MARK: - Button Event
-
-//
-//    @objc func linkButtonPressed(_: UIButton) {
-//        // ✭ URL 링크주소는 파싱구현 이후 다시 수정한다.
-//        let latitude = CommonData.shared.mainCoordinate.latitude
-//        let longitude = CommonData.shared.mainCoordinate.longitude
-//        CommonData.shared.openWeatherURL(latitude: latitude, longitude: longitude)
-//    }
-//
-//    @objc func listButtonPressed(_: UIButton) {
-//        present(weatherMainViewController, animated: true, completion: nil)
-//    }
-//
-//    @objc func presentViewButtonPressed(_: UIButton) {}
 }
 
 // MARK: - UITableView Protocol
@@ -155,7 +136,7 @@ extension WeatherDetailContentViewController: UITableViewDelegate {
         switch sectionIndex {
         case .mainSection:
 
-            let weatherInfoTableHeaderView = contentView.weatherInfoTableHeaderView
+            let weatherInfoTableHeaderView = weatherDetailContentView.weatherInfoTableHeaderView
             let weatherData = CommonData.shared.weatherDataList[pageViewControllerIndex].subData
             guard let mainCelsius = weatherData?.currently.temperature,
                 let minCelsius = weatherData?.daily.data[pageViewControllerIndex].temperatureLow,
@@ -249,7 +230,7 @@ extension WeatherDetailContentViewController: UIViewSettingProtocol {
 
 extension WeatherDetailContentViewController: CellSettingProtocol {
     func registerCell() {
-        contentView.weatherInfoTableView.register(WeatherHourInfoTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weatherHourInfoTableCell)
-        contentView.weatherInfoTableView.register(WeatherSubInfoTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weatherWeekInfoTableCell)
+        weatherDetailContentView.weatherInfoTableView.register(WeatherHourInfoTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weatherHourInfoTableCell)
+        weatherDetailContentView.weatherInfoTableView.register(WeatherSubInfoTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weatherWeekInfoTableCell)
     }
 }

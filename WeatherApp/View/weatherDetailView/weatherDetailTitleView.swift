@@ -9,7 +9,7 @@
 
 import UIKit
 
-/// WeatherInfoViewController 메인 타이틀 뷰
+/// WeatherdetailViewController 메인 타이틀 뷰
 class weatherDetailTitleView: UIView {
     let weatherTitleLabel: UILabel = {
         let weatherTitleLabel = UILabel()
