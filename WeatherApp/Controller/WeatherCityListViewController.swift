@@ -9,7 +9,7 @@
 import CoreLocation
 import UIKit
 
-class WeatherMainViewController: UIViewController {
+class WeatherCityListViewController: UIViewController {
     // MARK: - Property
 
     let locationManager = CLLocationManager()
@@ -29,8 +29,8 @@ class WeatherMainViewController: UIViewController {
         return weatherCitySearchViewController
     }()
 
-    let weatherMainView: WeatherMainView = {
-        let weatherMainView = WeatherMainView()
+    let weatherMainView: WeatherCityListView = {
+        let weatherMainView = WeatherCityListView()
         return weatherMainView
     }()
 
@@ -123,7 +123,7 @@ class WeatherMainViewController: UIViewController {
 
     func setActivityIndicatorContainerView() {}
 
-    func setFooterViewButtonTarget(footerView: WeatherMainTableFooterView) {
+    func setFooterViewButtonTarget(footerView: WeatherCityListTableFooterView) {
         footerView.celsiusToggleButton.addTarget(self, action: #selector(celsiusToggleButtonPressed(_:)), for: .touchUpInside)
         footerView.addCityButton.addTarget(self, action: #selector(addCityButtonPressed(_:)), for: .touchUpInside)
         footerView.weatherLinkButton.addTarget(self, action: #selector(weatherLinkButtonPressed(_:)), for: .touchUpInside)
@@ -216,7 +216,7 @@ class WeatherMainViewController: UIViewController {
 
 // MARK: UITableView Delegate
 
-extension WeatherMainViewController: UITableViewDelegate {
+extension WeatherCityListViewController: UITableViewDelegate {
     func scrollViewDidScroll(_: UIScrollView) {}
 
     func tableView(_: UITableView, viewForHeaderInSection _: Int) -> UIView? {
@@ -226,18 +226,18 @@ extension WeatherMainViewController: UITableViewDelegate {
     }
 
     func tableView(_: UITableView, viewForFooterInSection _: Int) -> UIView? {
-        let footerView = WeatherMainTableFooterView()
+        let footerView = WeatherCityListTableFooterView()
         footerView.backgroundColor = CommonColor.weatherMainTableFooterView
         setFooterViewButtonTarget(footerView: footerView)
         return footerView
     }
 
     func tableView(_: UITableView, heightForRowAt _: IndexPath) -> CGFloat {
-        return WeatherCellHeight.mainTableViewCell
+        return WeatherCellHeight.cityListTableViewCell
     }
 
     func tableView(_ tableView: UITableView, heightForFooterInSection _: Int) -> CGFloat {
-        return WeatherViewHeight.weatherMainBottomView
+        return WeatherViewHeight.weatherCityListBottomView
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -255,7 +255,7 @@ extension WeatherMainViewController: UITableViewDelegate {
 
 // MARK: UITableView DataSource
 
-extension WeatherMainViewController: UITableViewDataSource {
+extension WeatherCityListViewController: UITableViewDataSource {
     func numberOfSections(in _: UITableView) -> Int {
         return 1
     }
@@ -265,7 +265,7 @@ extension WeatherMainViewController: UITableViewDataSource {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        guard let weatherMainCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherMainTableCell, for: indexPath) as? WeatherMainTableViewCell else { return UITableViewCell() }
+        guard let weatherMainCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherCityListTableCell, for: indexPath) as? WeatherCityListTableViewCell else { return UITableViewCell() }
 
         if indexPath.row == 0 {
             weatherMainCell.mainIndicatorImageView.image = UIImage(named: AssetIdentifier.Image.mainIndicator)
@@ -318,7 +318,7 @@ extension WeatherMainViewController: UITableViewDataSource {
 
 // MARK: - CLLocationManager Protocol
 
-extension WeatherMainViewController: CLLocationManagerDelegate {
+extension WeatherCityListViewController: CLLocationManagerDelegate {
     /// * **위치가 업데이트 될 때마다 실행 되는 델리게이트 메서드**
 
     func locationManager(_ manager: CLLocationManager, didUpdateLocations _: [CLLocation]) {
@@ -334,7 +334,7 @@ extension WeatherMainViewController: CLLocationManagerDelegate {
     func locationManagerDidResumeLocationUpdates(_: CLLocationManager) {}
 }
 
-extension WeatherMainViewController: WeatherAPIDelegate {
+extension WeatherCityListViewController: WeatherAPIDelegate {
     func weatherAPIDidError(_: WeatherAPI) {
         DispatchQueue.global().async {
             self.isTimeToCheckWeatherData = false
@@ -360,7 +360,7 @@ extension WeatherMainViewController: WeatherAPIDelegate {
     }
 }
 
-extension WeatherMainViewController: UIViewSettingProtocol {
+extension WeatherCityListViewController: UIViewSettingProtocol {
     func makeSubviews() {
         view.addSubview(activityIndicatorContainerView)
     }
@@ -368,8 +368,8 @@ extension WeatherMainViewController: UIViewSettingProtocol {
     func makeConstraints() {}
 }
 
-extension WeatherMainViewController: CellSettingProtocol {
+extension WeatherCityListViewController: CellSettingProtocol {
     func registerCell() {
-        weatherMainView.weatherMainTableView.register(WeatherMainTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weatherMainTableCell)
+        weatherMainView.weatherMainTableView.register(WeatherCityListTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weatherCityListTableCell)
     }
 }

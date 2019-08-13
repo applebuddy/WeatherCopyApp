@@ -9,7 +9,7 @@
 import UIKit
 
 /// WeatherMainViewController 메인 테이블뷰 셀
-class WeatherMainTableViewCell: UITableViewCell {
+class WeatherCityListTableViewCell: UITableViewCell {
     // MARK: - Property
 
     // MARK: - UI
@@ -68,7 +68,7 @@ class WeatherMainTableViewCell: UITableViewCell {
     }
 }
 
-extension WeatherMainTableViewCell: UIViewSettingProtocol {
+extension WeatherCityListTableViewCell: UIViewSettingProtocol {
     func makeSubviews() {
         addSubview(nowTimeLabel)
         addSubview(mainIndicatorImageView)

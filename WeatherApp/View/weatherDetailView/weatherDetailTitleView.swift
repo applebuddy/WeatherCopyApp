@@ -10,7 +10,7 @@
 import UIKit
 
 /// WeatherInfoViewController 메인 타이틀 뷰
-public class WeatherTitleView: UIView {
+class weatherDetailTitleView: UIView {
     let weatherTitleLabel: UILabel = {
         let weatherTitleLabel = UILabel()
         weatherTitleLabel.text = "_"
@@ -41,7 +41,7 @@ public class WeatherTitleView: UIView {
     }
 }
 
-extension WeatherTitleView: UIViewSettingProtocol {
+extension weatherDetailTitleView: UIViewSettingProtocol {
     func makeSubviews() {
         addSubview(weatherTitleLabel)
         addSubview(weatherSubTitleLabel)

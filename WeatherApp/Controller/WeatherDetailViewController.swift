@@ -10,7 +10,7 @@ import CoreLocation
 import MapKit
 import UIKit
 
-class WeatherInfoViewController: UIViewController {
+class WeatherDetailViewController: UIViewController {
     // MARK: - Property
 
     let locationManager = CLLocationManager()
@@ -22,8 +22,8 @@ class WeatherInfoViewController: UIViewController {
     /// * 설정한 지역 별 날씨정보를 보여준다.
     var weatherPageViewController: UIPageViewController?
 
-    lazy var weatherMainViewController: WeatherMainViewController = {
-        let weatherMainViewController = WeatherMainViewController()
+    lazy var weatherMainViewController: WeatherCityListViewController = {
+        let weatherMainViewController = WeatherCityListViewController()
         return weatherMainViewController
     }()
 
@@ -50,8 +50,8 @@ class WeatherInfoViewController: UIViewController {
         return listBarButton
     }()
 
-    let weatherInfoView: WeatherInfoView = {
-        let weatherInfoView = WeatherInfoView()
+    let weatherInfoView: weatherDetailView = {
+        let weatherInfoView = weatherDetailView()
         return weatherInfoView
     }()
 
@@ -114,8 +114,8 @@ class WeatherInfoViewController: UIViewController {
 
     func setPageControl() {}
 
-    func makeContentViewController(index: Int) -> ContentViewController? {
-        let contentViewController = ContentViewController()
+    func makeContentViewController(index: Int) -> WeatherDetailContentViewController? {
+        let contentViewController = WeatherDetailContentViewController()
         if index >= CommonData.shared.weatherDataList.count {
             contentViewController.pageViewControllerIndex = CommonData.shared.selectedMainCellIndex
         } else {
@@ -149,8 +149,8 @@ class WeatherInfoViewController: UIViewController {
         if scrollView.contentOffset.y <= 0 {
             scrollView.contentOffset.y = CGFloat.zero
         }
-        let height = CGFloat(max(0, WeatherCellHeight.infoTableHeaderCell - max(0, scrollView.contentOffset.y)))
-        let alphaValue = pow(height / WeatherCellHeight.infoTableHeaderCell, 10)
+        let height = CGFloat(max(0, WeatherCellHeight.detailTableHeaderCell - max(0, scrollView.contentOffset.y)))
+        let alphaValue = pow(height / WeatherCellHeight.detailTableHeaderCell, 10)
         weatherInfoView.weatherInfoTableHeaderView.setTableHeaderViewAlpha(alpha: CGFloat(alphaValue))
     }
 
@@ -176,16 +176,16 @@ class WeatherInfoViewController: UIViewController {
 
 // MARK: - PageView Protocol
 
-extension WeatherInfoViewController: UIPageViewControllerDelegate {
+extension WeatherDetailViewController: UIPageViewControllerDelegate {
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating _: Bool, previousViewControllers _: [UIViewController], transitionCompleted completed: Bool) {
         if completed {}
     }
 }
 
-extension WeatherInfoViewController: UIPageViewControllerDataSource {
+extension WeatherDetailViewController: UIPageViewControllerDataSource {
     // 이전으로 넘길때 컨텐츠 뷰 컨트롤러 데이터 전달
     func pageViewController(_: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-        guard let targetViewController = viewController as? ContentViewController else { return nil }
+        guard let targetViewController = viewController as? WeatherDetailContentViewController else { return nil }
         let previousIndex = targetViewController.pageViewControllerIndex
 
         if previousIndex == 0 {
@@ -197,7 +197,7 @@ extension WeatherInfoViewController: UIPageViewControllerDataSource {
     }
 
     func pageViewController(_: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-        guard let targetViewController = viewController as? ContentViewController else { return nil }
+        guard let targetViewController = viewController as? WeatherDetailContentViewController else { return nil }
 
         let contentViewControllerMaxIndex = CommonData.shared.weatherDataList.count - 1
         let nextIndex = targetViewController.pageViewControllerIndex
@@ -222,7 +222,7 @@ extension WeatherInfoViewController: UIPageViewControllerDataSource {
 
 // MARK: - Custom View Protocol
 
-extension WeatherInfoViewController: UIViewSettingProtocol {
+extension WeatherDetailViewController: UIViewSettingProtocol {
     func makeSubviews() {
         view.addSubview(weatherPageControl)
     }

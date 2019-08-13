@@ -9,15 +9,15 @@
 import UIKit
 
 /// WeatherInfoViewController 메인타이틀 정보 뷰
-public class WeatherInfoView: UIView {
-    let weatherTitleView: WeatherTitleView = {
-        let weatherTitleView = WeatherTitleView()
+class weatherDetailView: UIView {
+    let weatherTitleView: weatherDetailTitleView = {
+        let weatherTitleView = weatherDetailTitleView()
         weatherTitleView.backgroundColor = .black
         return weatherTitleView
     }()
 
-    let weatherInfoTableView: WeatherInfoTableView = {
-        let weatherTableView = WeatherInfoTableView(frame: CGRect.zero, style: .grouped)
+    let weatherInfoTableView: WeatherDetailTableView = {
+        let weatherTableView = WeatherDetailTableView(frame: CGRect.zero, style: .grouped)
         return weatherTableView
     }()
 
@@ -71,12 +71,12 @@ public class WeatherInfoView: UIView {
             weatherInfoTableHeaderView.centerXAnchor.constraint(equalTo: centerXAnchor),
             weatherInfoTableHeaderView.topAnchor.constraint(equalTo: weatherTitleView.bottomAnchor),
             weatherInfoTableHeaderView.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width),
-            weatherInfoTableHeaderView.heightAnchor.constraint(equalToConstant: WeatherCellHeight.infoTableHeaderCell),
+            weatherInfoTableHeaderView.heightAnchor.constraint(equalToConstant: WeatherCellHeight.detailTableHeaderCell),
         ])
     }
 }
 
-extension WeatherInfoView: UIViewSettingProtocol {
+extension weatherDetailView: UIViewSettingProtocol {
     func makeSubviews() {
         addSubview(weatherTitleView)
         addSubview(weatherInfoTableView)

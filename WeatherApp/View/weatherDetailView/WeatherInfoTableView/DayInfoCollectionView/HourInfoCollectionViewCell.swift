@@ -9,7 +9,7 @@
 import UIKit
 
 /// 24시간 날씨예보 정보 컬렉션뷰 셀
-public class HourInfoCollectionViewCell: UICollectionViewCell {
+class HourInfoCollectionViewCell: UICollectionViewCell {
     let cellImageView: UIImageView = {
         let cellImageView = UIImageView()
         cellImageView.contentMode = .scaleAspectFit

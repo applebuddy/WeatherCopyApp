@@ -10,7 +10,7 @@ import UIKit
 
 /// * View Heights
 struct WeatherViewHeight {
-    static let weatherMainBottomView: CGFloat = 100
+    static let weatherCityListBottomView: CGFloat = 100
     static let titleViewHeight: CGFloat = 100
     static let subInfoTableView: CGFloat = UIScreen.main.bounds.size.height - (WeatherViewHeight.titleViewHeight + WeatherViewHeight.todayInfoTableHeaderView + WeatherCellHeight.hourInfoCollectionCell)
     static let todayInfoTableHeaderView: CGFloat = 60

@@ -10,11 +10,11 @@ import UIKit
 
 /// WeatherMainViewController 메인 뷰
 /// * **설정 한 장소목록 및 날씨정보를 나타낸다.**
-public class WeatherMainView: UIView {
+class WeatherCityListView: UIView {
     // MARK: - UI
 
-    let weatherMainTableView: WeatherMainTableView = {
-        let weatherMainTableView = WeatherMainTableView(frame: CGRect.zero, style: .grouped)
+    let weatherMainTableView: WeatherCityListTableView = {
+        let weatherMainTableView = WeatherCityListTableView(frame: CGRect.zero, style: .grouped)
         return weatherMainTableView
     }()
 
@@ -40,7 +40,7 @@ public class WeatherMainView: UIView {
     }
 }
 
-extension WeatherMainView: UIViewSettingProtocol {
+extension WeatherCityListView: UIViewSettingProtocol {
     func makeSubviews() {
         addSubview(weatherMainTableView)
     }

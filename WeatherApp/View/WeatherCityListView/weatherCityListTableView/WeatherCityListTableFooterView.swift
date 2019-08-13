@@ -10,7 +10,7 @@ import UIKit
 
 /// WeatherMainTableViewCell 하단 뷰
 /// * **WeatherMainTableViewCell 하단의 버튼기능을 나타낸다.**
-public class WeatherMainTableFooterView: UIView {
+class WeatherCityListTableFooterView: UIView {
     let weatherLinkButton: UIButton = {
         let weatherLinkButton = UIButton(type: .custom)
         weatherLinkButton.setImage(UIImage(named: AssetIdentifier.Image.weatherLink), for: .normal)
@@ -54,7 +54,7 @@ public class WeatherMainTableFooterView: UIView {
     }
 }
 
-extension WeatherMainTableFooterView: UIViewSettingProtocol {
+extension WeatherCityListTableFooterView: UIViewSettingProtocol {
     func makeSubviews() {
         addSubview(celsiusToggleButton)
         addSubview(addCityButton)
