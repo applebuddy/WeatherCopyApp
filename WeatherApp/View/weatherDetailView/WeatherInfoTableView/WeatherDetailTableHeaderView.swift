@@ -9,7 +9,7 @@
 import UIKit
 
 /// 메인타이틀 하단의 테이블 헤더 뷰
-public class WeatherInfoTableHeaderView: UIView {
+public class WeatherDetailTableHeaderView: UIView {
     let mainCelsiusLabel: UILabel = {
         let celsiusLabel = UILabel()
         celsiusLabel.text = ""
@@ -97,7 +97,7 @@ public class WeatherInfoTableHeaderView: UIView {
     }
 }
 
-extension WeatherInfoTableHeaderView: UIViewSettingProtocol {
+extension WeatherDetailTableHeaderView: UIViewSettingProtocol {
     func makeSubviews() {
         addSubview(mainCelsiusLabel)
         addSubview(minCelsiusLabel)

@@ -13,8 +13,6 @@ final class CommonData {
     static let shared = CommonData()
 
     var weatherURLString = "https://weather.com/ko-KR/weather/today/"
-
-    var mainCityName = "-"
     var mainCelsius: Double?
 
     var subCityNameList = [String]()
@@ -82,6 +80,10 @@ final class CommonData {
         mainCelsius = Double(celsius)
     }
 
+    func setCityName(cityName: String, index: Int) {
+        weatherDataList[index].subCityName = cityName
+    }
+
     func setLocationAuthData(isAuth: Bool) {
         UserDefaults.standard.set(isAuth, forKey: DataIdentifier.isLocationAuthority)
         isLocationAuthority = isAuth
@@ -136,7 +138,7 @@ final class CommonData {
             guard let address = placeMarks?.first else { return }
             let cityName = address.dictionaryWithValues(forKeys: ["locality"])["locality"]
             guard let cityNameString = cityName as? String else { return }
-            self.mainCityName = cityNameString
+            CommonData.shared.setCityName(cityName: cityNameString, index: 0)
         }
     }
 
@@ -196,11 +198,6 @@ final class CommonData {
         case .fahrenheit:
             temperatureType = .celsius
         }
-    }
-
-    func setMainWeatherData(weatherData: WeatherAPIData) {
-        weatherDataList[0].subCityName = mainCityName
-        weatherDataList[0].subData = weatherData
     }
 
     func setIsAppForegroundValue(isForeground: Bool) {

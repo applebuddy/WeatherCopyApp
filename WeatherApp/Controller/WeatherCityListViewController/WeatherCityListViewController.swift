@@ -15,7 +15,7 @@ class WeatherCityListViewController: UIViewController {
     let locationManager = CLLocationManager()
     let weatherDataRefreshControl: UIRefreshControl = UIRefreshControl()
     var isTimeToCheckWeatherData: Bool = true
-    let weatherDataCheckInterval: Double = 5
+    let weatherDataCheckInterval: Double = 10
 
     var weatherDataCheckTimer: Timer = {
         let weatherDataCheckTimer = Timer()
@@ -47,8 +47,8 @@ class WeatherCityListViewController: UIViewController {
         super.viewDidLoad()
         setCityListViewController()
         setActivityIndicatorContainerView()
-        registerCell()
         setWeatherDataRefreshControl()
+        registerCell()
     }
 
     override func loadView() {
@@ -59,7 +59,7 @@ class WeatherCityListViewController: UIViewController {
     override func viewWillAppear(_: Bool) {
         super.viewWillAppear(true)
         checksLocationAuthority()
-        requestSubWeatherData()
+        requestMainWeatherData()
     }
 
     // MARK: - Set Method
@@ -69,6 +69,7 @@ class WeatherCityListViewController: UIViewController {
     }
 
     func setWeatherDataRefreshControl() {
+        weatherDataRefreshControl.isHidden = true
         weatherDataRefreshControl.addTarget(self, action: #selector(refreshWeatherTableViewData(_:)), for: .valueChanged)
         weatherCityListView.weatherMainTableView.refreshControl = weatherDataRefreshControl
     }
@@ -85,14 +86,11 @@ class WeatherCityListViewController: UIViewController {
                     let longitude = value.longitude else { return }
                 WeatherAPI.shared.requestAPI(latitude: latitude, longitude: longitude) { subWeatherAPIData in
                     CommonData.shared.setWeatherData(subWeatherAPIData, index: index)
-
-                    DispatchQueue.global().async {
-                        self.isTimeToCheckWeatherData = false
-                        DispatchQueue.main.async {
-                            self.weatherCityListView.weatherMainTableView.reloadData()
-                            self.stopIndicatorAnimating()
-                        }
+                    DispatchQueue.main.async {
+                        self.weatherCityListView.weatherMainTableView.reloadData()
+                        self.stopIndicatorAnimating()
                     }
+                    self.isTimeToCheckWeatherData = false
                 }
             }
         }
@@ -103,7 +101,10 @@ class WeatherCityListViewController: UIViewController {
         let mainLongitude = CommonData.shared.mainCoordinate.longitude
 
         WeatherAPI.shared.requestAPI(latitude: mainLatitude, longitude: mainLongitude) { weatherAPIData in
-            CommonData.shared.setMainWeatherData(weatherData: weatherAPIData)
+            CommonData.shared.setWeatherData(weatherAPIData, index: 0)
+            DispatchQueue.main.async {
+                self.weatherCityListView.weatherMainTableView.reloadData()
+            }
             self.requestSubWeatherData()
         }
     }
@@ -121,7 +122,9 @@ class WeatherCityListViewController: UIViewController {
         WeatherAPI.shared.delegate = self
     }
 
-    func setActivityIndicatorContainerView() {}
+    func setActivityIndicatorContainerView() {
+        activityIndicatorContainerView.isHidden = true
+    }
 
     func setFooterViewButtonTarget(footerView: WeatherCityListTableFooterView) {
         footerView.celsiusToggleButton.addTarget(self, action: #selector(celsiusToggleButtonPressed(_:)), for: .touchUpInside)
@@ -271,8 +274,9 @@ extension WeatherCityListViewController: UITableViewDataSource {
             weatherMainCell.mainIndicatorImageView.image = UIImage(named: AssetIdentifier.Image.mainIndicator)
 
             let mainWeatherData = CommonData.shared.weatherDataList[0].subData
-            let cityName = CommonData.shared.mainCityName
+
             guard let timeStamp = mainWeatherData?.currently.time,
+                let cityName = CommonData.shared.weatherDataList[0].subCityName,
                 let temperature = mainWeatherData?.hourly.data[0].temperature,
                 let timeZone = mainWeatherData?.timezone else {
                 return weatherMainCell
@@ -340,6 +344,7 @@ extension WeatherCityListViewController: WeatherAPIDelegate {
             self.isTimeToCheckWeatherData = false
             DispatchQueue.main.async {
                 self.weatherDataRefreshControl.endRefreshing()
+                self.stopIndicatorAnimating()
             }
         }
     }
@@ -349,7 +354,6 @@ extension WeatherCityListViewController: WeatherAPIDelegate {
             self.weatherDataRefreshControl.endRefreshing()
             self.weatherDataRefreshControl.isHidden = true
             self.stopIndicatorAnimating()
-            self.weatherCityListView.weatherMainTableView.reloadData()
         }
     }
 

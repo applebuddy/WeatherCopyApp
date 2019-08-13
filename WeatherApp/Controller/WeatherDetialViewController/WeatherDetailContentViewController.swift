@@ -15,7 +15,6 @@ class WeatherDetailContentViewController: UIViewController {
 
     let locationManager = CLLocationManager()
     var headerHeightConstraint: NSLayoutConstraint?
-    var nowWeatherData: WeatherAPIData?
     var isAppearViewController = false
     var pageViewControllerIndex = 0
 
@@ -58,24 +57,12 @@ class WeatherDetailContentViewController: UIViewController {
     override func viewWillAppear(_: Bool) {
         super.viewWillAppear(true)
         isAppearViewController = false
-
-        DispatchQueue.main.async {
-            self.setWeatherData()
-            self.weatherDetailContentView.weatherTitleView.layoutIfNeeded()
-            self.weatherDetailContentView.layoutIfNeeded()
-        }
     }
 
     // MARK: - Set Method
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
-    }
-
-    func setLocationManager() {
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.startUpdatingLocation()
     }
 
     func setWeatherData() {
@@ -95,7 +82,7 @@ class WeatherDetailContentViewController: UIViewController {
     }
 
     func setTableHeaderView() {
-        headerHeightConstraint = weatherDetailContentView.weatherInfoTableHeaderView.heightAnchor.constraint(equalToConstant: WeatherCellHeight.detailTableHeaderCell)
+        headerHeightConstraint = weatherDetailContentView.weatherDetailTableHeaderView.heightAnchor.constraint(equalToConstant: WeatherCellHeight.detailTableHeaderCell)
         headerHeightConstraint?.isActive = true
     }
 
@@ -105,7 +92,7 @@ class WeatherDetailContentViewController: UIViewController {
         }
         let height = CGFloat(max(0, WeatherCellHeight.detailTableHeaderCell - max(0, scrollView.contentOffset.y)))
         let alphaValue = pow(height / WeatherCellHeight.detailTableHeaderCell, 10)
-        weatherDetailContentView.weatherInfoTableHeaderView.setTableHeaderViewAlpha(alpha: CGFloat(alphaValue))
+        weatherDetailContentView.weatherDetailTableHeaderView.setTableHeaderViewAlpha(alpha: CGFloat(alphaValue))
     }
 
     // MARK: Check Event
@@ -126,7 +113,6 @@ extension WeatherDetailContentViewController: UITableViewDelegate {
 
         switch rowIndex {
         case .hourInfoRow: break
-//            guard let dayInfoCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherHourInfoTableCell, for: indexPath) as? WeatherHourInfoTableViewCell else { return }
         default: break
         }
     }
@@ -136,8 +122,9 @@ extension WeatherDetailContentViewController: UITableViewDelegate {
         switch sectionIndex {
         case .mainSection:
 
-            let weatherInfoTableHeaderView = weatherDetailContentView.weatherInfoTableHeaderView
-            let weatherData = CommonData.shared.weatherDataList[pageViewControllerIndex].subData
+            print("Setting MainTitle Index: \(pageViewControllerIndex)")
+            let weatherInfoTableHeaderView = weatherDetailContentView.weatherDetailTableHeaderView
+            let weatherData = CommonData.shared.weatherDataList[CommonData.shared.selectedMainCellIndex].subData
             guard let mainCelsius = weatherData?.currently.temperature,
                 let minCelsius = weatherData?.daily.data[pageViewControllerIndex].temperatureLow,
                 let maxCelsius = weatherData?.daily.data[pageViewControllerIndex].temperatureHigh,
@@ -188,34 +175,6 @@ extension WeatherDetailContentViewController: UITableViewDataSource {
         case .separatorRow: return WeatherSeparatorTableViewCell()
         case .weekInfoRow:
             return weatherWeekInfoCell
-        }
-    }
-}
-
-extension WeatherDetailContentViewController: CLLocationManagerDelegate {
-    /// * **위치가 업데이트 될 때마다 실행 되는 델리게이트 메서드**
-
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations _: [CLLocation]) {
-        if let nowCoordinate = manager.location?.coordinate {
-            CommonData.shared.setMainCityName(latitude: nowCoordinate.latitude, longitude: nowCoordinate.longitude)
-            let nowLatitude = nowCoordinate.latitude.roundedValue(roundSize: 2)
-            let nowLongitude = nowCoordinate.longitude.roundedValue(roundSize: 2)
-
-            CommonData.shared.setMainCityName(latitude: nowLatitude, longitude: nowLongitude)
-            if !isAppearViewController {
-                CommonData.shared.setMainCoordinate(latitude: nowLatitude, longitude: nowLongitude)
-                let mainLatitude = CommonData.shared.mainCoordinate.latitude
-                let mainLongitude = CommonData.shared.mainCoordinate.longitude
-
-                WeatherAPI.shared.requestAPI(latitude: mainLatitude, longitude: mainLongitude) { weatherAPIData in
-                    CommonData.shared.setMainWeatherData(weatherData: weatherAPIData)
-
-                    DispatchQueue.global().async {
-                        self.setWeatherData()
-                        self.isAppearViewController = true
-                    }
-                }
-            }
         }
     }
 }

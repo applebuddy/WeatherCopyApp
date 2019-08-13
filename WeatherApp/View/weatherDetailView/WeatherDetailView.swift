@@ -21,8 +21,8 @@ class WeatherDetailView: UIView {
         return weatherTableView
     }()
 
-    let weatherInfoTableHeaderView: WeatherInfoTableHeaderView = {
-        let weatherInfoTableHeaderView = WeatherInfoTableHeaderView()
+    let weatherDetailTableHeaderView: WeatherDetailTableHeaderView = {
+        let weatherInfoTableHeaderView = WeatherDetailTableHeaderView()
         weatherInfoTableHeaderView.contentMode = .scaleAspectFill
         return weatherInfoTableHeaderView
     }()
@@ -66,12 +66,12 @@ class WeatherDetailView: UIView {
     }
 
     func setInfoHeaderViewContraint() {
-        weatherInfoTableHeaderView.activateAnchors()
+        weatherDetailTableHeaderView.activateAnchors()
         NSLayoutConstraint.activate([
-            weatherInfoTableHeaderView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            weatherInfoTableHeaderView.topAnchor.constraint(equalTo: weatherTitleView.bottomAnchor),
-            weatherInfoTableHeaderView.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width),
-            weatherInfoTableHeaderView.heightAnchor.constraint(equalToConstant: WeatherCellHeight.detailTableHeaderCell),
+            weatherDetailTableHeaderView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            weatherDetailTableHeaderView.topAnchor.constraint(equalTo: weatherTitleView.bottomAnchor),
+            weatherDetailTableHeaderView.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width),
+            weatherDetailTableHeaderView.heightAnchor.constraint(equalToConstant: WeatherCellHeight.detailTableHeaderCell),
         ])
     }
 }
@@ -80,7 +80,7 @@ extension WeatherDetailView: UIViewSettingProtocol {
     func makeSubviews() {
         addSubview(weatherTitleView)
         addSubview(weatherInfoTableView)
-        addSubview(weatherInfoTableHeaderView)
+        addSubview(weatherDetailTableHeaderView)
     }
 
     func makeConstraints() {

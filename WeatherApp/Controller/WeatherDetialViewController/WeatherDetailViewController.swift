@@ -121,6 +121,8 @@ class WeatherDetailViewController: UIViewController {
             contentViewController.pageViewControllerIndex = index
         }
 
+        contentViewController.setWeatherData()
+        contentViewController.weatherDetailContentView.weatherTitleView.layoutIfNeeded()
         return contentViewController
     }
 
@@ -150,7 +152,7 @@ class WeatherDetailViewController: UIViewController {
         }
         let height = CGFloat(max(0, WeatherCellHeight.detailTableHeaderCell - max(0, scrollView.contentOffset.y)))
         let alphaValue = pow(height / WeatherCellHeight.detailTableHeaderCell, 10)
-        weatherDetailView.weatherInfoTableHeaderView.setTableHeaderViewAlpha(alpha: CGFloat(alphaValue))
+        weatherDetailView.weatherDetailTableHeaderView.setTableHeaderViewAlpha(alpha: CGFloat(alphaValue))
     }
 
     // MARK: Check Event
