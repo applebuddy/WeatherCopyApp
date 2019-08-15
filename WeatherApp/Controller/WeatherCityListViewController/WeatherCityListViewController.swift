@@ -52,7 +52,6 @@ class WeatherCityListViewController: UIViewController {
     }
 
     override func loadView() {
-        super.loadView()
         view = weatherCityListView
     }
 
@@ -254,6 +253,25 @@ extension WeatherCityListViewController: UITableViewDelegate {
             cell.setSelected(false, animated: false)
         }
     }
+
+    func tableView(_: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        if indexPath.row == 0 {
+            return .none
+        } else {
+            return .delete
+        }
+    }
+
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if indexPath.row == 0 { return }
+
+        if editingStyle == .delete {
+            CommonData.shared.weatherDataList.remove(at: indexPath.row)
+            CommonData.shared.weatherLocationDataList.remove(at: indexPath.row)
+            CommonData.shared.saveWeatherDataList()
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+        }
+    }
 }
 
 // MARK: UITableView DataSource
@@ -297,25 +315,6 @@ extension WeatherCityListViewController: UITableViewDataSource {
             weatherMainCell.mainIndicatorImageView.image = nil
 
             return weatherMainCell
-        }
-    }
-
-    func tableView(_: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-        if indexPath.row == 0 {
-            return .none
-        } else {
-            return .delete
-        }
-    }
-
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if indexPath.row == 0 { return }
-
-        if editingStyle == .delete {
-            CommonData.shared.weatherDataList.remove(at: indexPath.row)
-            CommonData.shared.weatherLocationDataList.remove(at: indexPath.row)
-            CommonData.shared.saveWeatherDataList()
-            tableView.deleteRows(at: [indexPath], with: .automatic)
         }
     }
 }

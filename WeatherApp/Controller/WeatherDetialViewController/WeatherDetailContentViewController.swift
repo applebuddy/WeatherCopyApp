@@ -41,7 +41,6 @@ class WeatherDetailContentViewController: UIViewController {
     // MARK: - Life Cycle
 
     override func loadView() {
-        super.loadView()
         view = weatherDetailContentView
     }
 
@@ -122,7 +121,6 @@ extension WeatherDetailContentViewController: UITableViewDelegate {
         switch sectionIndex {
         case .mainSection:
 
-            print("Setting MainTitle Index: \(pageViewControllerIndex)")
             let weatherInfoTableHeaderView = weatherDetailContentView.weatherDetailTableHeaderView
             let weatherData = CommonData.shared.weatherDataList[CommonData.shared.selectedMainCellIndex].subData
             guard let mainCelsius = weatherData?.currently.temperature,

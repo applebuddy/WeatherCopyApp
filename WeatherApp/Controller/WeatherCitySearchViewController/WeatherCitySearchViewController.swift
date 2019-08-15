@@ -37,7 +37,6 @@ class WeatherCitySearchViewController: UIViewController {
     }
 
     override func loadView() {
-        super.loadView()
         view = weatherCitySearchView
     }
 

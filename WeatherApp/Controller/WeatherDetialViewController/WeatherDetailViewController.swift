@@ -58,7 +58,6 @@ class WeatherDetailViewController: UIViewController {
     // MARK: - Life Cycle
 
     override func loadView() {
-        super.loadView()
         view = weatherDetailView
     }
 
