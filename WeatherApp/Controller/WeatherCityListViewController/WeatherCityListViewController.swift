@@ -41,10 +41,16 @@ class WeatherCityListViewController: UIViewController {
         return activityIndicatorContainerView
     }()
 
+    lazy var cityListIndicatorView: UIActivityIndicatorView = {
+        let indicatorView = UIActivityIndicatorView()
+        return indicatorView
+    }()
+
     // MARK: - Life Cycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        cityListIndicatorView = activityIndicatorContainerView.activityIndicatorView
         setCityListViewController()
         setActivityIndicatorContainerView()
         setWeatherDataRefreshControl()
@@ -94,7 +100,7 @@ class WeatherCityListViewController: UIViewController {
                     CommonData.shared.setWeatherData(subWeatherAPIData, index: index)
                     DispatchQueue.main.async {
                         self.reloadWeatherCityListTableView()
-                        self.stopIndicatorAnimating()
+                        self.cityListIndicatorView.stopIndicatorAnimating(containerView: self.activityIndicatorContainerView)
                     }
                     self.isTimeToCheckWeatherData = false
                 }
@@ -179,7 +185,7 @@ class WeatherCityListViewController: UIViewController {
         }
 
         DispatchQueue.main.async {
-            self.stopIndicatorAnimating()
+            self.cityListIndicatorView.stopIndicatorAnimating(containerView: self.activityIndicatorContainerView)
             self.reloadWeatherCityListTableView()
         }
     }
@@ -200,18 +206,6 @@ class WeatherCityListViewController: UIViewController {
         weatherDataRefreshControl.isHidden = false
         weatherDataRefreshControl.beginRefreshing()
         requestMainWeatherData()
-    }
-
-    func startIndicatorAnimating() {
-        activityIndicatorContainerView.isHidden = false
-        activityIndicatorContainerView.activityIndicatorView.isHidden = false
-        activityIndicatorContainerView.activityIndicatorView.startAnimating()
-    }
-
-    func stopIndicatorAnimating() {
-        activityIndicatorContainerView.isHidden = true
-        activityIndicatorContainerView.activityIndicatorView.isHidden = true
-        activityIndicatorContainerView.activityIndicatorView.stopAnimating()
     }
 
     // MARK: - Timer Event
@@ -350,7 +344,7 @@ extension WeatherCityListViewController: WeatherAPIDelegate {
             self.isTimeToCheckWeatherData = false
             DispatchQueue.main.async {
                 self.weatherDataRefreshControl.endRefreshing()
-                self.stopIndicatorAnimating()
+                self.cityListIndicatorView.stopIndicatorAnimating(containerView: self.activityIndicatorContainerView)
             }
         }
     }
@@ -359,13 +353,13 @@ extension WeatherCityListViewController: WeatherAPIDelegate {
         DispatchQueue.main.async {
             self.weatherDataRefreshControl.endRefreshing()
             self.weatherDataRefreshControl.isHidden = true
-            self.stopIndicatorAnimating()
+            self.cityListIndicatorView.stopIndicatorAnimating(containerView: self.activityIndicatorContainerView)
         }
     }
 
     func weatherAPIDidRequested(_: WeatherAPI) {
         DispatchQueue.main.async {
-            self.startIndicatorAnimating()
+            self.cityListIndicatorView.startIndicatorAnimating(containerView: self.activityIndicatorContainerView)
         }
     }
 }
