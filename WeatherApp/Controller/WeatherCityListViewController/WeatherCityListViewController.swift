@@ -100,7 +100,7 @@ class WeatherCityListViewController: UIViewController {
                     CommonData.shared.setWeatherData(subWeatherAPIData, index: index)
                     DispatchQueue.main.async {
                         self.reloadWeatherCityListTableView()
-                        self.cityListIndicatorView.stopIndicatorAnimating(containerView: self.activityIndicatorContainerView)
+                        self.cityListIndicatorView.stopCustomIndicatorAnimating(containerView: self.activityIndicatorContainerView)
                     }
                     self.isTimeToCheckWeatherData = false
                 }
@@ -185,7 +185,7 @@ class WeatherCityListViewController: UIViewController {
         }
 
         DispatchQueue.main.async {
-            self.cityListIndicatorView.stopIndicatorAnimating(containerView: self.activityIndicatorContainerView)
+            self.cityListIndicatorView.stopCustomIndicatorAnimating(containerView: self.activityIndicatorContainerView)
             self.reloadWeatherCityListTableView()
         }
     }
@@ -344,7 +344,7 @@ extension WeatherCityListViewController: WeatherAPIDelegate {
             self.isTimeToCheckWeatherData = false
             DispatchQueue.main.async {
                 self.weatherDataRefreshControl.endRefreshing()
-                self.cityListIndicatorView.stopIndicatorAnimating(containerView: self.activityIndicatorContainerView)
+                self.cityListIndicatorView.stopCustomIndicatorAnimating(containerView: self.activityIndicatorContainerView)
             }
         }
     }
@@ -353,13 +353,13 @@ extension WeatherCityListViewController: WeatherAPIDelegate {
         DispatchQueue.main.async {
             self.weatherDataRefreshControl.endRefreshing()
             self.weatherDataRefreshControl.isHidden = true
-            self.cityListIndicatorView.stopIndicatorAnimating(containerView: self.activityIndicatorContainerView)
+            self.cityListIndicatorView.stopCustomIndicatorAnimating(containerView: self.activityIndicatorContainerView)
         }
     }
 
     func weatherAPIDidRequested(_: WeatherAPI) {
         DispatchQueue.main.async {
-            self.cityListIndicatorView.startIndicatorAnimating(containerView: self.activityIndicatorContainerView)
+            self.cityListIndicatorView.startCustomIndicatorAnimating(containerView: self.activityIndicatorContainerView)
         }
     }
 }

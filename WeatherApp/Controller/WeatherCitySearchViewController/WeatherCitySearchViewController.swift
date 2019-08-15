@@ -177,17 +177,17 @@ extension WeatherCitySearchViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        citySearchIndicatorView.startIndicatorAnimating(containerView: activityIndicatorContainerView)
+        citySearchIndicatorView.startCustomIndicatorAnimating(containerView: activityIndicatorContainerView)
         geoCoder.geocodeAddressString(displayedResultList[indexPath.row]) { placemarks, error in
 
             if error != nil {
-                self.citySearchIndicatorView.stopIndicatorAnimating(containerView: self.activityIndicatorContainerView)
+                self.citySearchIndicatorView.stopCustomIndicatorAnimating(containerView: self.activityIndicatorContainerView)
                 self.presentLocationDataErrorAlertController()
             }
 
             guard let placeMarks = placemarks,
                 let location = placeMarks.first?.location else {
-                self.citySearchIndicatorView.stopIndicatorAnimating(containerView: self.activityIndicatorContainerView)
+                self.citySearchIndicatorView.stopCustomIndicatorAnimating(containerView: self.activityIndicatorContainerView)
                 self.presentLocationDataErrorAlertController()
                 return
             }
@@ -195,7 +195,7 @@ extension WeatherCitySearchViewController: UITableViewDelegate {
             let defaultCityName = self.calculateDefaultCityName(placeMarks: placeMarks)
 
             CommonData.shared.addSubWeatherData(coordinate: location.coordinate, defaultCityName: defaultCityName) { isSucceed in
-                self.citySearchIndicatorView.stopIndicatorAnimating(containerView: self.activityIndicatorContainerView)
+                self.citySearchIndicatorView.stopCustomIndicatorAnimating(containerView: self.activityIndicatorContainerView)
                 if isSucceed {
                     CommonData.shared.saveWeatherDataList()
                     self.dismiss(animated: true)

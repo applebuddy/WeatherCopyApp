@@ -16,15 +16,16 @@ class WeatherDetailView: UIView {
         return weatherTitleView
     }()
 
-    let weatherInfoTableView: WeatherDetailTableView = {
+    let weatherDetailTableView: WeatherDetailTableView = {
         let weatherTableView = WeatherDetailTableView(frame: CGRect.zero, style: .grouped)
+
         return weatherTableView
     }()
 
     let weatherDetailTableHeaderView: WeatherDetailTableHeaderView = {
-        let weatherInfoTableHeaderView = WeatherDetailTableHeaderView()
-        weatherInfoTableHeaderView.contentMode = .scaleAspectFill
-        return weatherInfoTableHeaderView
+        let weatherDetailTableHeaderView = WeatherDetailTableHeaderView()
+        weatherDetailTableHeaderView.contentMode = .scaleAspectFill
+        return weatherDetailTableHeaderView
     }()
 
     override init(frame: CGRect) {
@@ -45,27 +46,27 @@ class WeatherDetailView: UIView {
         weatherTitleView.weatherSubTitleLabel.text = "\(subTitle)"
     }
 
-    func makeWeatherTableViewConstraint() {
-        weatherInfoTableView.activateAnchors()
-        NSLayoutConstraint.activate([
-            weatherInfoTableView.topAnchor.constraint(equalTo: weatherTitleView.bottomAnchor),
-            weatherInfoTableView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            weatherInfoTableView.leftAnchor.constraint(equalTo: leftAnchor),
-            weatherInfoTableView.rightAnchor.constraint(equalTo: rightAnchor),
-        ])
-    }
-
-    func makeWeatherTitleViewContraint() {
+    func makeDetailTitleViewContraint() {
         weatherTitleView.activateAnchors()
         NSLayoutConstraint.activate([
-            weatherTitleView.topAnchor.constraint(equalTo: topAnchor, constant: 0),
-            weatherTitleView.leftAnchor.constraint(equalTo: leftAnchor, constant: 0),
-            weatherTitleView.rightAnchor.constraint(equalTo: rightAnchor, constant: 0),
+            weatherTitleView.topAnchor.constraint(equalTo: topAnchor),
+            weatherTitleView.leftAnchor.constraint(equalTo: leftAnchor),
+            weatherTitleView.rightAnchor.constraint(equalTo: rightAnchor),
             weatherTitleView.heightAnchor.constraint(equalToConstant: WeatherViewHeight.titleViewHeight),
         ])
     }
 
-    func makeInfoHeaderViewContraint() {
+    func makeDetailTableViewConstraint() {
+        weatherDetailTableView.activateAnchors()
+        NSLayoutConstraint.activate([
+            weatherDetailTableView.topAnchor.constraint(equalTo: weatherTitleView.bottomAnchor),
+            weatherDetailTableView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            weatherDetailTableView.leftAnchor.constraint(equalTo: leftAnchor),
+            weatherDetailTableView.rightAnchor.constraint(equalTo: rightAnchor),
+        ])
+    }
+
+    func makeDetailHeaderViewContraint() {
         weatherDetailTableHeaderView.activateAnchors()
         NSLayoutConstraint.activate([
             weatherDetailTableHeaderView.centerXAnchor.constraint(equalTo: centerXAnchor),
@@ -79,13 +80,11 @@ class WeatherDetailView: UIView {
 extension WeatherDetailView: UIViewSettingProtocol {
     func makeSubviews() {
         addSubview(weatherTitleView)
-        addSubview(weatherInfoTableView)
-        addSubview(weatherDetailTableHeaderView)
+        addSubview(weatherDetailTableView)
     }
 
     func makeConstraints() {
-        makeWeatherTitleViewContraint()
-        makeWeatherTableViewConstraint()
-        makeInfoHeaderViewContraint()
+        makeDetailTitleViewContraint()
+        makeDetailTableViewConstraint()
     }
 }

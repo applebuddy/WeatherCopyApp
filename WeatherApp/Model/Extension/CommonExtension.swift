@@ -31,7 +31,7 @@ extension Double {
 }
 
 extension UIActivityIndicatorView {
-    func startIndicatorAnimating(containerView: UIView) {
+    func startCustomIndicatorAnimating(containerView: UIView) {
         DispatchQueue.main.async {
             containerView.isHidden = false
             self.isHidden = false
@@ -39,7 +39,7 @@ extension UIActivityIndicatorView {
         }
     }
 
-    func stopIndicatorAnimating(containerView: UIView) {
+    func stopCustomIndicatorAnimating(containerView: UIView) {
         DispatchQueue.main.async {
             containerView.isHidden = true
             self.isHidden = true

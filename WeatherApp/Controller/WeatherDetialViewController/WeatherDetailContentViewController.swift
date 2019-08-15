@@ -49,7 +49,7 @@ class WeatherDetailContentViewController: UIViewController {
         setDetailViewController()
         setDetailView()
         registerCell()
-        setTableHeaderView()
+//        setTableHeaderView()
         makeConstraints()
     }
 
@@ -76,8 +76,8 @@ class WeatherDetailContentViewController: UIViewController {
     }
 
     func setDetailView() {
-        weatherDetailContentView.weatherInfoTableView.dataSource = self
-        weatherDetailContentView.weatherInfoTableView.delegate = self
+        weatherDetailContentView.weatherDetailTableView.dataSource = self
+        weatherDetailContentView.weatherDetailTableView.delegate = self
     }
 
     func setTableHeaderView() {
@@ -89,7 +89,9 @@ class WeatherDetailContentViewController: UIViewController {
         if scrollView.contentOffset.y <= 0 {
             scrollView.contentOffset.y = CGFloat.zero
         }
+
         let height = CGFloat(max(0, WeatherCellHeight.detailTableHeaderCell - max(0, scrollView.contentOffset.y)))
+
         let alphaValue = pow(height / WeatherCellHeight.detailTableHeaderCell, 10)
         weatherDetailContentView.weatherDetailTableHeaderView.setTableHeaderViewAlpha(alpha: CGFloat(alphaValue))
     }
@@ -104,6 +106,7 @@ class WeatherDetailContentViewController: UIViewController {
 extension WeatherDetailContentViewController: UITableViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         makeWeatherInfoTableHeaderViewScrollEvent(scrollView, offsetY: scrollView.contentOffset.y)
+        weatherDetailContentView.weatherDetailTableHeaderView.layoutIfNeeded()
     }
 
     // * WeatherData 갱신 시 DayInfoCollectionViewCell을 리로드 해준다.
@@ -149,6 +152,10 @@ extension WeatherDetailContentViewController: UITableViewDelegate {
     func tableView(_: UITableView, heightForFooterInSection _: Int) -> CGFloat {
         return CGFloat.leastNormalMagnitude
     }
+
+    func tableView(_: UITableView, heightForHeaderInSection _: Int) -> CGFloat {
+        return WeatherCellHeight.detailTableHeaderCell
+    }
 }
 
 extension WeatherDetailContentViewController: UITableViewDataSource {
@@ -187,7 +194,7 @@ extension WeatherDetailContentViewController: UIViewSettingProtocol {
 
 extension WeatherDetailContentViewController: CellSettingProtocol {
     func registerCell() {
-        weatherDetailContentView.weatherInfoTableView.register(WeatherHourInfoTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weatherHourInfoTableCell)
-        weatherDetailContentView.weatherInfoTableView.register(WeatherSubInfoTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weatherWeekInfoTableCell)
+        weatherDetailContentView.weatherDetailTableView.register(WeatherHourInfoTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weatherHourInfoTableCell)
+        weatherDetailContentView.weatherDetailTableView.register(WeatherSubInfoTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weatherWeekInfoTableCell)
     }
 }

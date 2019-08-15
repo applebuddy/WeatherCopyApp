@@ -50,10 +50,10 @@ class weatherDetailTitleView: UIView {
         weatherTitleLabel.activateAnchors()
         NSLayoutConstraint.activate([
             weatherTitleLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 20),
-            weatherTitleLabel.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 30),
-            weatherTitleLabel.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -30),
-            weatherTitleLabel.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
-            weatherTitleLabel.heightAnchor.constraint(equalToConstant: 30),
+            weatherTitleLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: 30),
+            weatherTitleLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: -30),
+            weatherTitleLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+            weatherTitleLabel.heightAnchor.constraint(equalToConstant: 20),
         ])
     }
 
