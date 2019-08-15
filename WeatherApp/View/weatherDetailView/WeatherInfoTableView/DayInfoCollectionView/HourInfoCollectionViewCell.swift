@@ -10,6 +10,8 @@ import UIKit
 
 /// 24시간 날씨예보 정보 컬렉션뷰 셀
 class HourInfoCollectionViewCell: UICollectionViewCell {
+    // MARK: - UI
+
     let cellImageView: UIImageView = {
         let cellImageView = UIImageView()
         cellImageView.contentMode = .scaleAspectFit
@@ -48,6 +50,8 @@ class HourInfoCollectionViewCell: UICollectionViewCell {
         return cellStackView
     }()
 
+    // MARK: - Init
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = #colorLiteral(red: 1, green: 1, blue: 1, alpha: 1)
@@ -59,6 +63,8 @@ class HourInfoCollectionViewCell: UICollectionViewCell {
         super.init(coder: aDecoder)
         fatalError("init(coder:) has not been implemented")
     }
+
+    // MARK: - Set Method
 
     func setDayInfoCollectionCellData(title: String, precipitation: Double, imageType: WeatherType, celsius: Double) {
         let precipitation = Int(precipitation * 100)
@@ -81,15 +87,8 @@ class HourInfoCollectionViewCell: UICollectionViewCell {
         cellStackView.addArrangedSubview(cellImageView)
         cellStackView.addArrangedSubview(celsiusLabel)
     }
-}
 
-extension HourInfoCollectionViewCell: UIViewSettingProtocol {
-    func makeSubviews() {
-        addSubview(cellStackView)
-        setStackView()
-    }
-
-    func makeConstraints() {
+    func makeCellStackViewContraint() {
         cellStackView.activateAnchors()
         cellStackView.centerXAnchor.constraint(equalTo: centerXAnchor).isActive = true
         cellStackView.centerYAnchor.constraint(equalTo: centerYAnchor).isActive = true
@@ -108,5 +107,16 @@ extension HourInfoCollectionViewCell: UIViewSettingProtocol {
             cellImageView.widthAnchor.constraint(equalTo: widthAnchor),
             celsiusLabel.widthAnchor.constraint(equalTo: widthAnchor),
         ])
+    }
+}
+
+extension HourInfoCollectionViewCell: UIViewSettingProtocol {
+    func makeSubviews() {
+        addSubview(cellStackView)
+        setStackView()
+    }
+
+    func makeConstraints() {
+        makeCellStackViewContraint()
     }
 }

@@ -59,6 +59,7 @@ class WeatherCityListViewController: UIViewController {
         super.viewWillAppear(true)
         checksLocationAuthority()
         requestMainWeatherData()
+        reloadWeatherCityListTableView()
     }
 
     // MARK: - Set Method
@@ -67,10 +68,16 @@ class WeatherCityListViewController: UIViewController {
         return .lightContent
     }
 
+    func reloadWeatherCityListTableView() {
+        DispatchQueue.main.async {
+            self.weatherCityListView.weatherCityListTableView.reloadData()
+        }
+    }
+
     func setWeatherDataRefreshControl() {
         weatherDataRefreshControl.isHidden = true
         weatherDataRefreshControl.addTarget(self, action: #selector(refreshWeatherTableViewData(_:)), for: .valueChanged)
-        weatherCityListView.weatherMainTableView.refreshControl = weatherDataRefreshControl
+        weatherCityListView.weatherCityListTableView.refreshControl = weatherDataRefreshControl
     }
 
     func setWeatherDataCheckTimer() {
@@ -86,7 +93,7 @@ class WeatherCityListViewController: UIViewController {
                 WeatherAPI.shared.requestAPI(latitude: latitude, longitude: longitude) { subWeatherAPIData in
                     CommonData.shared.setWeatherData(subWeatherAPIData, index: index)
                     DispatchQueue.main.async {
-                        self.weatherCityListView.weatherMainTableView.reloadData()
+                        self.reloadWeatherCityListTableView()
                         self.stopIndicatorAnimating()
                     }
                     self.isTimeToCheckWeatherData = false
@@ -102,7 +109,7 @@ class WeatherCityListViewController: UIViewController {
         WeatherAPI.shared.requestAPI(latitude: mainLatitude, longitude: mainLongitude) { weatherAPIData in
             CommonData.shared.setWeatherData(weatherAPIData, index: 0)
             DispatchQueue.main.async {
-                self.weatherCityListView.weatherMainTableView.reloadData()
+                self.reloadWeatherCityListTableView()
             }
             self.requestSubWeatherData()
         }
@@ -116,8 +123,8 @@ class WeatherCityListViewController: UIViewController {
 
     func setCityListViewController() {
         makeSubviews()
-        weatherCityListView.weatherMainTableView.delegate = self
-        weatherCityListView.weatherMainTableView.dataSource = self
+        weatherCityListView.weatherCityListTableView.delegate = self
+        weatherCityListView.weatherCityListTableView.dataSource = self
         WeatherAPI.shared.delegate = self
     }
 
@@ -173,7 +180,7 @@ class WeatherCityListViewController: UIViewController {
 
         DispatchQueue.main.async {
             self.stopIndicatorAnimating()
-            self.weatherCityListView.weatherMainTableView.reloadData()
+            self.reloadWeatherCityListTableView()
         }
     }
 
@@ -373,6 +380,6 @@ extension WeatherCityListViewController: UIViewSettingProtocol {
 
 extension WeatherCityListViewController: CellSettingProtocol {
     func registerCell() {
-        weatherCityListView.weatherMainTableView.register(WeatherCityListTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weatherCityListTableCell)
+        weatherCityListView.weatherCityListTableView.register(WeatherCityListTableViewCell.self, forCellReuseIdentifier: CellIdentifier.weatherCityListTableCell)
     }
 }

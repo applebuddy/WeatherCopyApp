@@ -10,6 +10,8 @@ import UIKit
 
 // 테이블 뷰 간 틈에 사용되는 Separator 뷰
 class WeatherSeparatorView: UIView {
+    // MARK: - Init
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = CommonColor.separator
@@ -18,10 +20,4 @@ class WeatherSeparatorView: UIView {
     required init?(coder _: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-}
-
-extension WeatherSeparatorView: UIViewSettingProtocol {
-    func makeSubviews() {}
-
-    func makeConstraints() {}
 }

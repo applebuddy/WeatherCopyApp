@@ -45,7 +45,7 @@ class WeatherDetailView: UIView {
         weatherTitleView.weatherSubTitleLabel.text = "\(subTitle)"
     }
 
-    func setWeatherTableViewConstraint() {
+    func makeWeatherTableViewConstraint() {
         weatherInfoTableView.activateAnchors()
         NSLayoutConstraint.activate([
             weatherInfoTableView.topAnchor.constraint(equalTo: weatherTitleView.bottomAnchor),
@@ -55,7 +55,7 @@ class WeatherDetailView: UIView {
         ])
     }
 
-    func setWeatherTitleViewContraint() {
+    func makeWeatherTitleViewContraint() {
         weatherTitleView.activateAnchors()
         NSLayoutConstraint.activate([
             weatherTitleView.topAnchor.constraint(equalTo: topAnchor, constant: 0),
@@ -65,7 +65,7 @@ class WeatherDetailView: UIView {
         ])
     }
 
-    func setInfoHeaderViewContraint() {
+    func makeInfoHeaderViewContraint() {
         weatherDetailTableHeaderView.activateAnchors()
         NSLayoutConstraint.activate([
             weatherDetailTableHeaderView.centerXAnchor.constraint(equalTo: centerXAnchor),
@@ -84,8 +84,8 @@ extension WeatherDetailView: UIViewSettingProtocol {
     }
 
     func makeConstraints() {
-        setWeatherTitleViewContraint()
-        setWeatherTableViewConstraint()
-        setInfoHeaderViewContraint()
+        makeWeatherTitleViewContraint()
+        makeWeatherTableViewConstraint()
+        makeInfoHeaderViewContraint()
     }
 }

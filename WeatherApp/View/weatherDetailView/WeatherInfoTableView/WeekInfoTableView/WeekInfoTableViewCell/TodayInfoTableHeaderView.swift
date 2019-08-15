@@ -10,6 +10,8 @@ import UIKit
 
 /// 오늘 날씨 서브정보를 알려주는 테이블뷰 셀 헤더뷰
 class TodayInfoTableHeaderView: UIView {
+    // MARK: - UI
+
     let todayInfoTextView: UITextView = {
         let todayInfoTextView = UITextView()
         todayInfoTextView.backgroundColor = .clear
@@ -32,6 +34,8 @@ class TodayInfoTableHeaderView: UIView {
         return headerBottomBorderView
     }()
 
+    // MARK: - Init
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .white
@@ -49,6 +53,26 @@ class TodayInfoTableHeaderView: UIView {
     func setInfoHeaderViewData(textViewText: String) {
         todayInfoTextView.text = "\(textViewText)"
     }
+
+    func makeTodayInfoTextViewConstraint() {
+        todayInfoTextView.activateAnchors()
+        NSLayoutConstraint.activate([
+            todayInfoTextView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: CommonInset.leftInset),
+            todayInfoTextView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: CommonInset.topInset),
+            todayInfoTextView.bottomAnchor.constraint(equalTo: headerBottomBorderView.topAnchor, constant: -CommonInset.bottomInset),
+            todayInfoTextView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -CommonInset.rightInset),
+        ])
+    }
+
+    func makeHeaderBottomBorderViewConstraint() {
+        headerBottomBorderView.activateAnchors()
+        NSLayoutConstraint.activate([
+            headerBottomBorderView.heightAnchor.constraint(equalToConstant: 1),
+            headerBottomBorderView.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width),
+            headerBottomBorderView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: 0),
+            headerBottomBorderView.centerXAnchor.constraint(equalToSystemSpacingAfter: safeAreaLayoutGuide.centerXAnchor, multiplier: 1),
+        ])
+    }
 }
 
 extension TodayInfoTableHeaderView: UIViewSettingProtocol {
@@ -58,20 +82,7 @@ extension TodayInfoTableHeaderView: UIViewSettingProtocol {
     }
 
     func makeConstraints() {
-        headerBottomBorderView.activateAnchors()
-        NSLayoutConstraint.activate([
-            headerBottomBorderView.heightAnchor.constraint(equalToConstant: 1),
-            headerBottomBorderView.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width),
-            headerBottomBorderView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: 0),
-            headerBottomBorderView.centerXAnchor.constraint(equalToSystemSpacingAfter: safeAreaLayoutGuide.centerXAnchor, multiplier: 1),
-        ])
-
-        todayInfoTextView.activateAnchors()
-        NSLayoutConstraint.activate([
-            todayInfoTextView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: CommonInset.leftInset),
-            todayInfoTextView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: CommonInset.topInset),
-            todayInfoTextView.bottomAnchor.constraint(equalTo: headerBottomBorderView.topAnchor, constant: -CommonInset.bottomInset),
-            todayInfoTextView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -CommonInset.rightInset),
-        ])
+        makeHeaderBottomBorderViewConstraint()
+        makeTodayInfoTextViewConstraint()
     }
 }

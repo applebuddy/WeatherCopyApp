@@ -49,9 +49,9 @@ final class WeatherAPI {
                         let weatherAPIData = try JSONDecoder().decode(WeatherAPIData.self, from: data)
                         self.delegate?.weatherAPIDidFinished(self)
                         completion(weatherAPIData)
-                    } catch let DecodingError.keyNotFound(key, _) {
+                    } catch DecodingError.keyNotFound(_, _) {
                         self.delegate?.weatherAPIDidError(self)
-                    } catch let DecodingError.typeMismatch(type, context) {
+                    } catch DecodingError.typeMismatch(_, _) {
                         self.delegate?.weatherAPIDidError(self)
                     } catch {
                         self.delegate?.weatherAPIDidError(self)

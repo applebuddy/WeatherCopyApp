@@ -10,6 +10,8 @@ import UIKit
 
 /// WeekSubInfoTableViewCell 메인 뷰
 class WeekSubInfoView: UIView {
+    // MARK: - UI
+
     let dateLabel: UILabel = {
         let dateLabel = UILabel()
         dateLabel.text = ""
@@ -52,6 +54,8 @@ class WeekSubInfoView: UIView {
         subWeekInfoStackView.addArrangedSubview(minCelsiusLabel)
     }
 
+    // MARK: - Init
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         backgroundColor = .white
@@ -63,15 +67,10 @@ class WeekSubInfoView: UIView {
         super.init(coder: aDecoder)
         fatalError("init(coder:) has not been implemented")
     }
-}
 
-extension WeekSubInfoView: UIViewSettingProtocol {
-    func makeSubviews() {
-        setSubWeekInfoStackView()
-        addSubview(subWeekInfoStackView)
-    }
+    // MARK: - Set Method
 
-    func makeConstraints() {
+    func makeSubWeekInfoStackViewConstraint() {
         subWeekInfoStackView.activateAnchors()
         NSLayoutConstraint.activate([
             subWeekInfoStackView.widthAnchor.constraint(equalTo: widthAnchor),
@@ -94,5 +93,16 @@ extension WeekSubInfoView: UIViewSettingProtocol {
             maxCelsiusLabel.heightAnchor.constraint(equalTo: heightAnchor),
             minCelsiusLabel.heightAnchor.constraint(equalTo: heightAnchor),
         ])
+    }
+}
+
+extension WeekSubInfoView: UIViewSettingProtocol {
+    func makeSubviews() {
+        setSubWeekInfoStackView()
+        addSubview(subWeekInfoStackView)
+    }
+
+    func makeConstraints() {
+        makeSubWeekInfoStackViewConstraint()
     }
 }

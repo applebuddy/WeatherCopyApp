@@ -154,6 +154,22 @@ class WeatherDetailViewController: UIViewController {
         weatherDetailView.weatherDetailTableHeaderView.setTableHeaderViewAlpha(alpha: CGFloat(alphaValue))
     }
 
+    func makeLinkBarButtonConstraint() {
+        linkBarButton.activateAnchors()
+        NSLayoutConstraint.activate([
+            linkBarButton.heightAnchor.constraint(equalToConstant: CommonSize.defaultButtonSize.height),
+            linkBarButton.widthAnchor.constraint(equalTo: linkBarButton.heightAnchor, multiplier: 1.0),
+        ])
+    }
+
+    func makeListBarButtonConstraint() {
+        listBarButton.activateAnchors()
+        NSLayoutConstraint.activate([
+            listBarButton.heightAnchor.constraint(equalToConstant: CommonSize.defaultButtonSize.height),
+            listBarButton.widthAnchor.constraint(equalTo: listBarButton.heightAnchor, multiplier: 1.0),
+        ])
+    }
+
     // MARK: Check Event
 
     func presentToCityListView() {
@@ -228,16 +244,7 @@ extension WeatherDetailViewController: UIViewSettingProtocol {
     }
 
     func makeConstraints() {
-        linkBarButton.activateAnchors()
-        NSLayoutConstraint.activate([
-            linkBarButton.heightAnchor.constraint(equalToConstant: CommonSize.defaultButtonSize.height),
-            linkBarButton.widthAnchor.constraint(equalTo: linkBarButton.heightAnchor, multiplier: 1.0),
-        ])
-
-        listBarButton.activateAnchors()
-        NSLayoutConstraint.activate([
-            listBarButton.heightAnchor.constraint(equalToConstant: CommonSize.defaultButtonSize.height),
-            listBarButton.widthAnchor.constraint(equalTo: listBarButton.heightAnchor, multiplier: 1.0),
-        ])
+        makeLinkBarButtonConstraint()
+        makeListBarButtonConstraint()
     }
 }

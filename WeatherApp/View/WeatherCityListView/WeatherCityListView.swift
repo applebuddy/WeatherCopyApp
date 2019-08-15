@@ -13,7 +13,7 @@ import UIKit
 class WeatherCityListView: UIView {
     // MARK: - UI
 
-    let weatherMainTableView: WeatherCityListTableView = {
+    let weatherCityListTableView: WeatherCityListTableView = {
         let weatherMainTableView = WeatherCityListTableView(frame: CGRect.zero, style: .grouped)
         return weatherMainTableView
     }()
@@ -29,23 +29,23 @@ class WeatherCityListView: UIView {
         super.init(coder: aDecoder)
     }
 
-    func setWeatherMainTableViewConstraint() {
-        weatherMainTableView.activateAnchors()
+    func makeWeatherMainTableViewConstraint() {
+        weatherCityListTableView.activateAnchors()
         NSLayoutConstraint.activate([
-            weatherMainTableView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
-            weatherMainTableView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor),
-            weatherMainTableView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor),
-            weatherMainTableView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            weatherCityListTableView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
+            weatherCityListTableView.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor),
+            weatherCityListTableView.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor),
+            weatherCityListTableView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
         ])
     }
 }
 
 extension WeatherCityListView: UIViewSettingProtocol {
     func makeSubviews() {
-        addSubview(weatherMainTableView)
+        addSubview(weatherCityListTableView)
     }
 
     func makeConstraints() {
-        setWeatherMainTableViewConstraint()
+        makeWeatherMainTableViewConstraint()
     }
 }
