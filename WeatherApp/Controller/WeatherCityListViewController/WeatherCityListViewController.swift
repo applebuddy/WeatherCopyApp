@@ -170,12 +170,12 @@ class WeatherCityListViewController: UIViewController {
     // MARK: - Button Event
 
     @objc func celsiusToggleButtonPressed(_ sender: UIButton) {
-        if sender.image(for: .normal) == UIImage(named: "toggleButton_C") {
+        if sender.image(for: .normal) == UIImage(named: AssetIdentifier.Image.toggleButtonC) {
             CommonData.shared.changeTemperatureType()
-            sender.setImage(UIImage(named: "toggleButton_F"), for: .normal)
+            sender.setImage(UIImage(named: AssetIdentifier.Image.toggleButtonF), for: .normal)
         } else {
             CommonData.shared.changeTemperatureType()
-            sender.setImage(UIImage(named: "toggleButton_C"), for: .normal)
+            sender.setImage(UIImage(named: AssetIdentifier.Image.toggleButtonC), for: .normal)
         }
 
         DispatchQueue.main.async {

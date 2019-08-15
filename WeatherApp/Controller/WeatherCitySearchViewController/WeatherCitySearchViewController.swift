@@ -26,6 +26,13 @@ class WeatherCitySearchViewController: UIViewController {
         return weatherCitySearchView
     }()
 
+    let activityIndicatorContainerView: WeatherActivityIndicatorView = {
+        let activityIndicatorContainerView = WeatherActivityIndicatorView()
+        activityIndicatorContainerView.isHidden = true
+        activityIndicatorContainerView.activityIndicatorView.center = CGPoint(x: UIScreen.main.bounds.size.width / 2, y: UIScreen.main.bounds.size.height / 2)
+        return activityIndicatorContainerView
+    }()
+
     // MARK: - Life Cycle
 
     override func viewDidLoad() {
@@ -50,6 +57,22 @@ class WeatherCitySearchViewController: UIViewController {
 
     func setButtonTarget() {
         weatherCitySearchView.backToMainButton.addTarget(self, action: #selector(backToMainButtonPressed(_:)), for: .touchUpInside)
+    }
+
+    func startIndicatorAnimating() {
+        DispatchQueue.main.async {
+            self.activityIndicatorContainerView.isHidden = false
+            self.activityIndicatorContainerView.activityIndicatorView.isHidden = false
+            self.activityIndicatorContainerView.activityIndicatorView.startAnimating()
+        }
+    }
+
+    func stopIndicatorAnimating() {
+        DispatchQueue.main.async {
+            self.activityIndicatorContainerView.isHidden = true
+            self.activityIndicatorContainerView.activityIndicatorView.isHidden = true
+            self.activityIndicatorContainerView.activityIndicatorView.stopAnimating()
+        }
     }
 
     // MARK: Set Location Method
@@ -96,6 +119,7 @@ class WeatherCitySearchViewController: UIViewController {
     }
 
     func setCitySearchViewController() {
+        makeSubviews()
         view.backgroundColor = .black
         setButtonTarget()
         setLocationManager()
@@ -163,7 +187,7 @@ extension WeatherCitySearchViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-
+        startIndicatorAnimating()
         geoCoder.geocodeAddressString(displayedResultList[indexPath.row]) { placemarks, error in
 
             if error != nil {
@@ -179,6 +203,7 @@ extension WeatherCitySearchViewController: UITableViewDelegate {
             let defaultCityName = self.calculateDefaultCityName(placeMarks: placeMarks)
 
             CommonData.shared.addSubWeatherData(coordinate: location.coordinate, defaultCityName: defaultCityName) { isSucceed in
+                self.stopIndicatorAnimating()
                 if isSucceed {
                     CommonData.shared.saveWeatherDataList()
                     self.dismiss(animated: true)
@@ -245,4 +270,12 @@ extension WeatherCitySearchViewController: CellSettingProtocol {
     func registerCell() {
         weatherCitySearchView.citySearchTableView.register(CitySearchTableViewCell.self, forCellReuseIdentifier: CellIdentifier.citySearchTableCell)
     }
+}
+
+extension WeatherCitySearchViewController: UIViewSettingProtocol {
+    func makeSubviews() {
+        view.addSubview(activityIndicatorContainerView)
+    }
+
+    func makeConstraints() {}
 }
