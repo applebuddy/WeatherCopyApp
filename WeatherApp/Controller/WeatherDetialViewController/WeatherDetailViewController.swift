@@ -121,7 +121,7 @@ class WeatherDetailViewController: UIViewController {
         }
 
         contentViewController.setWeatherData()
-        contentViewController.weatherDetailContentView.weatherTitleView.layoutIfNeeded()
+        contentViewController.weatherDetailContentView.weatherDetailTitleView.layoutIfNeeded()
         return contentViewController
     }
 

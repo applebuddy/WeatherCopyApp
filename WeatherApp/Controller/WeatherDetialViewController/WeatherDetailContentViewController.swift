@@ -14,7 +14,6 @@ class WeatherDetailContentViewController: UIViewController {
     // MARK: - Property
 
     let locationManager = CLLocationManager()
-    var headerHeightConstraint: NSLayoutConstraint?
     var isAppearViewController = false
     var pageViewControllerIndex = 0
 
@@ -49,7 +48,6 @@ class WeatherDetailContentViewController: UIViewController {
         setDetailViewController()
         setDetailView()
         registerCell()
-//        setTableHeaderView()
         makeConstraints()
     }
 
@@ -78,11 +76,6 @@ class WeatherDetailContentViewController: UIViewController {
     func setDetailView() {
         weatherDetailContentView.weatherDetailTableView.dataSource = self
         weatherDetailContentView.weatherDetailTableView.delegate = self
-    }
-
-    func setTableHeaderView() {
-        headerHeightConstraint = weatherDetailContentView.weatherDetailTableHeaderView.heightAnchor.constraint(equalToConstant: WeatherCellHeight.detailTableHeaderCell)
-        headerHeightConstraint?.isActive = true
     }
 
     func makeWeatherInfoTableHeaderViewScrollEvent(_ scrollView: UIScrollView, offsetY _: CGFloat) {

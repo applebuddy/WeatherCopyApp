@@ -10,12 +10,12 @@
 import UIKit
 
 /// WeatherdetailViewController 메인 타이틀 뷰
-class weatherDetailTitleView: UIView {
+class WeatherDetailTitleView: UIView {
     // MARK: - UI
 
     let weatherTitleLabel: UILabel = {
         let weatherTitleLabel = UILabel()
-        weatherTitleLabel.text = "_"
+        weatherTitleLabel.text = "__"
         weatherTitleLabel.font = .systemFont(ofSize: 30)
         weatherTitleLabel.textAlignment = .center
         weatherTitleLabel.textColor = .white
@@ -50,8 +50,8 @@ class weatherDetailTitleView: UIView {
         weatherTitleLabel.activateAnchors()
         NSLayoutConstraint.activate([
             weatherTitleLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 20),
-            weatherTitleLabel.leftAnchor.constraint(equalTo: leftAnchor, constant: 30),
-            weatherTitleLabel.rightAnchor.constraint(equalTo: rightAnchor, constant: -30),
+            weatherTitleLabel.leftAnchor.constraint(equalTo: leftAnchor),
+            weatherTitleLabel.rightAnchor.constraint(equalTo: rightAnchor),
             weatherTitleLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
             weatherTitleLabel.heightAnchor.constraint(equalToConstant: 20),
         ])
@@ -68,7 +68,7 @@ class weatherDetailTitleView: UIView {
     }
 }
 
-extension weatherDetailTitleView: UIViewSettingProtocol {
+extension WeatherDetailTitleView: UIViewSettingProtocol {
     func makeSubviews() {
         addSubview(weatherTitleLabel)
         addSubview(weatherSubTitleLabel)
