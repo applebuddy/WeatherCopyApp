@@ -10,7 +10,7 @@ import CoreLocation
 import MapKit
 import UIKit
 
-class WeatherInfoViewController: UIViewController {
+class WeatherDetailViewController: UIViewController {
     // MARK: - Property
 
     let locationManager = CLLocationManager()
@@ -22,9 +22,9 @@ class WeatherInfoViewController: UIViewController {
     /// * 설정한 지역 별 날씨정보를 보여준다.
     var weatherPageViewController: UIPageViewController?
 
-    lazy var weatherMainViewController: WeatherMainViewController = {
-        let weatherMainViewController = WeatherMainViewController()
-        return weatherMainViewController
+    lazy var weatherCityListViewController: WeatherCityListViewController = {
+        let weatherCityListViewController = WeatherCityListViewController()
+        return weatherCityListViewController
     }()
 
     let weatherPageControl: UIPageControl = {
@@ -50,16 +50,15 @@ class WeatherInfoViewController: UIViewController {
         return listBarButton
     }()
 
-    let weatherInfoView: WeatherInfoView = {
-        let weatherInfoView = WeatherInfoView()
-        return weatherInfoView
+    let weatherDetailView: WeatherDetailView = {
+        let weatherDetailView = WeatherDetailView()
+        return weatherDetailView
     }()
 
     // MARK: - Life Cycle
 
     override func loadView() {
-        super.loadView()
-        view = weatherInfoView
+        view = weatherDetailView
     }
 
     override func viewDidLoad() {
@@ -70,18 +69,17 @@ class WeatherInfoViewController: UIViewController {
         CommonData.shared.setUserDefaultsData() // 저장 된 서브 날씨데이터를 추가한다.
 
         makeSubviews()
-        setInfoViewController()
+        setDetailViewController()
         setButtonTarget()
         setToolBarButtonItem()
         makeConstraints()
-        presentToMainView()
+        presentToCityListView()
     }
 
     override func viewWillAppear(_: Bool) {
         super.viewWillAppear(true)
 
         // 페이지뷰 컨트롤러 갱신
-
         setWeatherPageViewController()
     }
 
@@ -97,8 +95,7 @@ class WeatherInfoViewController: UIViewController {
         weatherPageViewController = mainPageViewController
 
         // 뷰 컨트롤러 하나만 먼저 준비, 데이터소스에서 나머지 컨텐츠 뷰 컨트롤러를 설정한다.
-        let contentViewController = ContentViewController()
-        contentViewController.pageViewControllerIndex = CommonData.shared.selectedMainCellIndex
+        guard let contentViewController = makeContentViewController(index: CommonData.shared.selectedMainCellIndex) else { return }
 
         let unWrappingPageViewController = weatherPageViewController
 
@@ -115,15 +112,21 @@ class WeatherInfoViewController: UIViewController {
 
     func setPageControl() {}
 
-    func makeContentViewController(index: Int) -> ContentViewController? {
-        let contentViewController = ContentViewController()
-        contentViewController.pageViewControllerIndex = index
+    func makeContentViewController(index: Int) -> WeatherDetailContentViewController? {
+        let contentViewController = WeatherDetailContentViewController()
+        if index >= CommonData.shared.weatherDataList.count {
+            contentViewController.pageViewControllerIndex = CommonData.shared.selectedMainCellIndex
+        } else {
+            contentViewController.pageViewControllerIndex = index
+        }
 
+        contentViewController.setWeatherData()
+        contentViewController.weatherDetailContentView.weatherDetailTitleView.layoutIfNeeded()
         return contentViewController
     }
 
-    func setInfoViewController() {
-        view.backgroundColor = CommonColor.weatherInfoView
+    func setDetailViewController() {
+        view.backgroundColor = CommonColor.weatherDetailView
         setWeatherPageViewController()
     }
 
@@ -146,15 +149,32 @@ class WeatherInfoViewController: UIViewController {
         if scrollView.contentOffset.y <= 0 {
             scrollView.contentOffset.y = CGFloat.zero
         }
-        let height = CGFloat(max(0, WeatherCellHeight.infoTableHeaderCell - max(0, scrollView.contentOffset.y)))
-        let alphaValue = pow(height / WeatherCellHeight.infoTableHeaderCell, 10)
-        weatherInfoView.weatherInfoTableHeaderView.setTableHeaderViewAlpha(alpha: CGFloat(alphaValue))
+
+        let height = CGFloat(max(0, WeatherCellHeight.detailTableHeaderCell - max(0, scrollView.contentOffset.y)))
+        let alphaValue = pow(height / WeatherCellHeight.detailTableHeaderCell, 10)
+        weatherDetailView.weatherDetailTableHeaderView.setTableHeaderViewAlpha(alpha: CGFloat(alphaValue))
+    }
+
+    func makeLinkBarButtonConstraint() {
+        linkBarButton.activateAnchors()
+        NSLayoutConstraint.activate([
+            linkBarButton.heightAnchor.constraint(equalToConstant: CommonSize.defaultButtonSize.height),
+            linkBarButton.widthAnchor.constraint(equalTo: linkBarButton.heightAnchor, multiplier: 1.0),
+        ])
+    }
+
+    func makeListBarButtonConstraint() {
+        listBarButton.activateAnchors()
+        NSLayoutConstraint.activate([
+            listBarButton.heightAnchor.constraint(equalToConstant: CommonSize.defaultButtonSize.height),
+            listBarButton.widthAnchor.constraint(equalTo: listBarButton.heightAnchor, multiplier: 1.0),
+        ])
     }
 
     // MARK: Check Event
 
-    func presentToMainView() {
-        present(weatherMainViewController, animated: true)
+    func presentToCityListView() {
+        present(weatherCityListViewController, animated: true)
     }
 
     // MARK: - Button Event
@@ -167,22 +187,22 @@ class WeatherInfoViewController: UIViewController {
     }
 
     @objc func listButtonPressed(_: UIButton) {
-        present(weatherMainViewController, animated: true, completion: nil)
+        present(weatherCityListViewController, animated: true, completion: nil)
     }
 }
 
 // MARK: - PageView Protocol
 
-extension WeatherInfoViewController: UIPageViewControllerDelegate {
+extension WeatherDetailViewController: UIPageViewControllerDelegate {
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating _: Bool, previousViewControllers _: [UIViewController], transitionCompleted completed: Bool) {
         if completed {}
     }
 }
 
-extension WeatherInfoViewController: UIPageViewControllerDataSource {
+extension WeatherDetailViewController: UIPageViewControllerDataSource {
     // 이전으로 넘길때 컨텐츠 뷰 컨트롤러 데이터 전달
     func pageViewController(_: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-        guard let targetViewController = viewController as? ContentViewController else { return nil }
+        guard let targetViewController = viewController as? WeatherDetailContentViewController else { return nil }
         let previousIndex = targetViewController.pageViewControllerIndex
 
         if previousIndex == 0 {
@@ -194,7 +214,7 @@ extension WeatherInfoViewController: UIPageViewControllerDataSource {
     }
 
     func pageViewController(_: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-        guard let targetViewController = viewController as? ContentViewController else { return nil }
+        guard let targetViewController = viewController as? WeatherDetailContentViewController else { return nil }
 
         let contentViewControllerMaxIndex = CommonData.shared.weatherDataList.count - 1
         let nextIndex = targetViewController.pageViewControllerIndex
@@ -219,22 +239,13 @@ extension WeatherInfoViewController: UIPageViewControllerDataSource {
 
 // MARK: - Custom View Protocol
 
-extension WeatherInfoViewController: UIViewSettingProtocol {
+extension WeatherDetailViewController: UIViewSettingProtocol {
     func makeSubviews() {
         view.addSubview(weatherPageControl)
     }
 
     func makeConstraints() {
-        linkBarButton.activateAnchors()
-        NSLayoutConstraint.activate([
-            linkBarButton.heightAnchor.constraint(equalToConstant: CommonSize.defaultButtonSize.height),
-            linkBarButton.widthAnchor.constraint(equalTo: linkBarButton.heightAnchor, multiplier: 1.0),
-        ])
-
-        listBarButton.activateAnchors()
-        NSLayoutConstraint.activate([
-            listBarButton.heightAnchor.constraint(equalToConstant: CommonSize.defaultButtonSize.height),
-            listBarButton.widthAnchor.constraint(equalTo: listBarButton.heightAnchor, multiplier: 1.0),
-        ])
+        makeLinkBarButtonConstraint()
+        makeListBarButtonConstraint()
     }
 }

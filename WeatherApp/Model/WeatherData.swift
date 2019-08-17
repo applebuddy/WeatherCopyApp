@@ -9,12 +9,12 @@
 import CoreLocation
 import UIKit
 
-struct SubWeatherData: Codable {
+struct WeatherData: Codable {
     var subData: WeatherAPIData?
     var subCityName: String?
 }
 
-struct SubLocationData: Codable {
+struct LocationData: Codable {
     var latitude: Double?
     var longitude: Double?
 }

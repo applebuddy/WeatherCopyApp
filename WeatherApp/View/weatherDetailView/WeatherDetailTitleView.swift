@@ -9,11 +9,13 @@
 
 import UIKit
 
-/// WeatherInfoViewController 메인 타이틀 뷰
-public class WeatherTitleView: UIView {
+/// WeatherdetailViewController 메인 타이틀 뷰
+class WeatherDetailTitleView: UIView {
+    // MARK: - UI
+
     let weatherTitleLabel: UILabel = {
         let weatherTitleLabel = UILabel()
-        weatherTitleLabel.text = "_"
+        weatherTitleLabel.text = "__"
         weatherTitleLabel.font = .systemFont(ofSize: 30)
         weatherTitleLabel.textAlignment = .center
         weatherTitleLabel.textColor = .white
@@ -30,6 +32,8 @@ public class WeatherTitleView: UIView {
         return weatherSubTitleLabel
     }()
 
+    // MARK: - Init
+
     override init(frame: CGRect) {
         super.init(frame: frame)
         makeSubviews()
@@ -39,24 +43,21 @@ public class WeatherTitleView: UIView {
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
-}
 
-extension WeatherTitleView: UIViewSettingProtocol {
-    func makeSubviews() {
-        addSubview(weatherTitleLabel)
-        addSubview(weatherSubTitleLabel)
-    }
+    // MARK: - Set Method
 
-    func makeConstraints() {
+    func makeWeatherTitleLabelConstraint() {
         weatherTitleLabel.activateAnchors()
         NSLayoutConstraint.activate([
             weatherTitleLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 20),
-            weatherTitleLabel.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: 30),
-            weatherTitleLabel.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -30),
-            weatherTitleLabel.centerXAnchor.constraint(equalTo: safeAreaLayoutGuide.centerXAnchor),
-            weatherTitleLabel.heightAnchor.constraint(equalToConstant: 30),
+            weatherTitleLabel.leftAnchor.constraint(equalTo: leftAnchor),
+            weatherTitleLabel.rightAnchor.constraint(equalTo: rightAnchor),
+            weatherTitleLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
+            weatherTitleLabel.heightAnchor.constraint(equalToConstant: 20),
         ])
+    }
 
+    func makeWeatherSubTitleLabelConstraint() {
         weatherSubTitleLabel.activateAnchors()
         NSLayoutConstraint.activate([
             weatherSubTitleLabel.topAnchor.constraint(equalTo: weatherTitleLabel.bottomAnchor, constant: 10),
@@ -64,5 +65,17 @@ extension WeatherTitleView: UIViewSettingProtocol {
             weatherSubTitleLabel.rightAnchor.constraint(equalTo: weatherTitleLabel.rightAnchor),
             weatherSubTitleLabel.heightAnchor.constraint(equalToConstant: 15),
         ])
+    }
+}
+
+extension WeatherDetailTitleView: UIViewSettingProtocol {
+    func makeSubviews() {
+        addSubview(weatherTitleLabel)
+        addSubview(weatherSubTitleLabel)
+    }
+
+    func makeConstraints() {
+        makeWeatherTitleLabelConstraint()
+        makeWeatherSubTitleLabelConstraint()
     }
 }

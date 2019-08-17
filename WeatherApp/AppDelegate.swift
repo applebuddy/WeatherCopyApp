@@ -4,7 +4,7 @@
 //
 //  Created by MinKyeongTae on 31/07/2019.
 //  Copyright © 2019 MinKyeongTae. All rights reserved.
-//  // ** now sub Branch : Feature/AddWeatherPageView **
+//  // ** Now Sub Branch : Refactoring/001 **
 
 import UIKit
 
@@ -15,9 +15,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
 
-        let weatherInfoViewController = WeatherInfoViewController()
-        let mainNavigationController = MainNavigationController(rootViewController: weatherInfoViewController)
-        window?.rootViewController = mainNavigationController
+        let weatherDetailViewController = WeatherDetailViewController()
+        let weatherNavigationController = WeatherNavigationController(rootViewController: weatherDetailViewController)
+        window?.rootViewController = weatherNavigationController
         window?.makeKeyAndVisible()
 
         return true

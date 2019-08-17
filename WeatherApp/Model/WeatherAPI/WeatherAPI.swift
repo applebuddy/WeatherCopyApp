@@ -15,7 +15,8 @@ final class WeatherAPI {
     public let urlSession = URLSession(configuration: .default)
     public var dataTask = URLSessionDataTask()
     public var baseURL = "https://api.darksky.net/forecast/"
-    public let APIToken = "8073e832590a6b75a9bbf52af77efcd3/"
+    public let APIToken = "447da2f0774b0e23418285c52c5ec67b/" // 자신의 날씨 API+'/'를 사용합니다.
+    // 447da2f0774b0e23418285c52c5ec67b
     public let APISubURL = "?lang=ko&exclude=minutely,alerts,flags"
     public var errorMessage = ""
     internal var delegate: WeatherAPIDelegate?
@@ -48,9 +49,9 @@ final class WeatherAPI {
                         let weatherAPIData = try JSONDecoder().decode(WeatherAPIData.self, from: data)
                         self.delegate?.weatherAPIDidFinished(self)
                         completion(weatherAPIData)
-                    } catch let DecodingError.keyNotFound(key, _) {
+                    } catch DecodingError.keyNotFound(_, _) {
                         self.delegate?.weatherAPIDidError(self)
-                    } catch let DecodingError.typeMismatch(type, context) {
+                    } catch DecodingError.typeMismatch(_, _) {
                         self.delegate?.weatherAPIDidError(self)
                     } catch {
                         self.delegate?.weatherAPIDidError(self)

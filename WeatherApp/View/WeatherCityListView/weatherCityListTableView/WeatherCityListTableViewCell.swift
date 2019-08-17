@@ -8,8 +8,8 @@
 
 import UIKit
 
-/// WeatherMainViewController 메인 테이블뷰 셀
-class WeatherMainTableViewCell: UITableViewCell {
+/// WeatherCityListViewController 메인 테이블뷰 셀
+class WeatherCityListTableViewCell: UITableViewCell {
     // MARK: - Property
 
     // MARK: - UI
@@ -46,6 +46,8 @@ class WeatherMainTableViewCell: UITableViewCell {
         return mainIndicatorImageView
     }()
 
+    // MARK: - Init
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = .white
@@ -57,6 +59,8 @@ class WeatherMainTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
+    // MARK: - Set Method
+
     func setMainTableCellData(cityName: String, timeStamp: Int, timeZone: String, temperature: Double) {
         cityTitleLabel.text = "\(cityName)"
         let dateFormatter = CommonData.shared.mainDateFormatter
@@ -66,9 +70,47 @@ class WeatherMainTableViewCell: UITableViewCell {
         let celsius = CommonData.shared.calculateCelsius(celsius: temperature)
         cityCelsiusLabel.text = "\(celsius)º"
     }
+
+    func makeCityCelsiusLabelConstraint() {
+        cityCelsiusLabel.activateAnchors()
+        NSLayoutConstraint.activate([
+            cityCelsiusLabel.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -CommonInset.rightInset / 2),
+            cityCelsiusLabel.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor),
+
+        ])
+    }
+
+    func makeCityTitleLabelConstraint() {
+        cityTitleLabel.activateAnchors()
+        NSLayoutConstraint.activate([
+            cityTitleLabel.topAnchor.constraint(equalTo: mainIndicatorImageView.bottomAnchor, constant: CommonInset.topInset / 2),
+            cityTitleLabel.leftAnchor.constraint(equalTo: nowTimeLabel.leftAnchor),
+            cityTitleLabel.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.7),
+        ])
+    }
+
+    func makeMainIndicatorImageViewConstraint() {
+        mainIndicatorImageView.activateAnchors()
+        NSLayoutConstraint.activate([
+            mainIndicatorImageView.topAnchor.constraint(equalTo: nowTimeLabel.topAnchor, constant: 0),
+            mainIndicatorImageView.bottomAnchor.constraint(equalTo: nowTimeLabel.bottomAnchor, constant: -CommonInset.bottomInset),
+            mainIndicatorImageView.leftAnchor.constraint(equalTo: nowTimeLabel.rightAnchor, constant: CommonInset.leftInset / 3),
+            mainIndicatorImageView.widthAnchor.constraint(equalTo: mainIndicatorImageView.heightAnchor),
+        ])
+    }
+
+    func makeNowTimeLabelConstraint() {
+        nowTimeLabel.activateAnchors()
+        NSLayoutConstraint.activate([
+            nowTimeLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: CommonInset.topInset * 2),
+            nowTimeLabel.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: CommonInset.leftInset / 2),
+            nowTimeLabel.widthAnchor.constraint(lessThanOrEqualToConstant: 70),
+            nowTimeLabel.heightAnchor.constraint(equalToConstant: 30),
+        ])
+    }
 }
 
-extension WeatherMainTableViewCell: UIViewSettingProtocol {
+extension WeatherCityListTableViewCell: UIViewSettingProtocol {
     func makeSubviews() {
         addSubview(nowTimeLabel)
         addSubview(mainIndicatorImageView)
@@ -77,34 +119,9 @@ extension WeatherMainTableViewCell: UIViewSettingProtocol {
     }
 
     func makeConstraints() {
-        nowTimeLabel.activateAnchors()
-        NSLayoutConstraint.activate([
-            nowTimeLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: CommonInset.topInset * 2),
-            nowTimeLabel.leftAnchor.constraint(equalTo: safeAreaLayoutGuide.leftAnchor, constant: CommonInset.leftInset / 2),
-            nowTimeLabel.widthAnchor.constraint(lessThanOrEqualToConstant: 70),
-            nowTimeLabel.heightAnchor.constraint(equalToConstant: 30),
-        ])
-
-        mainIndicatorImageView.activateAnchors()
-        NSLayoutConstraint.activate([
-            mainIndicatorImageView.topAnchor.constraint(equalTo: nowTimeLabel.topAnchor, constant: 0),
-            mainIndicatorImageView.bottomAnchor.constraint(equalTo: nowTimeLabel.bottomAnchor, constant: -CommonInset.bottomInset),
-            mainIndicatorImageView.leftAnchor.constraint(equalTo: nowTimeLabel.rightAnchor, constant: CommonInset.leftInset / 3),
-            mainIndicatorImageView.widthAnchor.constraint(equalTo: mainIndicatorImageView.heightAnchor),
-        ])
-
-        cityTitleLabel.activateAnchors()
-        NSLayoutConstraint.activate([
-            cityTitleLabel.topAnchor.constraint(equalTo: mainIndicatorImageView.bottomAnchor, constant: CommonInset.topInset / 2),
-            cityTitleLabel.leftAnchor.constraint(equalTo: nowTimeLabel.leftAnchor),
-            cityTitleLabel.widthAnchor.constraint(equalTo: safeAreaLayoutGuide.widthAnchor, multiplier: 0.7),
-        ])
-
-        cityCelsiusLabel.activateAnchors()
-        NSLayoutConstraint.activate([
-            cityCelsiusLabel.rightAnchor.constraint(equalTo: safeAreaLayoutGuide.rightAnchor, constant: -CommonInset.rightInset / 2),
-            cityCelsiusLabel.centerYAnchor.constraint(equalTo: safeAreaLayoutGuide.centerYAnchor),
-
-        ])
+        makeNowTimeLabelConstraint()
+        makeMainIndicatorImageViewConstraint()
+        makeCityTitleLabelConstraint()
+        makeCityCelsiusLabelConstraint()
     }
 }

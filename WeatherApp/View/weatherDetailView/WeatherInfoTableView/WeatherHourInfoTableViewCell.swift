@@ -30,7 +30,7 @@ class WeatherHourInfoTableViewCell: UITableViewCell {
         makeSubviews()
         makeConstraints()
 
-        dayInfoCollectionView.register(HourInfoCollectionViewCell.self, forCellWithReuseIdentifier: CellIdentifier.HourInfoCollectionCell)
+        dayInfoCollectionView.register(HourInfoCollectionViewCell.self, forCellWithReuseIdentifier: CellIdentifier.hourInfoCollectionCell)
         dayInfoCollectionView.delegate = self
         dayInfoCollectionView.dataSource = self
     }
@@ -54,7 +54,7 @@ class WeatherHourInfoTableViewCell: UITableViewCell {
 
 extension WeatherHourInfoTableViewCell: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let hourInfoCollectionCell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifier.HourInfoCollectionCell, for: indexPath) as? HourInfoCollectionViewCell else { return UICollectionViewCell() }
+        guard let hourInfoCollectionCell = collectionView.dequeueReusableCell(withReuseIdentifier: CellIdentifier.hourInfoCollectionCell, for: indexPath) as? HourInfoCollectionViewCell else { return UICollectionViewCell() }
         let weatherIndex = CommonData.shared.selectedMainCellIndex
 
         let weatherData = CommonData.shared.weatherDataList[weatherIndex].subData

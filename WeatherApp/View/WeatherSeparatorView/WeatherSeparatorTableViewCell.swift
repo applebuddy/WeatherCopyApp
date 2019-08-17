@@ -9,11 +9,15 @@
 import UIKit
 
 class WeatherSeparatorTableViewCell: UITableViewCell {
+    // MARK: - UI
+
     let separatorView: WeatherSeparatorView = {
         let separatorView = WeatherSeparatorView()
         separatorView.backgroundColor = CommonColor.separator
         return separatorView
     }()
+
+    // MARK: - Init
 
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)

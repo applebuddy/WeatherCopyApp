@@ -8,9 +8,9 @@
 
 import UIKit
 
-/// WeatherMainViewController 메인 테이블뷰
+/// WeatherCityListViewController 메인 테이블뷰
 /// * **설정 한 장소목록 및 날씨정보를 나타낸다.**
-public class WeatherMainTableView: UITableView {
+class WeatherCityListTableView: UITableView {
     override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
         backgroundColor = .black

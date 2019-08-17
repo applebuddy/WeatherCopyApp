@@ -29,3 +29,21 @@ extension Double {
         return (self * 1.8) + 32
     }
 }
+
+extension UIActivityIndicatorView {
+    func startCustomIndicatorAnimating(containerView: UIView) {
+        DispatchQueue.main.async {
+            containerView.isHidden = false
+            self.isHidden = false
+            self.startAnimating()
+        }
+    }
+
+    func stopCustomIndicatorAnimating(containerView: UIView) {
+        DispatchQueue.main.async {
+            containerView.isHidden = true
+            self.isHidden = true
+            self.stopAnimating()
+        }
+    }
+}

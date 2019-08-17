@@ -11,12 +11,12 @@ import UIKit
 // MARK: TableView Section Index
 
 /// * WeatherMainTableView Section Index
-enum WeatherMainTableViewSection: Int {
+enum WeatherCityListTableViewSection: Int {
     case mainSection = 0
 }
 
 /// * WeatherInfoTableView Section Index
-enum WeatherInfoTableViewSection: Int {
+enum WeatherDetailTableViewSection: Int {
     case mainSection = 0
 }
 
@@ -29,7 +29,7 @@ enum WeatherSubInfoTableViewSection: Int {
 // MARK: TableView Row Index
 
 /// * WeatherInfoTableView Row Index
-enum WeatherInfoTableViewRow: Int {
+enum WeatherDetailTableViewRow: Int {
     case hourInfoRow = 0
     case separatorRow = 1
     case weekInfoRow = 2

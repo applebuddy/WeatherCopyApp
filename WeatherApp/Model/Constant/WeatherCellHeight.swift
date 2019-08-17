@@ -11,10 +11,10 @@ import UIKit
 /// * TableView Cell Heights
 struct WeatherCellHeight {
     static let hourInfoTableCell: CGFloat = 120
-    static let infoTableHeaderCell: CGFloat = 150
+    static let detailTableHeaderCell: CGFloat = 150
     static let hourInfoCollectionCell: CGFloat = 120
     static let subInfoTableViewCell: CGFloat = 35
     static let todayInfoTableViewCell: CGFloat = 60
-    static let mainTableViewCell: CGFloat = 100
+    static let cityListTableViewCell: CGFloat = 100
     static let citySearchTableView: CGFloat = 50
 }

@@ -12,9 +12,9 @@ import UIKit
 struct CellIdentifier {
     static let weatherHourInfoTableCell: String = "weatherHourInfoTableViewCell"
     static let weatherWeekInfoTableCell: String = "weatherWeekInfoTableViewCell"
-    static let HourInfoCollectionCell: String = "hourInfoCollectionViewCell"
+    static let hourInfoCollectionCell: String = "hourInfoCollectionViewCell"
     static let weekInfoTableCell: String = "weekInfoTableViewCell"
-    static let weatherMainTableCell: String = "weatherMainTableViewCell"
+    static let weatherCityListTableCell: String = "weatherCityListTableViewCell"
     static let todayInfoTableCell: String = "todayInfoTableViewCell"
     static let weatherSeparatorTableCell: String = "weatherSeparatorTableViewCell"
     static let citySearchTableCell: String = "citySearchTableViewCell"

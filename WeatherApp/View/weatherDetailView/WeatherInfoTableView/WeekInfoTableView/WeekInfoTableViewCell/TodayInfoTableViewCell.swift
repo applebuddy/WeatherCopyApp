@@ -10,6 +10,8 @@ import UIKit
 
 /// 오늘의 서브날씨정도 테이블뷰 셀
 class TodayInfoTableViewCell: UITableViewCell {
+    // MARK: - UI
+
     let todayInfoStackView: UIStackView = {
         let todayInfoStackView = UIStackView()
         todayInfoStackView.axis = .horizontal
@@ -67,6 +69,8 @@ class TodayInfoTableViewCell: UITableViewCell {
         return todayInfoTitleSubLabel
     }()
 
+    // MARK: - Init
+
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         backgroundColor = .white
@@ -82,6 +86,8 @@ class TodayInfoTableViewCell: UITableViewCell {
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
     }
+
+    // MARK: - Set Method
 
     func setLeftStackViewData(titleInfo: Double, rowIndex: Int) {
         guard let rowIndex = TodayInfoTableViewRow(rawValue: rowIndex) else { return }
@@ -191,45 +197,36 @@ class TodayInfoTableViewCell: UITableViewCell {
         todayInfoStackView.addArrangedSubview(rightStackView)
         addSubview(todayInfoStackView)
     }
-}
 
-extension TodayInfoTableViewCell: UIViewSettingProtocol {
-    func makeSubviews() {
-        setTodayInfoStackView()
-        addSubview(cellBottomBorderView)
-    }
-
-    func makeConstraints() {
-        cellBottomBorderView.activateAnchors()
-        NSLayoutConstraint.activate([
-            cellBottomBorderView.heightAnchor.constraint(equalToConstant: 1),
-            cellBottomBorderView.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width * 0.9),
-            cellBottomBorderView.bottomAnchor.constraint(equalTo: bottomAnchor),
-            cellBottomBorderView.centerXAnchor.constraint(equalTo: centerXAnchor),
-        ])
-
-        todayInfoStackView.activateAnchors()
-        NSLayoutConstraint.activate([
-            todayInfoStackView.widthAnchor.constraint(equalTo: widthAnchor, constant: -CommonInset.leftInset * 2),
-            todayInfoStackView.topAnchor.constraint(equalTo: topAnchor, constant: CommonInset.topInset),
-            todayInfoStackView.centerXAnchor.constraint(equalTo: centerXAnchor),
-            todayInfoStackView.bottomAnchor.constraint(equalTo: cellBottomBorderView.topAnchor, constant: -CommonInset.bottomInset / 2),
-        ])
-
-        leftStackView.activateAnchors()
-        NSLayoutConstraint.activate([
-            leftStackView.leftAnchor.constraint(equalTo: todayInfoStackView.leftAnchor),
-            leftStackView.topAnchor.constraint(equalTo: todayInfoStackView.topAnchor),
-            leftStackView.widthAnchor.constraint(equalTo: todayInfoStackView.widthAnchor, multiplier: 0.5),
-            leftStackView.bottomAnchor.constraint(equalTo: todayInfoStackView.bottomAnchor),
-        ])
-
+    func makeRightStackViewConstraint() {
         rightStackView.activateAnchors()
         NSLayoutConstraint.activate([
             rightStackView.rightAnchor.constraint(equalTo: todayInfoStackView.rightAnchor),
             rightStackView.topAnchor.constraint(equalTo: todayInfoStackView.topAnchor),
             rightStackView.widthAnchor.constraint(equalTo: todayInfoStackView.widthAnchor, multiplier: 0.5),
             rightStackView.bottomAnchor.constraint(equalTo: todayInfoStackView.bottomAnchor),
+        ])
+
+        NSLayoutConstraint.activate([
+            rightInfoTitleLabel.heightAnchor.constraint(equalTo: rightStackView.heightAnchor, multiplier: 0.3),
+            rightInfoTitleLabel.rightAnchor.constraint(equalTo: rightStackView.rightAnchor),
+            rightInfoTitleLabel.leftAnchor.constraint(equalTo: rightStackView.leftAnchor),
+        ])
+
+        NSLayoutConstraint.activate([
+            rightInfoTitleValueLabel.heightAnchor.constraint(equalTo: rightStackView.heightAnchor, multiplier: 0.7),
+            rightInfoTitleValueLabel.rightAnchor.constraint(equalTo: rightStackView.rightAnchor),
+            rightInfoTitleValueLabel.leftAnchor.constraint(equalTo: rightStackView.leftAnchor),
+        ])
+    }
+
+    func makeLeftStackViewConstraint() {
+        leftStackView.activateAnchors()
+        NSLayoutConstraint.activate([
+            leftStackView.leftAnchor.constraint(equalTo: todayInfoStackView.leftAnchor),
+            leftStackView.topAnchor.constraint(equalTo: todayInfoStackView.topAnchor),
+            leftStackView.widthAnchor.constraint(equalTo: todayInfoStackView.widthAnchor, multiplier: 0.5),
+            leftStackView.bottomAnchor.constraint(equalTo: todayInfoStackView.bottomAnchor),
         ])
 
         leftInfoTitleLabel.activateAnchors()
@@ -247,17 +244,39 @@ extension TodayInfoTableViewCell: UIViewSettingProtocol {
             leftInfoTitleValueLabel.leftAnchor.constraint(equalTo: leftStackView.leftAnchor),
             leftInfoTitleValueLabel.rightAnchor.constraint(equalTo: rightStackView.leftAnchor),
         ])
+    }
 
+    func makeTodayInfoStackViewConstraint() {
+        todayInfoStackView.activateAnchors()
         NSLayoutConstraint.activate([
-            rightInfoTitleLabel.heightAnchor.constraint(equalTo: rightStackView.heightAnchor, multiplier: 0.3),
-            rightInfoTitleLabel.rightAnchor.constraint(equalTo: rightStackView.rightAnchor),
-            rightInfoTitleLabel.leftAnchor.constraint(equalTo: rightStackView.leftAnchor),
+            todayInfoStackView.widthAnchor.constraint(equalTo: widthAnchor, constant: -CommonInset.leftInset * 2),
+            todayInfoStackView.topAnchor.constraint(equalTo: topAnchor, constant: CommonInset.topInset),
+            todayInfoStackView.centerXAnchor.constraint(equalTo: centerXAnchor),
+            todayInfoStackView.bottomAnchor.constraint(equalTo: cellBottomBorderView.topAnchor, constant: -CommonInset.bottomInset / 2),
         ])
+    }
 
+    func makeCellBottomBorderViewConstraint() {
+        cellBottomBorderView.activateAnchors()
         NSLayoutConstraint.activate([
-            rightInfoTitleValueLabel.heightAnchor.constraint(equalTo: rightStackView.heightAnchor, multiplier: 0.7),
-            rightInfoTitleValueLabel.rightAnchor.constraint(equalTo: rightStackView.rightAnchor),
-            rightInfoTitleValueLabel.leftAnchor.constraint(equalTo: rightStackView.leftAnchor),
+            cellBottomBorderView.heightAnchor.constraint(equalToConstant: 1),
+            cellBottomBorderView.widthAnchor.constraint(equalToConstant: UIScreen.main.bounds.size.width * 0.9),
+            cellBottomBorderView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            cellBottomBorderView.centerXAnchor.constraint(equalTo: centerXAnchor),
         ])
+    }
+}
+
+extension TodayInfoTableViewCell: UIViewSettingProtocol {
+    func makeSubviews() {
+        setTodayInfoStackView()
+        addSubview(cellBottomBorderView)
+    }
+
+    func makeConstraints() {
+        makeCellBottomBorderViewConstraint()
+        makeTodayInfoStackViewConstraint()
+        makeLeftStackViewConstraint()
+        makeRightStackViewConstraint()
     }
 }
