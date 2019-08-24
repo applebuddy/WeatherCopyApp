@@ -215,12 +215,12 @@ extension WeatherCitySearchViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let citySearchTableCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.citySearchTableCell, for: indexPath) as? CitySearchTableViewCell else { return UITableViewCell() }
         if indexPath.row == 0 {
-            if displayedResultList.count == 0 {
+            if displayedResultList.isEmpty {
                 citySearchTableCell.searchedCityLabel.text = "검색 된 결과가 현재 없습니다."
             }
         }
 
-        if displayedResultList.count == 0 {
+        if displayedResultList.isEmpty {
             return citySearchTableCell
         }
 

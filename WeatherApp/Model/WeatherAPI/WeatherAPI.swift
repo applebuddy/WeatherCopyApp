@@ -12,6 +12,7 @@ final class WeatherAPI {
     static let shared = WeatherAPI()
 
     // STEP 1) JSON데이터를 받기 위해 사용할 변수와 API토큰을 준비한다.
+    // Review: 외부에서 접근할 수 없도록 private 로 설정하는 것이 캡슐화에 도움이 됩니다.
     public let urlSession = URLSession(configuration: .default)
     public var dataTask = URLSessionDataTask()
     public var baseURL = "https://api.darksky.net/forecast/"
@@ -59,6 +60,9 @@ final class WeatherAPI {
                 } else {
                     self.delegate?.weatherAPIDidError(self)
                 }
+            } else {
+                // Review: Error 처리 필요
+                // 관련된 코드: https://github.com/start-rxswift/MVVMGithubTDD/blob/master/TddMVVMGithub/Networking/Reqeusts.swift
             }
 
             // STEP 5) 데이터 처리 결과를 completion handler을 통해 반환한다.
