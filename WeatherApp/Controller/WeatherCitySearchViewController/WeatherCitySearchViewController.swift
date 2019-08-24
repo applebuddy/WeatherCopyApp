@@ -13,6 +13,7 @@ import UIKit
 class WeatherCitySearchViewController: UIViewController {
     // MARK: - Property
 
+    // Review: [Refactoring] Singleton으로 제공하는 건 어떨까요?
     let locationManager = CLLocationManager()
     let geoCoder = CLGeocoder()
     let completer = MKLocalSearchCompleter()
@@ -55,7 +56,10 @@ class WeatherCitySearchViewController: UIViewController {
 
     override func viewWillAppear(_: Bool) {
         super.viewWillAppear(true)
-        weatherCitySearchView.citySearchBar.becomeFirstResponder()
+        // Review: [사용성] 즉시 키보드를 보여주는 것보다 Delay 이후에 보여주는 것이 좀 더 부드럽지 않을까요~?
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.weatherCitySearchView.citySearchBar.becomeFirstResponder()
+//        }
         requestLocationAuthority()
     }
 

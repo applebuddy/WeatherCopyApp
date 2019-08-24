@@ -12,7 +12,7 @@ final class WeatherAPI {
     static let shared = WeatherAPI()
 
     // STEP 1) JSON데이터를 받기 위해 사용할 변수와 API토큰을 준비한다.
-    // Review: 외부에서 접근할 수 없도록 private 로 설정하는 것이 캡슐화에 도움이 됩니다.
+    // Review: [Refactroing] 외부에서 접근할 수 없도록 private 로 설정하는 것이 캡슐화에 도움이 됩니다.
     public let urlSession = URLSession(configuration: .default)
     public var dataTask = URLSessionDataTask()
     public var baseURL = "https://api.darksky.net/forecast/"
@@ -20,6 +20,7 @@ final class WeatherAPI {
     // 447da2f0774b0e23418285c52c5ec67b
     public let APISubURL = "?lang=ko&exclude=minutely,alerts,flags"
     public var errorMessage = ""
+    // Review: [경고] weak 키워드를 붙이지 않으면 강한 상호 참조가 됩니다.
     internal var delegate: WeatherAPIDelegate?
 
     init() {
@@ -28,6 +29,8 @@ final class WeatherAPI {
     }
 
     // completion: @escaping weatherResult
+    // Result<WeatherAPIData, Error> 로 정리하는 것이 어떨까요?
+    // delegate 를 사용하면 다른 곳에서 사용하게 된다면 문제가 발생합니다.
     public func requestAPI(latitude: Double, longitude: Double, completion: @escaping (WeatherAPIData) -> Void) {
         delegate?.weatherAPIDidRequested(self)
         let APIUrlString = "\(baseURL)\(latitude),\(longitude)\(APISubURL)"
@@ -61,7 +64,7 @@ final class WeatherAPI {
                     self.delegate?.weatherAPIDidError(self)
                 }
             } else {
-                // Review: error 처리가 필요해 보입니다~
+                // Review: [사용성] error 처리가 필요해 보입니다~
                 // 관련된 코드: https://github.com/start-rxswift/MVVMGithubTDD/blob/master/TddMVVMGithub/Networking/Reqeusts.swift
             }
 

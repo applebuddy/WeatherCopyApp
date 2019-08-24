@@ -14,7 +14,9 @@ class WeatherDetailContentViewController: UIViewController {
     // MARK: - Property
 
     let locationManager = CLLocationManager()
+    // Review: [Refactoring] 불필요 코드
     var isAppearViewController = false
+    // Review: [Refactoring] UIViewController 에서 Page index 관련 변수는 연관이 없습니다.
     var pageViewControllerIndex = 0
 
     // MARK: - UI
