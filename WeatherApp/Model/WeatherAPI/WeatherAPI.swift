@@ -61,7 +61,7 @@ final class WeatherAPI {
                     self.delegate?.weatherAPIDidError(self)
                 }
             } else {
-                // Review: Error 처리 필요
+                // Review: error 처리가 필요해 보입니다~
                 // 관련된 코드: https://github.com/start-rxswift/MVVMGithubTDD/blob/master/TddMVVMGithub/Networking/Reqeusts.swift
             }
 
