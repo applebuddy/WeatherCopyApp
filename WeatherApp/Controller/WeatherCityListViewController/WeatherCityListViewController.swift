@@ -70,6 +70,9 @@ class WeatherCityListViewController: UIViewController {
 
     // MARK: - Set Method
 
+    // Review: childForStatusBarStyle 를 사용하는 건 어떨까요?
+    // 처음 lightContent를 설정하면 다른 ViewController에서 .default로 하여도 설정되지 않습니다.
+    // https://developer.apple.com/documentation/uikit/uiviewcontroller/1621433-childforstatusbarstyle
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
