@@ -30,6 +30,8 @@ final class CommonData {
 
     let locationManager = CLLocationManager()
 
+    // Review: [Refactoring] Date 관련 Utils 로 정리하는 게 좋지 않을까요?
+    // https://github.com/ios-codereview/Daimo/blob/master/Daimo/Controller/DateFormatFactory.swift
     let mainDateFormatter: DateFormatter = {
         let mainDateFormatter = DateFormatter()
         mainDateFormatter.dateFormat = "a h:mm"

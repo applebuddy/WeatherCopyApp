@@ -15,6 +15,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_: UIApplication, didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
 
+        // Review: [경고] WeatherDetailViewController -> WeatherCityListViewController -> dismiss WeatherDetailViewController를 하면
+        // ViewController 그래프가 꼬입니다.
+        // https://github.com/ios-codereview/WeatherCopyApp/blob/master/Issues/1.png
+        
+        // WeatherCityListViewController -> WeatherDetailViewController 순서로 가는 것이 좋습니다.
         let weatherDetailViewController = WeatherDetailViewController()
         let weatherNavigationController = WeatherNavigationController(rootViewController: weatherDetailViewController)
         window?.rootViewController = weatherNavigationController

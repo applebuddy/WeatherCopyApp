@@ -113,6 +113,7 @@ class TodayInfoTableViewCell: UITableViewCell {
             // MARK: 바람
 
             if titleInfo != 0 {
+                // Review: [Refactoring] 단위 관련 Utils을 만드는 건 어떨까요?
                 let windSpeed = Int(titleInfo.roundedValue(roundSize: 0))
                 titleInfoText = "\(windSpeed)m/s"
             }

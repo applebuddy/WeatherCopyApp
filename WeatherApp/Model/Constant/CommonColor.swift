@@ -9,6 +9,10 @@
 import UIKit
 
 struct CommonColor {
+    // Review: [Refactoring] Resource(color, strings) 관련 것들은 SwiftGen 을 사용하는 건 어떨까요?
+    // https://github.com/SwiftGen/SwiftGen
+    
+    // 예제: https://github.com/kimtaesu/MediaSearch/blob/master/swiftgen.yml
     static let separator = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
     static let weatherCityListView = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)
     static let weatherCityListTableFooterView = #colorLiteral(red: 0, green: 0, blue: 0, alpha: 1)

@@ -81,6 +81,8 @@ public class WeatherDetailTableHeaderView: UIView {
         for subview in subviews {
             subview.alpha = alpha
         }
+        // Review: [Refactroing] alpha의 속성을 변경하는 것은
+        // setNeedsDisplay() 와 연관이 있지 않을까요?
         layoutIfNeeded()
     }
 

@@ -42,8 +42,8 @@
   -  WeatherMainTableView의 프로토콜을 채택해 사용한다.
 * WeatherInfoViewController : 도시 별 상세 날씨정보를 보여주는 뷰 컨트롤러
   -  WeatherInfoTableView의 프로토콜을 채택해 사용한다.
-  - '미구현' 페이지뷰 기능을 관리
-* '미구현' WeatherContentViewController : 페이지뷰 컨텐츠 뷰컨트롤러
+  -  페이지뷰 기능을 관리
+* WeatherContentViewController : 페이지뷰 컨텐츠 뷰컨트롤러
 * WeatherCitySearchViewController : 도시 검색 및 날씨정보 추가를 하는 뷰 컨트롤러
   -  CitySearchTableView의 프로토콜을 채택해 사용한다.
   
@@ -56,16 +56,16 @@
 * CitySearchTableView : 도시 검색결과를 보여주는 테이블 뷰
 * CitySearchTableViewCell : 도시 검색결과를 보여주는 테이블 뷰 셀
 
-**WeatherMainView** 도시 별 날씨정보, WeatherMainViewController 뷰
+**WeatherCityListView** 도시 별 날씨정보, WeatherMainViewController 뷰
 * WeatherActivityIndicatorView : 네트워킹 작업 진행 중 실행되는 중앙 인디케이터<br>
-    **WeatherMaintableView**
-    * WeatherMainTableViewCell : 도시 별 간략정보를 표시하는 테이블 뷰 셀
-    * WeatherMainTableFooterView : 테이블 뷰 하단 여백을 주기 위한 테이블 푸터뷰
+    **WeatherCityListTableView**
+    * WeatherCityListTableViewCell : 도시 별 간략정보를 표시하는 테이블 뷰 셀
+    * WeatherCityListTableFooterView : 테이블 뷰 하단 여백을 주기 위한 테이블 푸터뷰
 
-**WeatherInfoView** 도시 세부 날씨정보, WeatherMainViewController 뷰
+**WeatherDetailView** 도시 세부 날씨정보, WeatherMainViewController 뷰
 * WeatherTitleView : 뷰 최상단의 도시명과 날씨요약정보를 표시하는 뷰<br>
     **WeatherInfoTableView** 날씨세부정보를 보여주는 메인 테이블 뷰
-    * WeatherInfoTableHeaderView : 스크롤 시 높이가 변동되는 상단 Stretched 헤더뷰
+    * WeatherDetailTableHeaderView : 스크롤 시 높이가 변동되는 상단 Stretched 헤더뷰
     * WeatherHourInfoTableViewCell : 서브 콜렉션 뷰를 가진 시간 별 날씨정보 테이블 뷰 셀
      -  DayInfoCollectionView의 프로토콜을 사용한다.<br>
         **DayInfoCollectionView** 시간 별 날씨정보 컬렉션 뷰
@@ -84,8 +84,7 @@
 <br>
   
 ### 날씨 앱 실행 예시
-* 페이지뷰 구현 부족으로 WeatherInfoViewController, weatherPageViewController 내의 데이터갱신 및 뷰컨트롤러 페이징 이벤트 제한
-* **=> 추후 문제 해결 후 스터디 등에 활용 예정**
+* **-> 기능구현 완료, 코드 구조 / 알고리즘 등에 대한 추가 리펙토링 진행 중**
 
 <div>
 <img width="300" src="https://user-images.githubusercontent.com/4410021/62603585-32e64a80-b931-11e9-88c3-86c960f40922.jpeg">      <img width="300" src="https://user-images.githubusercontent.com/4410021/62603608-3bd71c00-b931-11e9-8b46-ea0c7b2dfc79.jpeg"> 

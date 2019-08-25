@@ -20,6 +20,7 @@ class WeatherDetailViewController: UIViewController {
 
     /// WeatherPageViewController
     /// * 설정한 지역 별 날씨정보를 보여준다.
+    // Review: [Refactoring] optional 인 이유는 뭘까요...? ㅠㅠ
     var weatherPageViewController: UIPageViewController?
 
     lazy var weatherCityListViewController: WeatherCityListViewController = {
@@ -102,6 +103,15 @@ class WeatherDetailViewController: UIViewController {
         unWrappingPageViewController?.setViewControllers([contentViewController], direction: .reverse, animated: true, completion: nil)
 
         mainPageViewController.view.addSubview(linkBarButton)
+        // Review: [Refactoring] ViewController Event를 좀더 구체적으로 하는건 어떨까요?
+        /*
+        to.willMove(toParent: self)
+        addChild(to)
+        from.willMove(toParent: nil)
+        to.didMove(toParent: self)
+        from.removeFromParent()
+        from.didMove(toParent: nil)
+        */
         view.addSubview(mainPageViewController.view)
         addChild(mainPageViewController)
         mainPageViewController.didMove(toParent: self)
@@ -121,6 +131,9 @@ class WeatherDetailViewController: UIViewController {
         }
 
         contentViewController.setWeatherData()
+        // Review: [성능] layoutIfNeeded 는 신중히 사용하셔야 합니다.
+        // https://miro.medium.com/max/1218/1*qRxIjIzHomLae-tmI0QXgQ.png
+        // 위 그림 과정을 전체 수행합니다
         contentViewController.weatherDetailContentView.weatherDetailTitleView.layoutIfNeeded()
         return contentViewController
     }
