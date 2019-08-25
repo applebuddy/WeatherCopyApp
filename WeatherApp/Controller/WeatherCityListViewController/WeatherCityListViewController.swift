@@ -17,12 +17,6 @@ class WeatherCityListViewController: UIViewController {
     var isTimeToCheckWeatherData: Bool = true
     let weatherDataCheckInterval: Double = 10
 
-    lazy var weatherNavigationViewController: WeatherNavigationViewController = {
-        let weatherDetailViewController = WeatherDetailViewController()
-        let weatherNavigationViewController = WeatherNavigationViewController(rootViewController: weatherDetailViewController)
-        return weatherNavigationViewController
-    }()
-
     // ✓ REVIEW: [사용성] 해제를 하는 부분이 없습니다.
     // => 특정 시점에 타이머를 해제할 수 있도록 한다. invalidate()
     var weatherDataCheckTimer: Timer = {
@@ -282,6 +276,9 @@ extension WeatherCityListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         CommonData.shared.setSelectedMainCellIndex(index: indexPath.row)
+
+        let weatherDetailViewController = WeatherDetailViewController()
+        let weatherNavigationViewController = WeatherNavigationViewController(rootViewController: weatherDetailViewController)
 
         present(weatherNavigationViewController, animated: true, completion: nil)
     }

@@ -70,16 +70,10 @@ class WeatherDetailViewController: UIViewController {
         super.viewDidLoad()
         makeSubviews()
         setDetailViewController()
+        setWeatherPageViewController()
         setButtonTarget()
         setToolBarButtonItem()
         makeConstraints()
-    }
-
-    override func viewWillAppear(_: Bool) {
-        super.viewWillAppear(true)
-
-        // 페이지뷰 컨트롤러 갱신
-        setWeatherPageViewController()
     }
 
     // MARK: - Set Method
@@ -91,12 +85,12 @@ class WeatherDetailViewController: UIViewController {
     func setWeatherPageViewController() {
         weatherPageViewController.view.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height)
 
-        // 뷰 컨트롤러 하나만 먼저 준비, 데이터소스에서 나머지 컨텐츠 뷰 컨트롤러를 설정한다.
-        guard let contentViewController = makeContentViewController(index: CommonData.shared.selectedMainCellIndex) else { return }
-
-        let unWrappingPageViewController = weatherPageViewController
-
-        unWrappingPageViewController.setViewControllers([contentViewController], direction: .reverse, animated: true, completion: nil)
+        view.addSubview(weatherPageViewController.view)
+        addChild(weatherPageViewController)
+        weatherPageViewController.didMove(toParent: self)
+        weatherPageViewController.delegate = self
+        weatherPageViewController.dataSource = self
+        weatherPageViewController.view.backgroundColor = .black
 
         weatherPageViewController.view.addSubview(linkBarButton)
         // Review: [Refactoring] ViewController Event를 좀더 구체적으로 하는건 어떨까요?
@@ -108,17 +102,18 @@ class WeatherDetailViewController: UIViewController {
          from.removeFromParent()
          from.didMove(toParent: nil)
          */
-        view.addSubview(weatherPageViewController.view)
-        addChild(weatherPageViewController)
-        weatherPageViewController.didMove(toParent: self)
-        weatherPageViewController.delegate = self
-        weatherPageViewController.dataSource = self
-        weatherPageViewController.view.backgroundColor = .black
+        // 뷰 컨트롤러 하나만 먼저 준비, 데이터소스에서 나머지 컨텐츠 뷰 컨트롤러를 설정한다.
+        let contentViewController = makeContentViewController(index: CommonData.shared.selectedMainCellIndex)
+        weatherPageViewController.setViewControllers([contentViewController], direction: .reverse, animated: true, completion: nil)
+    }
+
+    override func didMove(toParent _: UIViewController?) {
+        print("didMove!!")
     }
 
     func setPageControl() {}
 
-    func makeContentViewController(index: Int) -> WeatherDetailContentViewController? {
+    func makeContentViewController(index: Int) -> WeatherDetailContentViewController {
         let contentViewController = WeatherDetailContentViewController()
         if index >= CommonData.shared.weatherDataList.count {
             contentViewController.pageViewControllerIndex = CommonData.shared.selectedMainCellIndex
@@ -130,13 +125,11 @@ class WeatherDetailViewController: UIViewController {
         // Review: [성능] layoutIfNeeded 는 신중히 사용하셔야 합니다.
         // https://miro.medium.com/max/1218/1*qRxIjIzHomLae-tmI0QXgQ.png
         // 위 그림 과정을 전체 수행합니다
-        contentViewController.weatherDetailContentView.weatherDetailTitleView.layoutIfNeeded()
         return contentViewController
     }
 
     func setDetailViewController() {
         view.backgroundColor = CommonColor.weatherDetailView
-        setWeatherPageViewController()
     }
 
     func setButtonTarget() {
