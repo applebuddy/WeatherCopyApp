@@ -17,6 +17,7 @@ class WeatherCityListViewController: UIViewController {
     var isTimeToCheckWeatherData: Bool = true
     let weatherDataCheckInterval: Double = 10
 
+    // Review: [사용성] 해제는 어디서...?? ㅠㅠ
     var weatherDataCheckTimer: Timer = {
         let weatherDataCheckTimer = Timer()
         return weatherDataCheckTimer
@@ -37,6 +38,7 @@ class WeatherCityListViewController: UIViewController {
     let activityIndicatorContainerView: WeatherActivityIndicatorView = {
         let activityIndicatorContainerView = WeatherActivityIndicatorView()
 
+        // Review: [사용성] UIScreen.main.bounds.size.width 보단 self.view.frame.size.width 를 참조하는 것이 어떨까요?
         activityIndicatorContainerView.activityIndicatorView.center = CGPoint(x: UIScreen.main.bounds.size.width / 2, y: UIScreen.main.bounds.size.height / 2)
         return activityIndicatorContainerView
     }()
@@ -64,12 +66,17 @@ class WeatherCityListViewController: UIViewController {
     override func viewWillAppear(_: Bool) {
         super.viewWillAppear(true)
         checksLocationAuthority()
+        // ViewDidAppear 네트워크 작업이나 io, ui 작업 에서 하는 건 어떨가요?
+        // https://stackoverflow.com/questions/5630649/what-is-the-difference-between-viewwillappear-and-viewdidappear
         requestMainWeatherData()
         reloadWeatherCityListTableView()
     }
 
     // MARK: - Set Method
 
+    // Review: [사용성] childForStatusBarStyle 를 사용하는 건 어떨까요?
+    // 처음 lightContent를 설정하면 다른 ViewController에서 .default로 하여도 설정되지 않습니다.
+    // https://developer.apple.com/documentation/uikit/uiviewcontroller/1621433-childforstatusbarstyle
     override var preferredStatusBarStyle: UIStatusBarStyle {
         return .lightContent
     }
@@ -100,8 +107,11 @@ class WeatherCityListViewController: UIViewController {
                     CommonData.shared.setWeatherData(subWeatherAPIData, index: index)
                     DispatchQueue.main.async {
                         self.reloadWeatherCityListTableView()
+                        // Review: [Refactroing] 정중앙에 acitivityIndicator를 띄우는 것이라면
+                        // UITableView의 backgroundView 에서도 설정이 가능합니다.
                         self.cityListIndicatorView.stopCustomIndicatorAnimating(containerView: self.activityIndicatorContainerView)
                     }
+                    // Review: [Refactoring] RaceCondition이 발생할 수 있습니다.
                     self.isTimeToCheckWeatherData = false
                 }
             }
@@ -158,6 +168,9 @@ class WeatherCityListViewController: UIViewController {
         case .authorizedAlways,
              .authorizedWhenInUse:
             CommonData.shared.setLocationAuthData(isAuth: true)
+        // Review: [사용성] 위치 권한을 사용할 수 없으면 사용자에게 알려줘야 합니다
+//        case .denied
+//        case .restricted
         default:
             CommonData.shared.setLocationAuthData(isAuth: false)
         }
@@ -184,6 +197,7 @@ class WeatherCityListViewController: UIViewController {
             sender.setImage(UIImage(named: AssetIdentifier.Image.toggleButtonC), for: .normal)
         }
 
+        // Review: [Refactoring] 이미 Main 입니다. 불필요한 코드 같아 보여요~
         DispatchQueue.main.async {
             self.cityListIndicatorView.stopCustomIndicatorAnimating(containerView: self.activityIndicatorContainerView)
             self.reloadWeatherCityListTableView()
@@ -250,6 +264,7 @@ extension WeatherCityListViewController: UITableViewDelegate {
     }
 
     func tableView(_: UITableView, willDisplay cell: UITableViewCell, forRowAt _: IndexPath) {
+        // Review: [Refactoring] cell 은 재사용되기 때문에 isSelected 와 같이 상태를 나타내는 것은 데이터모델에서 하는 것이 좋지 않을까요~?
         if cell.isSelected == true {
             cell.setSelected(false, animated: false)
         }
@@ -292,6 +307,8 @@ extension WeatherCityListViewController: UITableViewDataSource {
         if indexPath.row == 0 {
             weatherMainCell.mainIndicatorImageView.image = UIImage(named: AssetIdentifier.Image.mainIndicator)
 
+            // Review: [Refactoring] 공유하는 데이터는 다른 쪽에서 [0] 을 삭제했을 경우 접근 에러가 발생할 수 있습니다.
+            // 데이터는 immutable 상태로 유지하는 것이 좋습니다.
             let mainWeatherData = CommonData.shared.weatherDataList[0].subData
 
             guard let timeStamp = mainWeatherData?.currently.time,
