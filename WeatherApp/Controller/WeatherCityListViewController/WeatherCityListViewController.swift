@@ -12,31 +12,31 @@ import UIKit
 class WeatherCityListViewController: UIViewController {
     // MARK: - Property
 
-    let locationManager = CLLocationManager()
-    let weatherDataRefreshControl: UIRefreshControl = UIRefreshControl()
-    var isTimeToCheckWeatherData: Bool = true
-    let weatherDataCheckInterval: Double = 10
+    private let locationManager = CLLocationManager()
+    private let weatherDataRefreshControl: UIRefreshControl = UIRefreshControl()
+    private var isTimeToCheckWeatherData: Bool = true
+    private let weatherDataCheckInterval: Double = 10
 
     // ✓ REVIEW: [사용성] 해제를 하는 부분이 없습니다.
     // => 특정 시점에 타이머를 해제할 수 있도록 한다. invalidate()
-    var weatherDataCheckTimer: Timer = {
+    private var weatherDataCheckTimer: Timer = {
         let weatherDataCheckTimer = Timer()
         return weatherDataCheckTimer
     }()
 
     // MARK: - UI
 
-    let weatherCitySearchViewController: WeatherCitySearchViewController = {
+    private let weatherCitySearchViewController: WeatherCitySearchViewController = {
         let weatherCitySearchViewController = WeatherCitySearchViewController()
         return weatherCitySearchViewController
     }()
 
-    let weatherCityListView: WeatherCityListView = {
+    private let weatherCityListView: WeatherCityListView = {
         let weatherCityListView = WeatherCityListView()
         return weatherCityListView
     }()
 
-    lazy var activityIndicatorContainerView: WeatherActivityIndicatorView = {
+    private lazy var activityIndicatorContainerView: WeatherActivityIndicatorView = {
         let activityIndicatorContainerView = WeatherActivityIndicatorView()
 
         // ✓ REVIEW: [사용성] UIScreen.main.bounds.size.width 보단 self.view.frame.size.width 를 참조하는 것이 어떨까요?
@@ -45,7 +45,7 @@ class WeatherCityListViewController: UIViewController {
         return activityIndicatorContainerView
     }()
 
-    lazy var cityListIndicatorView: UIActivityIndicatorView = {
+    private lazy var cityListIndicatorView: UIActivityIndicatorView = {
         let indicatorView = UIActivityIndicatorView()
         return indicatorView
     }()
@@ -68,6 +68,7 @@ class WeatherCityListViewController: UIViewController {
 
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
+        // 체크 타이머 해제
         weatherDataCheckTimer.invalidate()
     }
 
@@ -98,23 +99,23 @@ class WeatherCityListViewController: UIViewController {
         return .lightContent
     }
 
-    func reloadWeatherCityListTableView() {
+    private func reloadWeatherCityListTableView() {
         DispatchQueue.main.async {
             self.weatherCityListView.weatherCityListTableView.reloadData()
         }
     }
 
-    func setWeatherDataRefreshControl() {
+    private func setWeatherDataRefreshControl() {
         weatherDataRefreshControl.isHidden = true
         weatherDataRefreshControl.addTarget(self, action: #selector(refreshWeatherTableViewData(_:)), for: .valueChanged)
         weatherCityListView.weatherCityListTableView.refreshControl = weatherDataRefreshControl
     }
 
-    func setWeatherDataCheckTimer() {
+    private func setWeatherDataCheckTimer() {
         weatherDataCheckTimer = Timer.scheduledTimer(timeInterval: weatherDataCheckInterval, target: self, selector: #selector(refreshWeatherDataTimeDidStarted(_:)), userInfo: nil, repeats: true)
     }
 
-    func requestSubWeatherData() {
+    private func requestSubWeatherData() {
         DispatchQueue.global().async {
             let subWeatherLocationList = CommonData.shared.weatherLocationDataList
             for (index, value) in subWeatherLocationList.enumerated() {
@@ -135,7 +136,7 @@ class WeatherCityListViewController: UIViewController {
         }
     }
 
-    func requestMainWeatherData() {
+    private func requestMainWeatherData() {
         let mainLatitude = CommonData.shared.mainCoordinate.latitude
         let mainLongitude = CommonData.shared.mainCoordinate.longitude
 
@@ -148,30 +149,30 @@ class WeatherCityListViewController: UIViewController {
         }
     }
 
-    func setLocationManager() {
+    private func setLocationManager() {
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.startUpdatingLocation()
     }
 
-    func setCityListViewController() {
+    private func setCityListViewController() {
         makeSubviews()
         weatherCityListView.weatherCityListTableView.delegate = self
         weatherCityListView.weatherCityListTableView.dataSource = self
         WeatherAPI.shared.delegate = self
     }
 
-    func setActivityIndicatorContainerView() {
+    private func setActivityIndicatorContainerView() {
         activityIndicatorContainerView.isHidden = true
     }
 
-    func setFooterViewButtonTarget(footerView: WeatherCityListTableFooterView) {
+    private func setFooterViewButtonTarget(footerView: WeatherCityListTableFooterView) {
         footerView.celsiusToggleButton.addTarget(self, action: #selector(celsiusToggleButtonPressed(_:)), for: .touchUpInside)
         footerView.addCityButton.addTarget(self, action: #selector(addCityButtonPressed(_:)), for: .touchUpInside)
         footerView.weatherLinkButton.addTarget(self, action: #selector(weatherLinkButtonPressed(_:)), for: .touchUpInside)
     }
 
-    func makeWeatherMainTableViewEvent(_ scrollView: UIScrollView, offsetY _: CGFloat) {
+    private func makeWeatherMainTableViewEvent(_ scrollView: UIScrollView, offsetY _: CGFloat) {
         if scrollView.contentOffset.y >= 0 {
             scrollView.contentOffset.y = 0
         }
@@ -179,7 +180,7 @@ class WeatherCityListViewController: UIViewController {
 
     // MARK: Check Method
 
-    func checkLocationAuthStatus() -> Bool {
+    private func checkLocationAuthStatus() -> Bool {
         let locationAuthStatus = CLLocationManager.authorizationStatus()
         switch locationAuthStatus {
         case .authorizedAlways,
@@ -193,7 +194,7 @@ class WeatherCityListViewController: UIViewController {
         return CommonData.shared.isLocationAuthority
     }
 
-    func checksLocationAuthority() {
+    private func checksLocationAuthority() {
         // 사용자가 직접 환경설정에서 위치접근을 설정한 경우를 체그하기 위해 위치권한 상태를 체크한다.
         if !checkLocationAuthStatus() {
             present(weatherCitySearchViewController, animated: true)
@@ -204,7 +205,7 @@ class WeatherCityListViewController: UIViewController {
 
     // MARK: - Button Event
 
-    @objc func celsiusToggleButtonPressed(_ sender: UIButton) {
+    @objc private func celsiusToggleButtonPressed(_ sender: UIButton) {
         if sender.image(for: .normal) == UIImage(named: AssetIdentifier.Image.toggleButtonC) {
             CommonData.shared.changeTemperatureType()
             sender.setImage(UIImage(named: AssetIdentifier.Image.toggleButtonF), for: .normal)
@@ -213,18 +214,16 @@ class WeatherCityListViewController: UIViewController {
             sender.setImage(UIImage(named: AssetIdentifier.Image.toggleButtonC), for: .normal)
         }
 
-        // Review: [Refactoring] 이미 Main 입니다. 불필요한 코드 같아 보여요~
-        DispatchQueue.main.async {
-            self.cityListIndicatorView.stopCustomIndicatorAnimating(containerView: self.activityIndicatorContainerView)
-            self.reloadWeatherCityListTableView()
-        }
+        // ✓ REVIEW: [Refactoring] 이미 Main 입니다. 불필요한 코드입니다.
+        cityListIndicatorView.stopCustomIndicatorAnimating(containerView: activityIndicatorContainerView)
+        reloadWeatherCityListTableView()
     }
 
-    @objc func addCityButtonPressed(_: UIButton) {
+    @objc private func addCityButtonPressed(_: UIButton) {
         present(weatherCitySearchViewController, animated: true, completion: nil)
     }
 
-    @objc func weatherLinkButtonPressed(_: UIButton) {
+    @objc private func weatherLinkButtonPressed(_: UIButton) {
         let latitude = CommonData.shared.mainCoordinate.latitude
         let longitude = CommonData.shared.mainCoordinate.longitude
         CommonData.shared.openWeatherURL(latitude: latitude, longitude: longitude)
@@ -232,7 +231,7 @@ class WeatherCityListViewController: UIViewController {
 
     // MARK: - Animation Event
 
-    @objc func refreshWeatherTableViewData(_: UIRefreshControl) {
+    @objc private func refreshWeatherTableViewData(_: UIRefreshControl) {
         weatherDataRefreshControl.isHidden = false
         weatherDataRefreshControl.beginRefreshing()
         requestMainWeatherData()
@@ -240,7 +239,7 @@ class WeatherCityListViewController: UIViewController {
 
     // MARK: - Timer Event
 
-    @objc func refreshWeatherDataTimeDidStarted(_: Timer) {
+    @objc private func refreshWeatherDataTimeDidStarted(_: Timer) {
         isTimeToCheckWeatherData = true
     }
 }
@@ -284,10 +283,7 @@ extension WeatherCityListViewController: UITableViewDelegate {
     }
 
     func tableView(_: UITableView, willDisplay cell: UITableViewCell, forRowAt _: IndexPath) {
-        // ✓ Review: [Refactoring] cell 은 재사용되기 때문에 isSelected 와 같이 상태를 나타내는 것은 데이터모델에서 하는 것이 좋지 않을까요~?
-        if cell.isSelected == true {
-            cell.setSelected(false, animated: false)
-        }
+        // ✓ REVIEW: [Refactoring] cell 은 재사용되기 때문에 isSelected 와 같이 상태를 나타내는 것은 데이터모델에서 하는 것이 좋다.
     }
 
     func tableView(_: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {

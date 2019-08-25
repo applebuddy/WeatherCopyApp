@@ -13,28 +13,26 @@ import UIKit
 class WeatherDetailContentViewController: UIViewController {
     // MARK: - Property
 
-    let locationManager = CLLocationManager()
-    // Review: [Refactoring] 불필요 코드
-    var isAppearViewController = false
-    // Review: [Refactoring] UIViewController 에서 Page index 관련 변수는 연관이 없습니다.
+    // ✓ REVIEW: [Refactoring] 불필요 코드
+    // ✓ REVIEW: [Refactoring] UIViewController 에서 Page index 관련 변수는 연관이 없습니다.
     var pageViewControllerIndex = 0
 
     // MARK: - UI
 
-    let listBarButton: UIButton = {
+    private let listBarButton: UIButton = {
         let listBarButton = UIButton(type: .custom)
         listBarButton.setImage(UIImage(named: AssetIdentifier.Image.weatherList), for: .normal)
         return listBarButton
     }()
 
-    let presentViewButton: UIButton = {
+    private let presentViewButton: UIButton = {
         let presentViewButton = UIButton(type: .custom)
         presentViewButton.setTitleColor(.lightGray, for: .normal)
         presentViewButton.backgroundColor = .white
         return presentViewButton
     }()
 
-    let weatherDetailContentView: WeatherDetailView = {
+    private let weatherDetailContentView: WeatherDetailView = {
         let weatherDetailContentView = WeatherDetailView()
         return weatherDetailContentView
     }()
@@ -53,11 +51,6 @@ class WeatherDetailContentViewController: UIViewController {
         makeConstraints()
     }
 
-    override func viewWillAppear(_: Bool) {
-        super.viewWillAppear(true)
-        isAppearViewController = false
-    }
-
     // MARK: - Set Method
 
     override var preferredStatusBarStyle: UIStatusBarStyle {
@@ -71,16 +64,16 @@ class WeatherDetailContentViewController: UIViewController {
         weatherDetailContentView.setDetailViewData(title: detailViewTitle, subTitle: detailViewSubTitle)
     }
 
-    func setDetailViewController() {
+    private func setDetailViewController() {
         view.backgroundColor = CommonColor.weatherDetailView
     }
 
-    func setDetailView() {
+    private func setDetailView() {
         weatherDetailContentView.weatherDetailTableView.dataSource = self
         weatherDetailContentView.weatherDetailTableView.delegate = self
     }
 
-    func makeWeatherInfoTableHeaderViewScrollEvent(_ scrollView: UIScrollView, offsetY _: CGFloat) {
+    private func makeWeatherInfoTableHeaderViewScrollEvent(_ scrollView: UIScrollView, offsetY _: CGFloat) {
         if scrollView.contentOffset.y <= 0 {
             scrollView.contentOffset.y = CGFloat.zero
         }

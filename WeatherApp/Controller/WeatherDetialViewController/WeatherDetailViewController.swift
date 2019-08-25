@@ -13,8 +13,8 @@ import UIKit
 class WeatherDetailViewController: UIViewController {
     // MARK: - Property
 
-    let locationManager = CLLocationManager()
-    var isAppearViewController = false
+    private let locationManager = CLLocationManager()
+    private var isAppearViewController = false
 
     // MARK: - UI
 
@@ -22,17 +22,17 @@ class WeatherDetailViewController: UIViewController {
     /// * 설정한 지역 별 날씨정보를 보여준다.
     // ✓ REVIEW: [Refactoring] optional일 필요가 없다.
     // Optioanl로 선언되야할지 그 이유를 명확히 생각해보고 지정하자.
-    let weatherPageViewController: UIPageViewController = {
+    private let weatherPageViewController: UIPageViewController = {
         let weatherPageViewController = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
         return weatherPageViewController
     }()
 
-    lazy var weatherCityListViewController: WeatherCityListViewController = {
+    private lazy var weatherCityListViewController: WeatherCityListViewController = {
         let weatherCityListViewController = WeatherCityListViewController()
         return weatherCityListViewController
     }()
 
-    let weatherPageControl: UIPageControl = {
+    private let weatherPageControl: UIPageControl = {
         let weatherPageControl = UIPageControl(frame: CGRect(x: 0, y: UIScreen.main.bounds.maxY, width: UIScreen.main.bounds.width, height: 50))
         weatherPageControl.numberOfPages = 1 + CommonData.shared.weatherDataList.count
         weatherPageControl.hidesForSinglePage = false
@@ -43,19 +43,19 @@ class WeatherDetailViewController: UIViewController {
         return weatherPageControl
     }()
 
-    let linkBarButton: UIButton = {
+    private let linkBarButton: UIButton = {
         let linkBarButton = UIButton(type: .custom)
         linkBarButton.setImage(UIImage(named: AssetIdentifier.Image.weatherLink), for: .normal)
         return linkBarButton
     }()
 
-    let listBarButton: UIButton = {
+    private let listBarButton: UIButton = {
         let listBarButton = UIButton(type: .custom)
         listBarButton.setImage(UIImage(named: AssetIdentifier.Image.weatherList), for: .normal)
         return listBarButton
     }()
 
-    let weatherDetailView: WeatherDetailView = {
+    private let weatherDetailView: WeatherDetailView = {
         let weatherDetailView = WeatherDetailView()
         return weatherDetailView
     }()
@@ -82,7 +82,7 @@ class WeatherDetailViewController: UIViewController {
         return .lightContent
     }
 
-    func setWeatherPageViewController() {
+    private func setWeatherPageViewController() {
         weatherPageViewController.view.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height)
 
         view.addSubview(weatherPageViewController.view)
@@ -107,13 +107,9 @@ class WeatherDetailViewController: UIViewController {
         weatherPageViewController.setViewControllers([contentViewController], direction: .reverse, animated: true, completion: nil)
     }
 
-    override func didMove(toParent _: UIViewController?) {
-        print("didMove!!")
-    }
+    private func setPageControl() {}
 
-    func setPageControl() {}
-
-    func makeContentViewController(index: Int) -> WeatherDetailContentViewController {
+    private func makeContentViewController(index: Int) -> WeatherDetailContentViewController {
         let contentViewController = WeatherDetailContentViewController()
         if index >= CommonData.shared.weatherDataList.count {
             contentViewController.pageViewControllerIndex = CommonData.shared.selectedMainCellIndex
@@ -122,22 +118,23 @@ class WeatherDetailViewController: UIViewController {
         }
 
         contentViewController.setWeatherData()
-        // Review: [성능] layoutIfNeeded 는 신중히 사용하셔야 합니다.
-        // https://miro.medium.com/max/1218/1*qRxIjIzHomLae-tmI0QXgQ.png
-        // 위 그림 과정을 전체 수행합니다
+        // REVIEW: [성능] layoutIfNeeded 는 신중히 사용하셔야 합니다.
+        // layoutIfNeeded는 아래 그림 과정을 전체 수행합니다
+        // ✭ https://miro.medium.com/max/1218/1*qRxIjIzHomLae-tmI0QXgQ.png
+
         return contentViewController
     }
 
-    func setDetailViewController() {
+    private func setDetailViewController() {
         view.backgroundColor = CommonColor.weatherDetailView
     }
 
-    func setButtonTarget() {
+    private func setButtonTarget() {
         linkBarButton.addTarget(self, action: #selector(linkButtonPressed(_:)), for: .touchUpInside)
         listBarButton.addTarget(self, action: #selector(listButtonPressed(_:)), for: .touchUpInside)
     }
 
-    func setToolBarButtonItem() {
+    private func setToolBarButtonItem() {
         let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
         let barButtonItem = UIBarButtonItem(customView: linkBarButton)
         let barButtonItem3 = UIBarButtonItem(customView: listBarButton)
@@ -147,7 +144,7 @@ class WeatherDetailViewController: UIViewController {
         hidesBottomBarWhenPushed = false
     }
 
-    func makeWeatherInfoTableHeaderViewScrollEvent(_ scrollView: UIScrollView, offsetY _: CGFloat) {
+    private func makeWeatherInfoTableHeaderViewScrollEvent(_ scrollView: UIScrollView, offsetY _: CGFloat) {
         if scrollView.contentOffset.y <= 0 {
             scrollView.contentOffset.y = CGFloat.zero
         }
@@ -157,7 +154,7 @@ class WeatherDetailViewController: UIViewController {
         weatherDetailView.weatherDetailTableHeaderView.setTableHeaderViewAlpha(alpha: CGFloat(alphaValue))
     }
 
-    func makeLinkBarButtonConstraint() {
+    private func makeLinkBarButtonConstraint() {
         linkBarButton.activateAnchors()
         NSLayoutConstraint.activate([
             linkBarButton.heightAnchor.constraint(equalToConstant: CommonSize.defaultButtonSize.height),
@@ -165,7 +162,7 @@ class WeatherDetailViewController: UIViewController {
         ])
     }
 
-    func makeListBarButtonConstraint() {
+    private func makeListBarButtonConstraint() {
         listBarButton.activateAnchors()
         NSLayoutConstraint.activate([
             listBarButton.heightAnchor.constraint(equalToConstant: CommonSize.defaultButtonSize.height),
@@ -175,20 +172,20 @@ class WeatherDetailViewController: UIViewController {
 
     // MARK: Check Event
 
-    func dismissToCityListView() {
+    private func dismissToCityListView() {
         dismiss(animated: true, completion: nil)
     }
 
     // MARK: - Button Event
 
-    @objc func linkButtonPressed(_: UIButton) {
+    @objc private func linkButtonPressed(_: UIButton) {
         // ✭ URL 링크주소는 파싱구현 이후 다시 수정한다.
         let latitude = CommonData.shared.mainCoordinate.latitude
         let longitude = CommonData.shared.mainCoordinate.longitude
         CommonData.shared.openWeatherURL(latitude: latitude, longitude: longitude)
     }
 
-    @objc func listButtonPressed(_: UIButton) {
+    @objc private func listButtonPressed(_: UIButton) {
         dismissToCityListView()
     }
 }
