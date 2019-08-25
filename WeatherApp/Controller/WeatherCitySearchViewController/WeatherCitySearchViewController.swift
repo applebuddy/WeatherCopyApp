@@ -58,7 +58,7 @@ class WeatherCitySearchViewController: UIViewController {
         super.viewWillAppear(true)
         // Review: [사용성] 즉시 키보드를 보여주는 것보다 Delay 이후에 보여주는 것이 좀 더 부드럽지 않을까요~?
 //        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            self.weatherCitySearchView.citySearchBar.becomeFirstResponder()
+        weatherCitySearchView.citySearchBar.becomeFirstResponder()
 //        }
         requestLocationAuthority()
     }

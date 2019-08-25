@@ -105,13 +105,13 @@ class WeatherDetailViewController: UIViewController {
         mainPageViewController.view.addSubview(linkBarButton)
         // Review: [Refactoring] ViewController Event를 좀더 구체적으로 하는건 어떨까요?
         /*
-        to.willMove(toParent: self)
-        addChild(to)
-        from.willMove(toParent: nil)
-        to.didMove(toParent: self)
-        from.removeFromParent()
-        from.didMove(toParent: nil)
-        */
+         to.willMove(toParent: self)
+         addChild(to)
+         from.willMove(toParent: nil)
+         to.didMove(toParent: self)
+         from.removeFromParent()
+         from.didMove(toParent: nil)
+         */
         view.addSubview(mainPageViewController.view)
         addChild(mainPageViewController)
         mainPageViewController.didMove(toParent: self)
