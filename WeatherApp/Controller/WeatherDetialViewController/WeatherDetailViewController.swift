@@ -65,6 +65,11 @@ class WeatherDetailViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        // ** 날씨데이터 저장 방식 **
+        CommonData.shared.initWeatherDataListSize()
+        CommonData.shared.setUserDefaultsData()
+
         makeSubviews()
         setDetailViewController()
         setButtonTarget()

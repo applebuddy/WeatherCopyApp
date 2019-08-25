@@ -17,7 +17,8 @@ class WeatherCityListViewController: UIViewController {
     var isTimeToCheckWeatherData: Bool = true
     let weatherDataCheckInterval: Double = 10
 
-    // Review: [사용성] 해제는 어디서...?? ㅠㅠ
+    // ✓ REVIEW: [사용성] 해제를 하는 부분이 없습니다.
+    // => 특정 시점에 타이머를 해제할 수 있도록 한다.
     var weatherDataCheckTimer: Timer = {
         let weatherDataCheckTimer = Timer()
         return weatherDataCheckTimer
@@ -35,11 +36,12 @@ class WeatherCityListViewController: UIViewController {
         return weatherCityListView
     }()
 
-    let activityIndicatorContainerView: WeatherActivityIndicatorView = {
+    lazy var activityIndicatorContainerView: WeatherActivityIndicatorView = {
         let activityIndicatorContainerView = WeatherActivityIndicatorView()
 
-        // Review: [사용성] UIScreen.main.bounds.size.width 보단 self.view.frame.size.width 를 참조하는 것이 어떨까요?
-        activityIndicatorContainerView.activityIndicatorView.center = CGPoint(x: UIScreen.main.bounds.size.width / 2, y: UIScreen.main.bounds.size.height / 2)
+        // ✓ REVIEW: [사용성] UIScreen.main.bounds.size.width 보단 self.view.frame.size.width 를 참조하는 것이 어떨까요?
+        // => lazy var 로 실제 실행 시 초기화 될 수 있도록 설정 + view.frame으로 접근하여 위치 설정
+        activityIndicatorContainerView.activityIndicatorView.center = CGPoint(x: self.view.frame.size.width / 2, y: self.view.frame.size.height / 2)
         return activityIndicatorContainerView
     }()
 
@@ -59,16 +61,26 @@ class WeatherCityListViewController: UIViewController {
         registerCell()
     }
 
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        weatherDataCheckTimer.invalidate()
+    }
+
     override func loadView() {
         view = weatherCityListView
+    }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+
+        // ✓ REVIEW: viewDidAppear 네트워크 작업이나 io, ui 작업 에서 하는 건 어떨가요?
+        // => viewDidAppear, viewWillAppear 별 용도를 구분해서 알아둔다. https://stackoverflow.com/questions/5630649/what-is-the-difference-between-viewwillappear-and-viewdidappear
+        requestMainWeatherData()
     }
 
     override func viewWillAppear(_: Bool) {
         super.viewWillAppear(true)
         checksLocationAuthority()
-        // ViewDidAppear 네트워크 작업이나 io, ui 작업 에서 하는 건 어떨가요?
-        // https://stackoverflow.com/questions/5630649/what-is-the-difference-between-viewwillappear-and-viewdidappear
-        requestMainWeatherData()
         reloadWeatherCityListTableView()
     }
 
@@ -107,7 +119,7 @@ class WeatherCityListViewController: UIViewController {
                     CommonData.shared.setWeatherData(subWeatherAPIData, index: index)
                     DispatchQueue.main.async {
                         self.reloadWeatherCityListTableView()
-                        // Review: [Refactroing] 정중앙에 acitivityIndicator를 띄우는 것이라면
+                        // ✓ REVIEW: [Refactroing] 정중앙에 acitivityIndicator를 띄우는 것이라면
                         // UITableView의 backgroundView 에서도 설정이 가능합니다.
                         self.cityListIndicatorView.stopCustomIndicatorAnimating(containerView: self.activityIndicatorContainerView)
                     }
@@ -168,9 +180,8 @@ class WeatherCityListViewController: UIViewController {
         case .authorizedAlways,
              .authorizedWhenInUse:
             CommonData.shared.setLocationAuthData(isAuth: true)
-        // Review: [사용성] 위치 권한을 사용할 수 없으면 사용자에게 알려줘야 합니다
-//        case .denied
-//        case .restricted
+        // ✓ REVIEW: [사용성] 위치 권한을 사용할 수 없으면 사용자에게 알려줘야 합니다.
+        // 모든 권환흭득에 대한 케이스에 대해 유저에게 상황을 알릴 수 있도록 해야한다.
         default:
             CommonData.shared.setLocationAuthData(isAuth: false)
         }
