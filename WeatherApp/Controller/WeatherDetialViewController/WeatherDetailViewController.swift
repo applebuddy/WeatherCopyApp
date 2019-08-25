@@ -20,8 +20,9 @@ class WeatherDetailViewController: UIViewController {
 
     /// WeatherPageViewController
     /// * 설정한 지역 별 날씨정보를 보여준다.
-    // Review: [Refactoring] optional 인 이유는 뭘까요...? ㅠㅠ
-    var weatherPageViewController: UIPageViewController?
+    // ✓ REVIEW: [Refactoring] optional일 필요가 없다.
+    // Optioanl로 선언되야할지 그 이유를 명확히 생각해보고 지정하자.
+    var weatherPageViewController = UIPageViewController()
 
     lazy var weatherCityListViewController: WeatherCityListViewController = {
         let weatherCityListViewController = WeatherCityListViewController()
@@ -66,8 +67,8 @@ class WeatherDetailViewController: UIViewController {
         super.viewDidLoad()
 
         // ** 날씨데이터 저장 방식 **
-        CommonData.shared.initWeatherDataListSize() // 맨 처음 메인데이터가 들어갈 크기를 공간 설정하고,
-        CommonData.shared.setUserDefaultsData() // 저장 된 서브 날씨데이터를 추가한다.
+        CommonData.shared.initWeatherDataListSize()
+        CommonData.shared.setUserDefaultsData()
 
         makeSubviews()
         setDetailViewController()
@@ -100,7 +101,7 @@ class WeatherDetailViewController: UIViewController {
 
         let unWrappingPageViewController = weatherPageViewController
 
-        unWrappingPageViewController?.setViewControllers([contentViewController], direction: .reverse, animated: true, completion: nil)
+        unWrappingPageViewController.setViewControllers([contentViewController], direction: .reverse, animated: true, completion: nil)
 
         mainPageViewController.view.addSubview(linkBarButton)
         // Review: [Refactoring] ViewController Event를 좀더 구체적으로 하는건 어떨까요?
