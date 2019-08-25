@@ -17,8 +17,14 @@ class WeatherCityListViewController: UIViewController {
     var isTimeToCheckWeatherData: Bool = true
     let weatherDataCheckInterval: Double = 10
 
+    lazy var weatherNavigationViewController: WeatherNavigationViewController = {
+        let weatherDetailViewController = WeatherDetailViewController()
+        let weatherNavigationViewController = WeatherNavigationViewController(rootViewController: weatherDetailViewController)
+        return weatherNavigationViewController
+    }()
+
     // ✓ REVIEW: [사용성] 해제를 하는 부분이 없습니다.
-    // => 특정 시점에 타이머를 해제할 수 있도록 한다.
+    // => 특정 시점에 타이머를 해제할 수 있도록 한다. invalidate()
     var weatherDataCheckTimer: Timer = {
         let weatherDataCheckTimer = Timer()
         return weatherDataCheckTimer
@@ -54,6 +60,11 @@ class WeatherCityListViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+
+        // ** 날씨데이터 저장 방식 **
+        CommonData.shared.initWeatherDataListSize()
+        CommonData.shared.setUserDefaultsData()
+
         cityListIndicatorView = activityIndicatorContainerView.activityIndicatorView
         setCityListViewController()
         setActivityIndicatorContainerView()
@@ -271,11 +282,12 @@ extension WeatherCityListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         CommonData.shared.setSelectedMainCellIndex(index: indexPath.row)
-        dismiss(animated: true, completion: nil)
+
+        present(weatherNavigationViewController, animated: true, completion: nil)
     }
 
     func tableView(_: UITableView, willDisplay cell: UITableViewCell, forRowAt _: IndexPath) {
-        // Review: [Refactoring] cell 은 재사용되기 때문에 isSelected 와 같이 상태를 나타내는 것은 데이터모델에서 하는 것이 좋지 않을까요~?
+        // ✓ Review: [Refactoring] cell 은 재사용되기 때문에 isSelected 와 같이 상태를 나타내는 것은 데이터모델에서 하는 것이 좋지 않을까요~?
         if cell.isSelected == true {
             cell.setSelected(false, animated: false)
         }

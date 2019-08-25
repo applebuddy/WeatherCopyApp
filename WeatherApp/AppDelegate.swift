@@ -20,9 +20,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // https://github.com/ios-codereview/WeatherCopyApp/blob/master/Issues/1.png
 
         // WeatherCityListViewController -> WeatherDetailViewController 순서로 가는 것이 좋습니다.
-        let weatherDetailViewController = WeatherDetailViewController()
-        let weatherNavigationController = WeatherNavigationController(rootViewController: weatherDetailViewController)
-        window?.rootViewController = weatherNavigationController
+        let weatherCityListViewController = WeatherCityListViewController()
+        window?.rootViewController = weatherCityListViewController
         window?.makeKeyAndVisible()
 
         return true

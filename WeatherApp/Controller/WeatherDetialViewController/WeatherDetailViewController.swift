@@ -22,7 +22,10 @@ class WeatherDetailViewController: UIViewController {
     /// * 설정한 지역 별 날씨정보를 보여준다.
     // ✓ REVIEW: [Refactoring] optional일 필요가 없다.
     // Optioanl로 선언되야할지 그 이유를 명확히 생각해보고 지정하자.
-    var weatherPageViewController = UIPageViewController()
+    let weatherPageViewController: UIPageViewController = {
+        let weatherPageViewController = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
+        return weatherPageViewController
+    }()
 
     lazy var weatherCityListViewController: WeatherCityListViewController = {
         let weatherCityListViewController = WeatherCityListViewController()
@@ -65,17 +68,11 @@ class WeatherDetailViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // ** 날씨데이터 저장 방식 **
-        CommonData.shared.initWeatherDataListSize()
-        CommonData.shared.setUserDefaultsData()
-
         makeSubviews()
         setDetailViewController()
         setButtonTarget()
         setToolBarButtonItem()
         makeConstraints()
-        presentToCityListView()
     }
 
     override func viewWillAppear(_: Bool) {
@@ -92,9 +89,7 @@ class WeatherDetailViewController: UIViewController {
     }
 
     func setWeatherPageViewController() {
-        let mainPageViewController = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
-        mainPageViewController.view.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height)
-        weatherPageViewController = mainPageViewController
+        weatherPageViewController.view.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height)
 
         // 뷰 컨트롤러 하나만 먼저 준비, 데이터소스에서 나머지 컨텐츠 뷰 컨트롤러를 설정한다.
         guard let contentViewController = makeContentViewController(index: CommonData.shared.selectedMainCellIndex) else { return }
@@ -103,7 +98,7 @@ class WeatherDetailViewController: UIViewController {
 
         unWrappingPageViewController.setViewControllers([contentViewController], direction: .reverse, animated: true, completion: nil)
 
-        mainPageViewController.view.addSubview(linkBarButton)
+        weatherPageViewController.view.addSubview(linkBarButton)
         // Review: [Refactoring] ViewController Event를 좀더 구체적으로 하는건 어떨까요?
         /*
          to.willMove(toParent: self)
@@ -113,12 +108,12 @@ class WeatherDetailViewController: UIViewController {
          from.removeFromParent()
          from.didMove(toParent: nil)
          */
-        view.addSubview(mainPageViewController.view)
-        addChild(mainPageViewController)
-        mainPageViewController.didMove(toParent: self)
-        mainPageViewController.delegate = self
-        mainPageViewController.dataSource = self
-        mainPageViewController.view.backgroundColor = .black
+        view.addSubview(weatherPageViewController.view)
+        addChild(weatherPageViewController)
+        weatherPageViewController.didMove(toParent: self)
+        weatherPageViewController.delegate = self
+        weatherPageViewController.dataSource = self
+        weatherPageViewController.view.backgroundColor = .black
     }
 
     func setPageControl() {}
@@ -187,8 +182,8 @@ class WeatherDetailViewController: UIViewController {
 
     // MARK: Check Event
 
-    func presentToCityListView() {
-        present(weatherCityListViewController, animated: true)
+    func dismissToCityListView() {
+        dismiss(animated: true, completion: nil)
     }
 
     // MARK: - Button Event
@@ -201,7 +196,7 @@ class WeatherDetailViewController: UIViewController {
     }
 
     @objc func listButtonPressed(_: UIButton) {
-        present(weatherCityListViewController, animated: true, completion: nil)
+        dismissToCityListView()
     }
 }
 
