@@ -33,13 +33,13 @@ class WeatherDetailViewController: UIViewController {
     }()
 
     private let weatherPageControl: UIPageControl = {
-        let weatherPageControl = UIPageControl(frame: CGRect(x: 0, y: UIScreen.main.bounds.maxY, width: UIScreen.main.bounds.width, height: 50))
-        weatherPageControl.numberOfPages = 1 + CommonData.shared.weatherDataList.count
+        let weatherPageControl = UIPageControl()
+        weatherPageControl.numberOfPages = CommonData.shared.weatherDataList.count
         weatherPageControl.hidesForSinglePage = false
-        weatherPageControl.currentPage = 0
+        weatherPageControl.currentPage = CommonData.shared.selectedMainCellIndex
         weatherPageControl.tintColor = .black
         weatherPageControl.pageIndicatorTintColor = .black
-        weatherPageControl.currentPageIndicatorTintColor = .blue
+        weatherPageControl.currentPageIndicatorTintColor = .white
         return weatherPageControl
     }()
 
@@ -107,12 +107,15 @@ class WeatherDetailViewController: UIViewController {
         weatherPageViewController.setViewControllers([contentViewController], direction: .reverse, animated: true, completion: nil)
     }
 
-    private func setPageControl() {}
+    private func setMainPageControl(index: Int) {
+        weatherPageControl.currentPage = index
+    }
 
     private func makeContentViewController(index: Int) -> WeatherDetailContentViewController {
         let contentViewController = WeatherDetailContentViewController()
         if index >= CommonData.shared.weatherDataList.count {
             contentViewController.pageViewControllerIndex = CommonData.shared.selectedMainCellIndex
+            setMainPageControl(index: CommonData.shared.selectedMainCellIndex)
         } else {
             contentViewController.pageViewControllerIndex = index
         }
@@ -137,8 +140,9 @@ class WeatherDetailViewController: UIViewController {
     private func setToolBarButtonItem() {
         let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
         let barButtonItem = UIBarButtonItem(customView: linkBarButton)
+        let barButtonItem2 = UIBarButtonItem(customView: weatherPageControl)
         let barButtonItem3 = UIBarButtonItem(customView: listBarButton)
-        let toolBarItems = [barButtonItem, flexibleSpace, flexibleSpace, flexibleSpace, barButtonItem3]
+        let toolBarItems = [barButtonItem, flexibleSpace, barButtonItem2, flexibleSpace, barButtonItem3]
         toolbarItems = toolBarItems
         navigationController?.setToolbarHidden(false, animated: false)
         hidesBottomBarWhenPushed = false
@@ -203,8 +207,9 @@ extension WeatherDetailViewController: UIPageViewControllerDataSource {
     func pageViewController(_: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         guard let targetViewController = viewController as? WeatherDetailContentViewController else { return nil }
         let previousIndex = targetViewController.pageViewControllerIndex
-
+        setMainPageControl(index: previousIndex)
         if previousIndex == 0 {
+            setMainPageControl(index: 0)
             return nil
         } else {
             CommonData.shared.setSelectedMainCellIndex(index: previousIndex - 1)
@@ -217,7 +222,7 @@ extension WeatherDetailViewController: UIPageViewControllerDataSource {
 
         let contentViewControllerMaxIndex = CommonData.shared.weatherDataList.count - 1
         let nextIndex = targetViewController.pageViewControllerIndex
-
+        setMainPageControl(index: nextIndex)
         if nextIndex == contentViewControllerMaxIndex {
             return nil
         } else {
@@ -226,14 +231,14 @@ extension WeatherDetailViewController: UIPageViewControllerDataSource {
         }
     }
 
-    func presentationCount(for _: UIPageViewController) -> Int {
-        return CommonData.shared.weatherDataList.count
-    }
-
-    // 인디케이터의 초기 값
-    func presentationIndex(for _: UIPageViewController) -> Int {
-        return CommonData.shared.selectedMainCellIndex
-    }
+//    func presentationCount(for _: UIPageViewController) -> Int {
+//        return CommonData.shared.weatherDataList.count
+//    }
+//
+//    // 인디케이터의 초기 값
+//    func presentationIndex(for _: UIPageViewController) -> Int {
+//        return CommonData.shared.selectedMainCellIndex
+//    }
 }
 
 // MARK: - Custom View Protocol
