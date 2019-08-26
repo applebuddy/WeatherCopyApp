@@ -59,6 +59,13 @@ class WeatherCityListTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        if selected == true {
+            isSelected = false
+        }
+    }
+
     // MARK: - Set Method
 
     func setMainTableCellData(cityName: String, timeStamp: Int, timeZone: String, temperature: Double) {

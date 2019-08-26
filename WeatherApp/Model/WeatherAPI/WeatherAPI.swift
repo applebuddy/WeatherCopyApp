@@ -12,15 +12,15 @@ final class WeatherAPI {
     static let shared = WeatherAPI()
 
     // STEP 1) JSON데이터를 받기 위해 사용할 변수와 API토큰을 준비한다.
-    // Review: [Refactroing] 외부에서 접근할 수 없도록 private 로 설정하는 것이 캡슐화에 도움이 됩니다.
-    let urlSession = URLSession(configuration: .default)
-    var dataTask = URLSessionDataTask()
-    var baseURL = "https://api.darksky.net/forecast/"
-    let APIToken = "447da2f0774b0e23418285c52c5ec67b/" // 자신의 날씨 API+'/'를 사용합니다.
+    // ✓ Review: [Refactroing] 외부에서 접근할 수 없도록 private 로 설정하는 것이 캡슐화에 도움이 됩니다.
+    private let urlSession = URLSession(configuration: .default)
+    private var dataTask = URLSessionDataTask()
+    private var baseURL = "https://api.darksky.net/forecast/"
+    private let APIToken = "447da2f0774b0e23418285c52c5ec67b/" // 자신의 날씨 API+'/'를 사용합니다.
 
     // 447da2f0774b0e23418285c52c5ec67b
-    let APISubURL = "?lang=ko&exclude=minutely,alerts,flags"
-    var errorMessage = ""
+    private let APISubURL = "?lang=ko&exclude=minutely,alerts,flags"
+    private var errorMessage = ""
 
     // Review: [경고] weak 키워드를 붙이지 않으면 강한 상호 참조가 됩니다.
     weak var delegate: WeatherAPIDelegate?
@@ -33,7 +33,7 @@ final class WeatherAPI {
     // completion: @escaping weatherResult
     // Result<WeatherAPIData, Error> 로 정리하는 것이 어떨까요?
     // delegate 를 사용하면 다른 곳에서 사용하게 된다면 문제가 발생합니다.
-    public func requestAPI(latitude: Double, longitude: Double, completion: @escaping (WeatherAPIData) -> Void) {
+    func requestAPI(latitude: Double, longitude: Double, completion: @escaping (WeatherAPIData) -> Void) {
         delegate?.weatherAPIDidRequested(self)
         let APIUrlString = "\(baseURL)\(latitude),\(longitude)\(APISubURL)"
         guard let APIUrl = URL(string: APIUrlString) else { return }
@@ -76,7 +76,7 @@ final class WeatherAPI {
         dataTask.resume()
     }
 
-    public func setBaseURL(token _: String) {
+    private func setBaseURL(token _: String) {
         baseURL.append(APIToken)
     }
 }

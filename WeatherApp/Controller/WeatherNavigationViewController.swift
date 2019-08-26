@@ -8,7 +8,7 @@
 
 import UIKit
 
-public class WeatherNavigationController: UINavigationController {
+public class WeatherNavigationViewController: UINavigationController {
     // MARK: - Lift Cycle
 
     override init(rootViewController: UIViewController) {

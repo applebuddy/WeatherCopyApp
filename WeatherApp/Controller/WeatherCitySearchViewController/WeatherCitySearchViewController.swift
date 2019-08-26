@@ -13,28 +13,29 @@ import UIKit
 class WeatherCitySearchViewController: UIViewController {
     // MARK: - Property
 
-    // Review: [Refactoring] Singleton으로 제공하는 건 어떨까요?
-    let locationManager = CLLocationManager()
-    let geoCoder = CLGeocoder()
-    let completer = MKLocalSearchCompleter()
-    var displayedResultList = [String]()
-    var citySearchBar: UISearchBar?
+    // ✓ REVIEW: [Refactoring] Singleton으로 제공하는 건 어떨까요?
+    // 대부분의 ViewController에서 locationManager가 사용된다. 싱글턴으로 만들어 사용하면 보다 유연하게 객체를 사용할 수 있다.
+    private let locationManager = CLLocationManager()
+    private let geoCoder = CLGeocoder()
+    private let completer = MKLocalSearchCompleter()
+    private var displayedResultList = [String]()
+    private var citySearchBar: UISearchBar?
 
     // MARK: - UI
 
-    let weatherCitySearchView: WeatherCitySearchView = {
+    private let weatherCitySearchView: WeatherCitySearchView = {
         let weatherCitySearchView = WeatherCitySearchView()
         return weatherCitySearchView
     }()
 
-    let activityIndicatorContainerView: WeatherActivityIndicatorView = {
+    private let activityIndicatorContainerView: WeatherActivityIndicatorView = {
         let activityIndicatorContainerView = WeatherActivityIndicatorView()
         activityIndicatorContainerView.isHidden = true
         activityIndicatorContainerView.activityIndicatorView.center = CGPoint(x: UIScreen.main.bounds.size.width / 2, y: UIScreen.main.bounds.size.height / 2)
         return activityIndicatorContainerView
     }()
 
-    lazy var citySearchIndicatorView: UIActivityIndicatorView = {
+    private lazy var citySearchIndicatorView: UIActivityIndicatorView = {
         let indicatorView = UIActivityIndicatorView()
         return indicatorView
     }()
@@ -56,16 +57,18 @@ class WeatherCitySearchViewController: UIViewController {
 
     override func viewWillAppear(_: Bool) {
         super.viewWillAppear(true)
-        // Review: [사용성] 즉시 키보드를 보여주는 것보다 Delay 이후에 보여주는 것이 좀 더 부드럽지 않을까요~?
-//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-        weatherCitySearchView.citySearchBar.becomeFirstResponder()
-//        }
+        // REVIEW: [사용성] 즉시 키보드를 보여주는 것보다 Delay 이후에 보여주는 것이 좀 더 부드럽지 않을까요?
+        // 유저 입장에서 보다 자연스러운 앱 실행 및 진행이 될 수 있도록 신경쓰자
+        // Concurrent Async로 0.1초 지연 후 실행시킨다.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            self.weatherCitySearchView.citySearchBar.becomeFirstResponder()
+        }
         requestLocationAuthority()
     }
 
     // MARK: - Set Method
 
-    func setButtonTarget() {
+    private func setButtonTarget() {
         weatherCitySearchView.backToMainButton.addTarget(self, action: #selector(backToMainButtonPressed(_:)), for: .touchUpInside)
     }
 
@@ -75,7 +78,7 @@ class WeatherCitySearchViewController: UIViewController {
         return .lightContent
     }
 
-    func calculateDefaultCityName(placeMarks: [CLPlacemark]) -> String {
+    private func calculateDefaultCityName(placeMarks: [CLPlacemark]) -> String {
         var defaultCityName = "-"
         if let cityName = placeMarks.first?.dictionaryWithValues(forKeys: ["locality"])["locality"] {
             if let cityName = cityName as? String {
@@ -90,7 +93,7 @@ class WeatherCitySearchViewController: UIViewController {
         return defaultCityName
     }
 
-    func requestLocationAuthority() {
+    private func requestLocationAuthority() {
         // 현재 위치권한이 있는지 유무를 확인한다.
         let locationAuthStatus = CLLocationManager.authorizationStatus()
         switch locationAuthStatus {
@@ -104,7 +107,7 @@ class WeatherCitySearchViewController: UIViewController {
         }
     }
 
-    func setLocationManager() {
+    private func setLocationManager() {
         locationManager.delegate = self
         completer.delegate = self
 
@@ -112,7 +115,7 @@ class WeatherCitySearchViewController: UIViewController {
         locationManager.startUpdatingLocation()
     }
 
-    func setCitySearchViewController() {
+    private func setCitySearchViewController() {
         makeSubviews()
         view.backgroundColor = .black
         setButtonTarget()
@@ -121,20 +124,20 @@ class WeatherCitySearchViewController: UIViewController {
         citySearchBar?.delegate = self
     }
 
-    func resetDisplayedCityList() {
+    private func resetDisplayedCityList() {
         displayedResultList = []
     }
 
     // MARK: - Alert Event
 
-    func presentLocationDataErrorAlertController() {
+    private func presentLocationDataErrorAlertController() {
         let errorAlertController = UIAlertController(title: "위치정보 흭득실패", message: "해당 위치정보를 얻는데 실패했습니다. 정확한 지역, 다른 지역을 선택해주세요.", preferredStyle: .alert)
         let errorAlertAction = UIAlertAction(title: "확인", style: .cancel, handler: nil)
         errorAlertController.addAction(errorAlertAction)
         present(errorAlertController, animated: true, completion: nil)
     }
 
-    func presentLocationAuthAlertController() {
+    private func presentLocationAuthAlertController() {
         guard let appSettingURL = URL(string: UIApplication.openSettingsURLString) else { return }
 
         let authAlertController = UIAlertController(title: "위치 권한 요청", message: "날씨정보를 받기 위해 위치권한이 필요합니다. 위치권한을 설정하시겠습니까?", preferredStyle: .alert)
@@ -149,7 +152,7 @@ class WeatherCitySearchViewController: UIViewController {
 
     // MARK: - Button Event
 
-    @objc func backToMainButtonPressed(_: UIButton) {
+    @objc private func backToMainButtonPressed(_: UIButton) {
         view.endEditing(true)
         dismiss(animated: true, completion: nil)
     }

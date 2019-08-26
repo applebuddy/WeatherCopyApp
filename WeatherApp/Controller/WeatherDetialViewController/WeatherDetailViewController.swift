@@ -13,45 +13,49 @@ import UIKit
 class WeatherDetailViewController: UIViewController {
     // MARK: - Property
 
-    let locationManager = CLLocationManager()
-    var isAppearViewController = false
+    private let locationManager = CLLocationManager()
+    private var isAppearViewController = false
 
     // MARK: - UI
 
     /// WeatherPageViewController
     /// * 설정한 지역 별 날씨정보를 보여준다.
-    // Review: [Refactoring] optional 인 이유는 뭘까요...? ㅠㅠ
-    var weatherPageViewController: UIPageViewController?
+    // ✓ REVIEW: [Refactoring] optional일 필요가 없다.
+    // Optioanl로 선언되야할지 그 이유를 명확히 생각해보고 지정하자.
+    private let weatherPageViewController: UIPageViewController = {
+        let weatherPageViewController = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
+        return weatherPageViewController
+    }()
 
-    lazy var weatherCityListViewController: WeatherCityListViewController = {
+    private lazy var weatherCityListViewController: WeatherCityListViewController = {
         let weatherCityListViewController = WeatherCityListViewController()
         return weatherCityListViewController
     }()
 
-    let weatherPageControl: UIPageControl = {
-        let weatherPageControl = UIPageControl(frame: CGRect(x: 0, y: UIScreen.main.bounds.maxY, width: UIScreen.main.bounds.width, height: 50))
-        weatherPageControl.numberOfPages = 1 + CommonData.shared.weatherDataList.count
+    private let weatherPageControl: UIPageControl = {
+        let weatherPageControl = UIPageControl()
+        weatherPageControl.numberOfPages = CommonData.shared.weatherDataList.count
         weatherPageControl.hidesForSinglePage = false
-        weatherPageControl.currentPage = 0
+        weatherPageControl.currentPage = CommonData.shared.selectedMainCellIndex
         weatherPageControl.tintColor = .black
         weatherPageControl.pageIndicatorTintColor = .black
-        weatherPageControl.currentPageIndicatorTintColor = .blue
+        weatherPageControl.currentPageIndicatorTintColor = .white
         return weatherPageControl
     }()
 
-    let linkBarButton: UIButton = {
+    private let linkBarButton: UIButton = {
         let linkBarButton = UIButton(type: .custom)
         linkBarButton.setImage(UIImage(named: AssetIdentifier.Image.weatherLink), for: .normal)
         return linkBarButton
     }()
 
-    let listBarButton: UIButton = {
+    private let listBarButton: UIButton = {
         let listBarButton = UIButton(type: .custom)
         listBarButton.setImage(UIImage(named: AssetIdentifier.Image.weatherList), for: .normal)
         return listBarButton
     }()
 
-    let weatherDetailView: WeatherDetailView = {
+    private let weatherDetailView: WeatherDetailView = {
         let weatherDetailView = WeatherDetailView()
         return weatherDetailView
     }()
@@ -64,24 +68,12 @@ class WeatherDetailViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // ** 날씨데이터 저장 방식 **
-        CommonData.shared.initWeatherDataListSize() // 맨 처음 메인데이터가 들어갈 크기를 공간 설정하고,
-        CommonData.shared.setUserDefaultsData() // 저장 된 서브 날씨데이터를 추가한다.
-
         makeSubviews()
         setDetailViewController()
+        setWeatherPageViewController()
         setButtonTarget()
         setToolBarButtonItem()
         makeConstraints()
-        presentToCityListView()
-    }
-
-    override func viewWillAppear(_: Bool) {
-        super.viewWillAppear(true)
-
-        // 페이지뷰 컨트롤러 갱신
-        setWeatherPageViewController()
     }
 
     // MARK: - Set Method
@@ -90,19 +82,17 @@ class WeatherDetailViewController: UIViewController {
         return .lightContent
     }
 
-    func setWeatherPageViewController() {
-        let mainPageViewController = UIPageViewController(transitionStyle: .scroll, navigationOrientation: .horizontal, options: nil)
-        mainPageViewController.view.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height)
-        weatherPageViewController = mainPageViewController
+    private func setWeatherPageViewController() {
+        weatherPageViewController.view.frame = CGRect(x: 0, y: 0, width: view.bounds.width, height: view.bounds.height)
 
-        // 뷰 컨트롤러 하나만 먼저 준비, 데이터소스에서 나머지 컨텐츠 뷰 컨트롤러를 설정한다.
-        guard let contentViewController = makeContentViewController(index: CommonData.shared.selectedMainCellIndex) else { return }
+        view.addSubview(weatherPageViewController.view)
+        addChild(weatherPageViewController)
+        weatherPageViewController.didMove(toParent: self)
+        weatherPageViewController.delegate = self
+        weatherPageViewController.dataSource = self
+        weatherPageViewController.view.backgroundColor = .black
 
-        let unWrappingPageViewController = weatherPageViewController
-
-        unWrappingPageViewController?.setViewControllers([contentViewController], direction: .reverse, animated: true, completion: nil)
-
-        mainPageViewController.view.addSubview(linkBarButton)
+        weatherPageViewController.view.addSubview(linkBarButton)
         // Review: [Refactoring] ViewController Event를 좀더 구체적으로 하는건 어떨까요?
         /*
          to.willMove(toParent: self)
@@ -112,53 +102,53 @@ class WeatherDetailViewController: UIViewController {
          from.removeFromParent()
          from.didMove(toParent: nil)
          */
-        view.addSubview(mainPageViewController.view)
-        addChild(mainPageViewController)
-        mainPageViewController.didMove(toParent: self)
-        mainPageViewController.delegate = self
-        mainPageViewController.dataSource = self
-        mainPageViewController.view.backgroundColor = .black
+        // 뷰 컨트롤러 하나만 먼저 준비, 데이터소스에서 나머지 컨텐츠 뷰 컨트롤러를 설정한다.
+        let contentViewController = makeContentViewController(index: CommonData.shared.selectedMainCellIndex)
+        weatherPageViewController.setViewControllers([contentViewController], direction: .reverse, animated: true, completion: nil)
     }
 
-    func setPageControl() {}
+    private func setMainPageControl(index: Int) {
+        weatherPageControl.currentPage = index
+    }
 
-    func makeContentViewController(index: Int) -> WeatherDetailContentViewController? {
+    private func makeContentViewController(index: Int) -> WeatherDetailContentViewController {
         let contentViewController = WeatherDetailContentViewController()
         if index >= CommonData.shared.weatherDataList.count {
             contentViewController.pageViewControllerIndex = CommonData.shared.selectedMainCellIndex
+            setMainPageControl(index: CommonData.shared.selectedMainCellIndex)
         } else {
             contentViewController.pageViewControllerIndex = index
         }
 
         contentViewController.setWeatherData()
-        // Review: [성능] layoutIfNeeded 는 신중히 사용하셔야 합니다.
-        // https://miro.medium.com/max/1218/1*qRxIjIzHomLae-tmI0QXgQ.png
-        // 위 그림 과정을 전체 수행합니다
-        contentViewController.weatherDetailContentView.weatherDetailTitleView.layoutIfNeeded()
+        // REVIEW: [성능] layoutIfNeeded 는 신중히 사용하셔야 합니다.
+        // layoutIfNeeded는 아래 그림 과정을 전체 수행합니다
+        // ✭ https://miro.medium.com/max/1218/1*qRxIjIzHomLae-tmI0QXgQ.png
+
         return contentViewController
     }
 
-    func setDetailViewController() {
+    private func setDetailViewController() {
         view.backgroundColor = CommonColor.weatherDetailView
-        setWeatherPageViewController()
     }
 
-    func setButtonTarget() {
+    private func setButtonTarget() {
         linkBarButton.addTarget(self, action: #selector(linkButtonPressed(_:)), for: .touchUpInside)
         listBarButton.addTarget(self, action: #selector(listButtonPressed(_:)), for: .touchUpInside)
     }
 
-    func setToolBarButtonItem() {
+    private func setToolBarButtonItem() {
         let flexibleSpace = UIBarButtonItem(barButtonSystemItem: .flexibleSpace, target: self, action: nil)
         let barButtonItem = UIBarButtonItem(customView: linkBarButton)
+        let barButtonItem2 = UIBarButtonItem(customView: weatherPageControl)
         let barButtonItem3 = UIBarButtonItem(customView: listBarButton)
-        let toolBarItems = [barButtonItem, flexibleSpace, flexibleSpace, flexibleSpace, barButtonItem3]
+        let toolBarItems = [barButtonItem, flexibleSpace, barButtonItem2, flexibleSpace, barButtonItem3]
         toolbarItems = toolBarItems
         navigationController?.setToolbarHidden(false, animated: false)
         hidesBottomBarWhenPushed = false
     }
 
-    func makeWeatherInfoTableHeaderViewScrollEvent(_ scrollView: UIScrollView, offsetY _: CGFloat) {
+    private func makeWeatherInfoTableHeaderViewScrollEvent(_ scrollView: UIScrollView, offsetY _: CGFloat) {
         if scrollView.contentOffset.y <= 0 {
             scrollView.contentOffset.y = CGFloat.zero
         }
@@ -168,7 +158,7 @@ class WeatherDetailViewController: UIViewController {
         weatherDetailView.weatherDetailTableHeaderView.setTableHeaderViewAlpha(alpha: CGFloat(alphaValue))
     }
 
-    func makeLinkBarButtonConstraint() {
+    private func makeLinkBarButtonConstraint() {
         linkBarButton.activateAnchors()
         NSLayoutConstraint.activate([
             linkBarButton.heightAnchor.constraint(equalToConstant: CommonSize.defaultButtonSize.height),
@@ -176,7 +166,7 @@ class WeatherDetailViewController: UIViewController {
         ])
     }
 
-    func makeListBarButtonConstraint() {
+    private func makeListBarButtonConstraint() {
         listBarButton.activateAnchors()
         NSLayoutConstraint.activate([
             listBarButton.heightAnchor.constraint(equalToConstant: CommonSize.defaultButtonSize.height),
@@ -186,21 +176,21 @@ class WeatherDetailViewController: UIViewController {
 
     // MARK: Check Event
 
-    func presentToCityListView() {
-        present(weatherCityListViewController, animated: true)
+    private func dismissToCityListView() {
+        dismiss(animated: true, completion: nil)
     }
 
     // MARK: - Button Event
 
-    @objc func linkButtonPressed(_: UIButton) {
+    @objc private func linkButtonPressed(_: UIButton) {
         // ✭ URL 링크주소는 파싱구현 이후 다시 수정한다.
         let latitude = CommonData.shared.mainCoordinate.latitude
         let longitude = CommonData.shared.mainCoordinate.longitude
         CommonData.shared.openWeatherURL(latitude: latitude, longitude: longitude)
     }
 
-    @objc func listButtonPressed(_: UIButton) {
-        present(weatherCityListViewController, animated: true, completion: nil)
+    @objc private func listButtonPressed(_: UIButton) {
+        dismissToCityListView()
     }
 }
 
@@ -217,8 +207,9 @@ extension WeatherDetailViewController: UIPageViewControllerDataSource {
     func pageViewController(_: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         guard let targetViewController = viewController as? WeatherDetailContentViewController else { return nil }
         let previousIndex = targetViewController.pageViewControllerIndex
-
+        setMainPageControl(index: previousIndex)
         if previousIndex == 0 {
+            setMainPageControl(index: 0)
             return nil
         } else {
             CommonData.shared.setSelectedMainCellIndex(index: previousIndex - 1)
@@ -231,7 +222,7 @@ extension WeatherDetailViewController: UIPageViewControllerDataSource {
 
         let contentViewControllerMaxIndex = CommonData.shared.weatherDataList.count - 1
         let nextIndex = targetViewController.pageViewControllerIndex
-
+        setMainPageControl(index: nextIndex)
         if nextIndex == contentViewControllerMaxIndex {
             return nil
         } else {
@@ -240,14 +231,14 @@ extension WeatherDetailViewController: UIPageViewControllerDataSource {
         }
     }
 
-    func presentationCount(for _: UIPageViewController) -> Int {
-        return CommonData.shared.weatherDataList.count
-    }
-
-    // 인디케이터의 초기 값
-    func presentationIndex(for _: UIPageViewController) -> Int {
-        return CommonData.shared.selectedMainCellIndex
-    }
+//    func presentationCount(for _: UIPageViewController) -> Int {
+//        return CommonData.shared.weatherDataList.count
+//    }
+//
+//    // 인디케이터의 초기 값
+//    func presentationIndex(for _: UIPageViewController) -> Int {
+//        return CommonData.shared.selectedMainCellIndex
+//    }
 }
 
 // MARK: - Custom View Protocol
