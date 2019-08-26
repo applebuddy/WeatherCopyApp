@@ -66,12 +66,6 @@ class WeatherCityListViewController: UIViewController {
         registerCell()
     }
 
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        // 체크 타이머 해제
-        weatherDataCheckTimer.invalidate()
-    }
-
     override func loadView() {
         view = weatherCityListView
     }
@@ -81,13 +75,19 @@ class WeatherCityListViewController: UIViewController {
 
         // ✓ REVIEW: viewDidAppear 네트워크 작업이나 io, ui 작업 에서 하는 건 어떨가요?
         // => viewDidAppear, viewWillAppear 별 용도를 구분해서 알아둔다. https://stackoverflow.com/questions/5630649/what-is-the-difference-between-viewwillappear-and-viewdidappear
+        checksLocationAuthority()
         requestMainWeatherData()
     }
 
     override func viewWillAppear(_: Bool) {
         super.viewWillAppear(true)
-        checksLocationAuthority()
         reloadWeatherCityListTableView()
+    }
+
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        // 체크 타이머 해제
+        weatherDataCheckTimer.invalidate()
     }
 
     // MARK: - Set Method
@@ -380,6 +380,7 @@ extension WeatherCityListViewController: WeatherAPIDelegate {
                 self.cityListIndicatorView.stopCustomIndicatorAnimating(containerView: self.activityIndicatorContainerView)
             }
         }
+        reloadWeatherCityListTableView()
     }
 
     func weatherAPIDidFinished(_: WeatherAPI) {
