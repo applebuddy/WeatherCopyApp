@@ -76,11 +76,12 @@ class WeatherCityListViewController: UIViewController {
         // ✓ REVIEW: viewDidAppear 네트워크 작업이나 io, ui 작업 에서 하는 건 어떨가요?
         // => viewDidAppear, viewWillAppear 별 용도를 구분해서 알아둔다. https://stackoverflow.com/questions/5630649/what-is-the-difference-between-viewwillappear-and-viewdidappear
         checksLocationAuthority()
-        requestMainWeatherData()
+        requestWeatherData()
     }
 
     override func viewWillAppear(_: Bool) {
         super.viewWillAppear(true)
+        isTimeToCheckWeatherData = true
         reloadWeatherCityListTableView()
     }
 
@@ -102,6 +103,12 @@ class WeatherCityListViewController: UIViewController {
     private func reloadWeatherCityListTableView() {
         DispatchQueue.main.async {
             self.weatherCityListView.weatherCityListTableView.reloadData()
+        }
+    }
+
+    private func reloadMainCityCell() {
+        DispatchQueue.main.async {
+            self.weatherCityListView.weatherCityListTableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .none)
         }
     }
 
@@ -136,15 +143,13 @@ class WeatherCityListViewController: UIViewController {
         }
     }
 
-    private func requestMainWeatherData() {
+    private func requestWeatherData() {
         let mainLatitude = CommonData.shared.mainCoordinate.latitude
         let mainLongitude = CommonData.shared.mainCoordinate.longitude
 
         WeatherAPI.shared.requestAPI(latitude: mainLatitude, longitude: mainLongitude) { weatherAPIData in
             CommonData.shared.setWeatherData(weatherAPIData, index: 0)
-            DispatchQueue.main.async {
-                self.reloadWeatherCityListTableView()
-            }
+            self.reloadMainCityCell()
             self.requestSubWeatherData()
         }
     }
@@ -234,7 +239,7 @@ class WeatherCityListViewController: UIViewController {
     @objc private func refreshWeatherTableViewData(_: UIRefreshControl) {
         weatherDataRefreshControl.isHidden = false
         weatherDataRefreshControl.beginRefreshing()
-        requestMainWeatherData()
+        requestWeatherData()
     }
 
     // MARK: - Timer Event
@@ -364,7 +369,7 @@ extension WeatherCityListViewController: CLLocationManagerDelegate {
         if isTimeToCheckWeatherData {
             CommonData.shared.setMainCityName(latitude: latitude, longitude: longitude)
             CommonData.shared.setMainCoordinate(latitude: latitude, longitude: longitude)
-            requestMainWeatherData()
+            requestWeatherData()
         }
     }
 
