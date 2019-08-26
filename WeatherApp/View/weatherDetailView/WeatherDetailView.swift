@@ -52,7 +52,7 @@ class WeatherDetailView: UIView {
             weatherDetailTitleView.topAnchor.constraint(equalTo: topAnchor),
             weatherDetailTitleView.leftAnchor.constraint(equalTo: leftAnchor),
             weatherDetailTitleView.rightAnchor.constraint(equalTo: rightAnchor),
-            weatherDetailTitleView.heightAnchor.constraint(lessThanOrEqualToConstant: WeatherViewHeight.titleViewHeight),
+            weatherDetailTitleView.heightAnchor.constraint(equalToConstant: WeatherViewHeight.titleViewHeight),
         ])
     }
 
