@@ -85,8 +85,8 @@
   
 ### 날씨 앱 실행 예시
 - **-> 기능구현 완료, 코드 구조 / 알고리즘 등에 대한 추가 리펙토링 진행 중**
-- 현업개발자 리뷰지원 으로 코드구조 개선 중
-  - 지원해주신 Review : 김태수님(https://github.com/kimtaesu)
+- 현업개발자 Reviewer 지원 으로 코드구조 개선 중
+  - 지원해주신 Reviewer : 김태수님(https://github.com/kimtaesu)
 
 <div>
 <img width="300" src="https://user-images.githubusercontent.com/4410021/62603585-32e64a80-b931-11e9-88c3-86c960f40922.jpeg">      <img width="300" src="https://user-images.githubusercontent.com/4410021/62603608-3bd71c00-b931-11e9-8b46-ea0c7b2dfc79.jpeg"> 
