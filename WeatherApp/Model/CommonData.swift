@@ -128,19 +128,22 @@ final class CommonData {
         }
     }
 
-    func setMainCityName(latitude: Double, longitude: Double) {
+    func setMainCityName(latitude: Double, longitude: Double, completion: @escaping (Bool) -> Void) {
         let location = CLLocation(latitude: latitude, longitude: longitude)
         let geoCoder = CLGeocoder()
         let locale = Locale(identifier: "Ko-kr")
         geoCoder.reverseGeocodeLocation(location, preferredLocale: locale) { placeMarks, error in
 
             if error != nil {
+                completion(false)
                 return
             }
+
             guard let address = placeMarks?.first else { return }
             let cityName = address.dictionaryWithValues(forKeys: ["locality"])["locality"]
             guard let cityNameString = cityName as? String else { return }
             CommonData.shared.setCityName(cityName: cityNameString, index: 0)
+            completion(true)
         }
     }
 

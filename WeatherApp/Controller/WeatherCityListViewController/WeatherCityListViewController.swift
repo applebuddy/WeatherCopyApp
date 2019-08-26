@@ -41,13 +41,8 @@ class WeatherCityListViewController: UIViewController {
 
         // ✓ REVIEW: [사용성] UIScreen.main.bounds.size.width 보단 self.view.frame.size.width 를 참조하는 것이 어떨까요?
         // => lazy var 로 실제 실행 시 초기화 될 수 있도록 설정 + view.frame으로 접근하여 위치 설정
-        activityIndicatorContainerView.activityIndicatorView.center = CGPoint(x: self.view.frame.size.width / 2, y: self.view.frame.size.height / 2)
+        activityIndicatorContainerView.center = CGPoint(x: UIScreen.main.bounds.size.width / 2, y: UIScreen.main.bounds.size.height / 2)
         return activityIndicatorContainerView
-    }()
-
-    private lazy var cityListIndicatorView: UIActivityIndicatorView = {
-        let indicatorView = UIActivityIndicatorView()
-        return indicatorView
     }()
 
     // MARK: - Life Cycle
@@ -56,11 +51,9 @@ class WeatherCityListViewController: UIViewController {
         super.viewDidLoad()
 
         // ** 날씨데이터 저장 방식 **
+        setCityListViewController()
         CommonData.shared.initWeatherDataListSize()
         CommonData.shared.setUserDefaultsData()
-
-        cityListIndicatorView = activityIndicatorContainerView.activityIndicatorView
-        setCityListViewController()
         setActivityIndicatorContainerView()
         setWeatherDataRefreshControl()
         registerCell()
@@ -70,23 +63,23 @@ class WeatherCityListViewController: UIViewController {
         view = weatherCityListView
     }
 
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
+    override func viewDidAppear(_: Bool) {
+        super.viewDidAppear(true)
 
         // ✓ REVIEW: viewDidAppear 네트워크 작업이나 io, ui 작업 에서 하는 건 어떨가요?
         // => viewDidAppear, viewWillAppear 별 용도를 구분해서 알아둔다. https://stackoverflow.com/questions/5630649/what-is-the-difference-between-viewwillappear-and-viewdidappear
+        isTimeToCheckWeatherData = true
         checksLocationAuthority()
-        requestWeatherData()
     }
 
     override func viewWillAppear(_: Bool) {
         super.viewWillAppear(true)
-        isTimeToCheckWeatherData = true
+        requestWeatherData()
         reloadWeatherCityListTableView()
     }
 
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
+    override func viewWillDisappear(_: Bool) {
+        super.viewWillDisappear(true)
         // 체크 타이머 해제
         weatherDataCheckTimer.invalidate()
     }
@@ -134,10 +127,10 @@ class WeatherCityListViewController: UIViewController {
                         self.reloadWeatherCityListTableView()
                         // ✓ REVIEW: [Refactroing] 정중앙에 acitivityIndicator를 띄우는 것이라면
                         // UITableView의 backgroundView 에서도 설정이 가능합니다.
-                        self.cityListIndicatorView.stopCustomIndicatorAnimating(containerView: self.activityIndicatorContainerView)
+                        self.activityIndicatorContainerView.activityIndicatorView.stopCustomIndicatorAnimating(containerView: self.activityIndicatorContainerView)
                     }
                     // Review: [Refactoring] RaceCondition이 발생할 수 있습니다.
-                    self.isTimeToCheckWeatherData = false
+//                    self.isTimeToCheckWeatherData = false
                 }
             }
         }
@@ -220,7 +213,7 @@ class WeatherCityListViewController: UIViewController {
         }
 
         // ✓ REVIEW: [Refactoring] 이미 Main 입니다. 불필요한 코드입니다.
-        cityListIndicatorView.stopCustomIndicatorAnimating(containerView: activityIndicatorContainerView)
+        activityIndicatorContainerView.activityIndicatorView.stopCustomIndicatorAnimating(containerView: activityIndicatorContainerView)
         reloadWeatherCityListTableView()
     }
 
@@ -330,11 +323,10 @@ extension WeatherCityListViewController: UITableViewDataSource {
 
             // Review: [Refactoring] 공유하는 데이터는 다른 쪽에서 [0] 을 삭제했을 경우 접근 에러가 발생할 수 있습니다.
             // 데이터는 immutable 상태로 유지하는 것이 좋습니다.
-            let mainWeatherData = CommonData.shared.weatherDataList[0].subData
-
+            let mainWeatherData = CommonData.shared.weatherDataList[indexPath.row].subData
             guard let timeStamp = mainWeatherData?.currently.time,
-                let cityName = CommonData.shared.weatherDataList[0].subCityName,
-                let temperature = mainWeatherData?.hourly.data[0].temperature,
+                let cityName = CommonData.shared.weatherDataList[indexPath.row].subCityName,
+                let temperature = mainWeatherData?.hourly.data[indexPath.row].temperature,
                 let timeZone = mainWeatherData?.timezone else {
                 return weatherMainCell
             }
@@ -367,9 +359,14 @@ extension WeatherCityListViewController: CLLocationManagerDelegate {
         guard let latitude = manager.location?.coordinate.latitude,
             let longitude = manager.location?.coordinate.longitude else { return }
         if isTimeToCheckWeatherData {
-            CommonData.shared.setMainCityName(latitude: latitude, longitude: longitude)
+            CommonData.shared.setMainCityName(latitude: latitude, longitude: longitude, completion: { succeed in
+                if succeed {
+                    self.reloadMainCityCell()
+                }
+            })
             CommonData.shared.setMainCoordinate(latitude: latitude, longitude: longitude)
             requestWeatherData()
+            isTimeToCheckWeatherData = false
         }
     }
 
@@ -382,7 +379,7 @@ extension WeatherCityListViewController: WeatherAPIDelegate {
             self.isTimeToCheckWeatherData = false
             DispatchQueue.main.async {
                 self.weatherDataRefreshControl.endRefreshing()
-                self.cityListIndicatorView.stopCustomIndicatorAnimating(containerView: self.activityIndicatorContainerView)
+                self.activityIndicatorContainerView.activityIndicatorView.stopCustomIndicatorAnimating(containerView: self.activityIndicatorContainerView)
             }
         }
         reloadWeatherCityListTableView()
@@ -392,13 +389,13 @@ extension WeatherCityListViewController: WeatherAPIDelegate {
         DispatchQueue.main.async {
             self.weatherDataRefreshControl.endRefreshing()
             self.weatherDataRefreshControl.isHidden = true
-            self.cityListIndicatorView.stopCustomIndicatorAnimating(containerView: self.activityIndicatorContainerView)
+            self.activityIndicatorContainerView.activityIndicatorView.stopCustomIndicatorAnimating(containerView: self.activityIndicatorContainerView)
         }
     }
 
     func weatherAPIDidRequested(_: WeatherAPI) {
         DispatchQueue.main.async {
-            self.cityListIndicatorView.startCustomIndicatorAnimating(containerView: self.activityIndicatorContainerView)
+            self.activityIndicatorContainerView.activityIndicatorView.startCustomIndicatorAnimating(containerView: self.activityIndicatorContainerView)
         }
     }
 }
