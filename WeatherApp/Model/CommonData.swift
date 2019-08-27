@@ -13,11 +13,8 @@ final class CommonData {
     static let shared = CommonData()
 
     var weatherURLString = "https://weather.com/ko-KR/weather/today/"
-    var mainCelsius: Double?
-
     var subCityNameList = [String]()
     var weatherDataList = [WeatherData]()
-    var subWeatherDataList = [WeatherData]()
     var weatherLocationDataList = [LocationData]()
 
     var temperatureType: TemperatureType = .celsius
@@ -77,10 +74,6 @@ final class CommonData {
         return formattedDate
     }
 
-    func setMainCelsius(celsius: String) {
-        mainCelsius = Double(celsius)
-    }
-
     func setCityName(cityName: String, index: Int) {
         weatherDataList[index].subCityName = cityName
     }
@@ -95,7 +88,7 @@ final class CommonData {
         weatherLocationDataList[0].longitude = longitude
     }
 
-    // MARK: Set SubWeatherDataList
+    // MARK: Set WeatherDataList
 
     func addSubWeatherData(coordinate: CLLocationCoordinate2D, defaultCityName _: String, completion: @escaping (Bool) -> Void) {
         let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
@@ -191,7 +184,7 @@ final class CommonData {
         selectedMainCellIndex = index
     }
 
-    func initSubWeatherDataList() {
+    func initWeatherDataList() {
         weatherDataList = [WeatherData]()
     }
 
@@ -254,12 +247,4 @@ final class CommonData {
     }
 
     // MARK: - Get Method
-
-    func getSelectedMainCellIndex() -> Int {
-        return selectedMainCellIndex
-    }
-
-    func getIsAppForegroundValue() -> Bool {
-        return isAppForeground
-    }
 }
