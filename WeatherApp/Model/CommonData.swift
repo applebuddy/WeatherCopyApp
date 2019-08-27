@@ -23,7 +23,6 @@ final class CommonData {
     var temperatureType: TemperatureType = .celsius
 
     var isLocationAuthority = UserDefaults.standard.bool(forKey: DataIdentifier.isLocationAuthority)
-    var mainCoordinate = WeatherCoordinate(latitude: 0, longitude: 0)
     var selectedMainCellIndex = 0
 
     var isAppForeground = false
@@ -92,8 +91,8 @@ final class CommonData {
     }
 
     func setMainCoordinate(latitude: Double, longitude: Double) {
-        mainCoordinate.latitude = latitude
-        mainCoordinate.longitude = longitude
+        weatherLocationDataList[0].latitude = latitude
+        weatherLocationDataList[0].longitude = longitude
     }
 
     // MARK: Set SubWeatherDataList

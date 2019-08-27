@@ -184,8 +184,8 @@ class WeatherDetailViewController: UIViewController {
 
     @objc private func linkButtonPressed(_: UIButton) {
         // ✭ URL 링크주소는 파싱구현 이후 다시 수정한다.
-        let latitude = CommonData.shared.mainCoordinate.latitude
-        let longitude = CommonData.shared.mainCoordinate.longitude
+        guard let latitude = CommonData.shared.weatherLocationDataList[0].latitude,
+            let longitude = CommonData.shared.weatherLocationDataList[0].longitude else { return }
         CommonData.shared.openWeatherURL(latitude: latitude, longitude: longitude)
     }
 

@@ -99,7 +99,7 @@ class WeatherCityListViewController: UIViewController {
         }
     }
 
-    private func reloadMainCityCell() {
+    private func reloadCityRowCell(row _: Int) {
         DispatchQueue.main.async {
             self.weatherCityListView.weatherCityListTableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .none)
         }
@@ -115,35 +115,24 @@ class WeatherCityListViewController: UIViewController {
         weatherDataCheckTimer = Timer.scheduledTimer(timeInterval: weatherDataCheckInterval, target: self, selector: #selector(refreshWeatherDataTimeDidStarted(_:)), userInfo: nil, repeats: true)
     }
 
-    private func requestSubWeatherData() {
-        DispatchQueue.global().async {
-            let subWeatherLocationList = CommonData.shared.weatherLocationDataList
-            for (index, value) in subWeatherLocationList.enumerated() {
-                guard let latitude = value.latitude,
-                    let longitude = value.longitude else { return }
-                WeatherAPI.shared.requestAPI(latitude: latitude, longitude: longitude) { subWeatherAPIData in
-                    CommonData.shared.setWeatherData(subWeatherAPIData, index: index)
-                    DispatchQueue.main.async {
-                        self.reloadWeatherCityListTableView()
-                        // ✓ REVIEW: [Refactroing] 정중앙에 acitivityIndicator를 띄우는 것이라면
-                        // UITableView의 backgroundView 에서도 설정이 가능합니다.
-                        self.activityIndicatorContainerView.activityIndicatorView.stopCustomIndicatorAnimating(containerView: self.activityIndicatorContainerView)
-                    }
-                    // Review: [Refactoring] RaceCondition이 발생할 수 있습니다.
-//                    self.isTimeToCheckWeatherData = false
-                }
-            }
-        }
-    }
-
     private func requestWeatherData() {
-        let mainLatitude = CommonData.shared.mainCoordinate.latitude
-        let mainLongitude = CommonData.shared.mainCoordinate.longitude
+        let subWeatherLocationList = CommonData.shared.weatherLocationDataList
+        for (index, value) in subWeatherLocationList.enumerated() {
+            guard let latitude = value.latitude,
+                let longitude = value.longitude else { return }
+            WeatherAPI.shared.requestAPI(latitude: latitude, longitude: longitude) { weatherAPIData in
+                CommonData.shared.setWeatherData(weatherAPIData, index: index)
 
-        WeatherAPI.shared.requestAPI(latitude: mainLatitude, longitude: mainLongitude) { weatherAPIData in
-            CommonData.shared.setWeatherData(weatherAPIData, index: 0)
-            self.reloadMainCityCell()
-            self.requestSubWeatherData()
+                // I needs Concurrent Tasking for API Request
+                OperationQueue.main.addOperation {
+                    self.reloadCityRowCell(row: index)
+                    // ✓ REVIEW: [Refactroing] 정중앙에 acitivityIndicator를 띄우는 것이라면
+                    // UITableView의 backgroundView 에서도 설정이 가능합니다.
+                    self.activityIndicatorContainerView.activityIndicatorView.stopCustomIndicatorAnimating(containerView: self.activityIndicatorContainerView)
+                }
+                // Review: [Refactoring] RaceCondition이 발생할 수 있습니다.
+//                    self.isTimeToCheckWeatherData = false
+            }
         }
     }
 
@@ -222,8 +211,8 @@ class WeatherCityListViewController: UIViewController {
     }
 
     @objc private func weatherLinkButtonPressed(_: UIButton) {
-        let latitude = CommonData.shared.mainCoordinate.latitude
-        let longitude = CommonData.shared.mainCoordinate.longitude
+        guard let latitude = CommonData.shared.weatherLocationDataList[0].latitude,
+            let longitude = CommonData.shared.weatherLocationDataList[0].longitude else { return }
         CommonData.shared.openWeatherURL(latitude: latitude, longitude: longitude)
     }
 
@@ -323,11 +312,11 @@ extension WeatherCityListViewController: UITableViewDataSource {
 
             // Review: [Refactoring] 공유하는 데이터는 다른 쪽에서 [0] 을 삭제했을 경우 접근 에러가 발생할 수 있습니다.
             // 데이터는 immutable 상태로 유지하는 것이 좋습니다.
-            let mainWeatherData = CommonData.shared.weatherDataList[indexPath.row].subData
-            guard let timeStamp = mainWeatherData?.currently.time,
+            let mainWeatherData = CommonData.shared.weatherDataList[indexPath.row]
+            guard let timeStamp = mainWeatherData.subData?.currently.time,
                 let cityName = CommonData.shared.weatherDataList[indexPath.row].subCityName,
-                let temperature = mainWeatherData?.hourly.data[indexPath.row].temperature,
-                let timeZone = mainWeatherData?.timezone else {
+                let temperature = mainWeatherData.subData?.hourly.data[indexPath.row].temperature,
+                let timeZone = mainWeatherData.subData?.timezone else {
                 return weatherMainCell
             }
 
@@ -361,7 +350,7 @@ extension WeatherCityListViewController: CLLocationManagerDelegate {
         if isTimeToCheckWeatherData {
             CommonData.shared.setMainCityName(latitude: latitude, longitude: longitude, completion: { succeed in
                 if succeed {
-                    self.reloadMainCityCell()
+                    self.reloadCityRowCell(row: 0)
                 }
             })
             CommonData.shared.setMainCoordinate(latitude: latitude, longitude: longitude)
