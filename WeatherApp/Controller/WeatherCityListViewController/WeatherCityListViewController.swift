@@ -115,7 +115,7 @@ class WeatherCityListViewController: UIViewController {
         weatherDataCheckTimer = Timer.scheduledTimer(timeInterval: weatherDataCheckInterval, target: self, selector: #selector(refreshWeatherDataTimeDidStarted(_:)), userInfo: nil, repeats: true)
     }
 
-    private func requestWeatherData(index: Int, completion: @escaping () -> Void) {
+    private func requestWeatherData(index: Int) {
         let weatherLocationList = CommonData.shared.weatherLocationDataList[index]
 
         guard let latitude = weatherLocationList.latitude,
@@ -128,12 +128,12 @@ class WeatherCityListViewController: UIViewController {
                 }
                 CommonData.shared.saveWeatherDataList()
                 // I needs Concurrent Tasking for API Request
+
                 DispatchQueue.main.async {
                     self.reloadCityRowCell(row: index)
                     // ✓ REVIEW: [Refactroing] 정중앙에 acitivityIndicator를 띄우는 것이라면
                     // UITableView의 backgroundView 에서도 설정이 가능합니다.
                 }
-                completion()
 
             } else {
                 debugPrint("API Request Failed")
@@ -196,15 +196,9 @@ class WeatherCityListViewController: UIViewController {
     }
 
     private func requestAllWeatherData() {
-        let group = DispatchGroup()
+//        let group = DispatchGroup()
         for index in CommonData.shared.weatherDataList.indices {
-            group.enter()
-            requestWeatherData(index: index) {
-                group.leave()
-            }
-        }
-        group.notify(queue: .main) { [weak self] in
-            self?.reloadWeatherCityListTableView()
+            requestWeatherData(index: index)
         }
     }
 
@@ -324,27 +318,28 @@ extension WeatherCityListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let weatherMainCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherCityListTableCell, for: indexPath) as? WeatherCityListTableViewCell else { return UITableViewCell() }
 
+        let weatherData = CommonData.shared.weatherDataList[indexPath.row]
         if indexPath.row == 0 {
             weatherMainCell.mainIndicatorImageView.image = UIImage(named: AssetIdentifier.Image.mainIndicator)
 
             // Review: [Refactoring] 공유하는 데이터는 다른 쪽에서 [0] 을 삭제했을 경우 접근 에러가 발생할 수 있습니다.
             // 데이터는 immutable 상태로 유지하는 것이 좋습니다.
-            let mainWeatherData = CommonData.shared.weatherDataList[indexPath.row]
-            guard let timeStamp = mainWeatherData.subData?.currently.time,
-                let cityName = CommonData.shared.weatherDataList[indexPath.row].subCityName,
-                let temperature = mainWeatherData.subData?.hourly.data[indexPath.row].temperature,
-                let timeZone = mainWeatherData.subData?.timezone else {
+
+            guard let temperature = weatherData.subData?.hourly.data[indexPath.row].temperature,
+                let cityName = weatherData.subCityName,
+                let timeStamp = weatherData.subData?.currently.time,
+                let timeZone = weatherData.subData?.timezone else {
                 return weatherMainCell
             }
 
             weatherMainCell.setMainTableCellData(cityName: cityName, timeStamp: timeStamp, timeZone: timeZone, temperature: temperature)
             return weatherMainCell
+
         } else {
-            let subWeatherData = CommonData.shared.weatherDataList[indexPath.row]
-            guard let temperature = CommonData.shared.weatherDataList[indexPath.row].subData?.currently.temperature,
-                let cityName = subWeatherData.subCityName,
-                let timeStamp = subWeatherData.subData?.currently.time,
-                let timeZone = subWeatherData.subData?.timezone else {
+            guard let temperature = weatherData.subData?.currently.temperature,
+                let cityName = weatherData.subCityName,
+                let timeStamp = weatherData.subData?.currently.time,
+                let timeZone = weatherData.subData?.timezone else {
                 return weatherMainCell
             }
 
@@ -364,16 +359,12 @@ extension WeatherCityListViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations _: [CLLocation]) {
         guard let latitude = manager.location?.coordinate.latitude,
             let longitude = manager.location?.coordinate.longitude else { return }
-        if isTimeToCheckWeatherData {
-            CommonData.shared.setMainCityName(latitude: latitude, longitude: longitude, completion: { succeed in
-                if succeed {
-                    self.reloadCityRowCell(row: 0)
-                }
-            })
-            CommonData.shared.setMainCoordinate(latitude: latitude, longitude: longitude)
-            requestAllWeatherData()
-            isTimeToCheckWeatherData = false
-        }
+        CommonData.shared.setMainCoordinate(latitude: latitude, longitude: longitude)
+        CommonData.shared.setMainCityName(latitude: latitude, longitude: longitude, completion: { succeed in
+            if succeed {
+                self.reloadCityRowCell(row: 0)
+            }
+        })
     }
 
     func locationManagerDidResumeLocationUpdates(_: CLLocationManager) {}
