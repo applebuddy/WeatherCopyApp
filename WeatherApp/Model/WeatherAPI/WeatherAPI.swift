@@ -36,6 +36,7 @@ final class WeatherAPI {
     func requestAPI(latitude: Double, longitude: Double, completion: @escaping (WeatherAPIData?, Bool) -> Void) {
         delegate?.weatherAPIDidRequested(self)
         let APIUrlString = "\(baseURL)\(latitude),\(longitude)\(APISubURL)"
+        print("API URL : \(APIUrlString)")
         guard let APIUrl = URL(string: APIUrlString) else { return }
 
         // STEP 4-1) URLSessionDataTash 초기화
@@ -54,7 +55,7 @@ final class WeatherAPI {
                     do {
                         let weatherAPIData = try JSONDecoder().decode(WeatherAPIData.self, from: data)
                         self.delegate?.weatherAPIDidFinished(self)
-                        print(weatherAPIData)
+                        print("timestamp : \(weatherAPIData.currently.time)")
                         completion(weatherAPIData, true)
                     } catch DecodingError.keyNotFound(_, _) {
                         self.delegate?.weatherAPIDidError(self)

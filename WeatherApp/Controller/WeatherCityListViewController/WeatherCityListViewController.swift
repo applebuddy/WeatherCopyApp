@@ -125,8 +125,9 @@ class WeatherCityListViewController: UIViewController {
             if isSucceed {
                 if let weatherData = weatherAPIData {
                     CommonData.shared.setWeatherData(weatherData, index: index)
+                    CommonData.shared.saveWeatherDataList()
                 }
-                CommonData.shared.saveWeatherDataList()
+
                 // I needs Concurrent Tasking for API Request
 
                 DispatchQueue.main.async {
@@ -233,6 +234,7 @@ class WeatherCityListViewController: UIViewController {
     @objc private func refreshWeatherTableViewData(_: UIRefreshControl) {
         weatherDataRefreshControl.isHidden = false
         requestAllWeatherData()
+        reloadWeatherCityListTableView()
     }
 
     // MARK: - Timer Event
@@ -319,30 +321,22 @@ extension WeatherCityListViewController: UITableViewDataSource {
         guard let weatherMainCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherCityListTableCell, for: indexPath) as? WeatherCityListTableViewCell else { return UITableViewCell() }
 
         let weatherData = CommonData.shared.weatherDataList[indexPath.row]
+        guard let temperature = weatherData.subData?.hourly.data[indexPath.row].temperature,
+            let cityName = weatherData.subCityName,
+            let timeStamp = weatherData.subData?.currently.time,
+            let timeZone = weatherData.subData?.timezone else {
+            return weatherMainCell
+        }
+
         if indexPath.row == 0 {
             weatherMainCell.mainIndicatorImageView.image = UIImage(named: AssetIdentifier.Image.mainIndicator)
-
             // Review: [Refactoring] 공유하는 데이터는 다른 쪽에서 [0] 을 삭제했을 경우 접근 에러가 발생할 수 있습니다.
             // 데이터는 immutable 상태로 유지하는 것이 좋습니다.
-
-            guard let temperature = weatherData.subData?.hourly.data[indexPath.row].temperature,
-                let cityName = weatherData.subCityName,
-                let timeStamp = weatherData.subData?.currently.time,
-                let timeZone = weatherData.subData?.timezone else {
-                return weatherMainCell
-            }
 
             weatherMainCell.setMainTableCellData(cityName: cityName, timeStamp: timeStamp, timeZone: timeZone, temperature: temperature)
             return weatherMainCell
 
         } else {
-            guard let temperature = weatherData.subData?.currently.temperature,
-                let cityName = weatherData.subCityName,
-                let timeStamp = weatherData.subData?.currently.time,
-                let timeZone = weatherData.subData?.timezone else {
-                return weatherMainCell
-            }
-
             weatherMainCell.setMainTableCellData(cityName: cityName, timeStamp: timeStamp, timeZone: timeZone, temperature: temperature)
             weatherMainCell.mainIndicatorImageView.image = nil
 
