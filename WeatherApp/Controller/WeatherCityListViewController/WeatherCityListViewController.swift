@@ -74,7 +74,7 @@ class WeatherCityListViewController: UIViewController {
 
     override func viewWillAppear(_: Bool) {
         super.viewWillAppear(true)
-        requestWeatherData()
+        requestAllWeatherData()
         reloadWeatherCityListTableView()
     }
 
@@ -115,23 +115,28 @@ class WeatherCityListViewController: UIViewController {
         weatherDataCheckTimer = Timer.scheduledTimer(timeInterval: weatherDataCheckInterval, target: self, selector: #selector(refreshWeatherDataTimeDidStarted(_:)), userInfo: nil, repeats: true)
     }
 
-    private func requestWeatherData() {
-        let subWeatherLocationList = CommonData.shared.weatherLocationDataList
-        for (index, value) in subWeatherLocationList.enumerated() {
-            guard let latitude = value.latitude,
-                let longitude = value.longitude else { return }
-            WeatherAPI.shared.requestAPI(latitude: latitude, longitude: longitude) { weatherAPIData in
-                CommonData.shared.setWeatherData(weatherAPIData, index: index)
+    private func requestWeatherData(index: Int, completion: @escaping () -> Void) {
+        let weatherLocationList = CommonData.shared.weatherLocationDataList[index]
+
+        guard let latitude = weatherLocationList.latitude,
+            let longitude = weatherLocationList.longitude else { return }
+        WeatherAPI.shared.requestAPI(latitude: latitude, longitude: longitude) { weatherAPIData, isSucceed in
+
+            if isSucceed {
+                if let weatherData = weatherAPIData {
+                    CommonData.shared.setWeatherData(weatherData, index: index)
+                }
                 CommonData.shared.saveWeatherDataList()
                 // I needs Concurrent Tasking for API Request
                 DispatchQueue.main.async {
                     self.reloadCityRowCell(row: index)
                     // ✓ REVIEW: [Refactroing] 정중앙에 acitivityIndicator를 띄우는 것이라면
                     // UITableView의 backgroundView 에서도 설정이 가능합니다.
-                    self.activityIndicatorContainerView.activityIndicatorView.stopCustomIndicatorAnimating(containerView: self.activityIndicatorContainerView)
                 }
-                // Review: [Refactoring] RaceCondition이 발생할 수 있습니다.
-//                    self.isTimeToCheckWeatherData = false
+                completion()
+
+            } else {
+                debugPrint("API Request Failed")
             }
         }
     }
@@ -190,6 +195,19 @@ class WeatherCityListViewController: UIViewController {
         }
     }
 
+    private func requestAllWeatherData() {
+        let group = DispatchGroup()
+        for index in CommonData.shared.weatherDataList.indices {
+            group.enter()
+            requestWeatherData(index: index) {
+                group.leave()
+            }
+        }
+        group.notify(queue: .main) { [weak self] in
+            self?.reloadWeatherCityListTableView()
+        }
+    }
+
     // MARK: - Button Event
 
     @objc private func celsiusToggleButtonPressed(_ sender: UIButton) {
@@ -220,8 +238,7 @@ class WeatherCityListViewController: UIViewController {
 
     @objc private func refreshWeatherTableViewData(_: UIRefreshControl) {
         weatherDataRefreshControl.isHidden = false
-        weatherDataRefreshControl.beginRefreshing()
-        requestWeatherData()
+        requestAllWeatherData()
     }
 
     // MARK: - Timer Event
@@ -354,7 +371,7 @@ extension WeatherCityListViewController: CLLocationManagerDelegate {
                 }
             })
             CommonData.shared.setMainCoordinate(latitude: latitude, longitude: longitude)
-            requestWeatherData()
+            requestAllWeatherData()
             isTimeToCheckWeatherData = false
         }
     }

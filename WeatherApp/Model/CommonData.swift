@@ -117,12 +117,16 @@ final class CommonData {
                 return
             }
 
-            WeatherAPI.shared.requestAPI(latitude: coordinate.latitude, longitude: coordinate.longitude) { weatherAPIData in
+            WeatherAPI.shared.requestAPI(latitude: coordinate.latitude, longitude: coordinate.longitude) { weatherAPIData, isSucceed in
 
-                let weatherData = WeatherData(subData: weatherAPIData, subCityName: cityNameString)
-                self.weatherDataList.append(weatherData)
-                self.weatherLocationDataList.append(subLocationData)
-                completion(true)
+                if isSucceed {
+                    let weatherData = WeatherData(subData: weatherAPIData, subCityName: cityNameString)
+                    self.weatherDataList.append(weatherData)
+                    self.weatherLocationDataList.append(subLocationData)
+                    completion(true)
+                } else {
+                    completion(false)
+                }
             }
         }
     }

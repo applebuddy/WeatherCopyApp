@@ -33,7 +33,7 @@ final class WeatherAPI {
     // completion: @escaping weatherResult
     // Result<WeatherAPIData, Error> 로 정리하는 것이 어떨까요?
     // delegate 를 사용하면 다른 곳에서 사용하게 된다면 문제가 발생합니다.
-    func requestAPI(latitude: Double, longitude: Double, completion: @escaping (WeatherAPIData) -> Void) {
+    func requestAPI(latitude: Double, longitude: Double, completion: @escaping (WeatherAPIData?, Bool) -> Void) {
         delegate?.weatherAPIDidRequested(self)
         let APIUrlString = "\(baseURL)\(latitude),\(longitude)\(APISubURL)"
         guard let APIUrl = URL(string: APIUrlString) else { return }
@@ -54,19 +54,24 @@ final class WeatherAPI {
                     do {
                         let weatherAPIData = try JSONDecoder().decode(WeatherAPIData.self, from: data)
                         self.delegate?.weatherAPIDidFinished(self)
-                        completion(weatherAPIData)
+                        completion(weatherAPIData, true)
                     } catch DecodingError.keyNotFound(_, _) {
                         self.delegate?.weatherAPIDidError(self)
+                        completion(nil, false)
                     } catch DecodingError.typeMismatch(_, _) {
                         self.delegate?.weatherAPIDidError(self)
+                        completion(nil, false)
                     } catch {
                         self.delegate?.weatherAPIDidError(self)
+                        completion(nil, false)
                     }
                 } else {
                     self.delegate?.weatherAPIDidError(self)
+                    completion(nil, false)
                 }
             } else {
                 debugPrint("Could'nt find any responses")
+                completion(nil, false)
             }
 
             // STEP 5) 데이터 처리 결과를 completion handler을 통해 반환한다.
