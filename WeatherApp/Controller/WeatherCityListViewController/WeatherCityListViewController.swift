@@ -122,7 +122,7 @@ class WeatherCityListViewController: UIViewController {
                 let longitude = value.longitude else { return }
             WeatherAPI.shared.requestAPI(latitude: latitude, longitude: longitude) { weatherAPIData in
                 CommonData.shared.setWeatherData(weatherAPIData, index: index)
-
+                CommonData.shared.saveWeatherDataList()
                 // I needs Concurrent Tasking for API Request
                 DispatchQueue.main.async {
                     self.reloadCityRowCell(row: index)
