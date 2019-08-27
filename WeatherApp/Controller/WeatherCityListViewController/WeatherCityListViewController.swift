@@ -124,7 +124,7 @@ class WeatherCityListViewController: UIViewController {
                 CommonData.shared.setWeatherData(weatherAPIData, index: index)
 
                 // I needs Concurrent Tasking for API Request
-                OperationQueue.main.addOperation {
+                DispatchQueue.main.async {
                     self.reloadCityRowCell(row: index)
                     // ✓ REVIEW: [Refactroing] 정중앙에 acitivityIndicator를 띄우는 것이라면
                     // UITableView의 backgroundView 에서도 설정이 가능합니다.
