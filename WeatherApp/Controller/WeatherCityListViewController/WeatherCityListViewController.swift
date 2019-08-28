@@ -74,7 +74,6 @@ class WeatherCityListViewController: UIViewController {
 
     override func viewWillAppear(_: Bool) {
         super.viewWillAppear(true)
-        requestAllWeatherData()
         reloadWeatherCityListTableView()
     }
 
@@ -113,6 +112,10 @@ class WeatherCityListViewController: UIViewController {
 
     private func setWeatherDataCheckTimer() {
         weatherDataCheckTimer = Timer.scheduledTimer(timeInterval: weatherDataCheckInterval, target: self, selector: #selector(refreshWeatherDataTimeDidStarted(_:)), userInfo: nil, repeats: true)
+    }
+
+    private func requestMainWeatherData() {
+        requestWeatherData(index: 0)
     }
 
     private func requestWeatherData(index: Int) {
@@ -193,10 +196,11 @@ class WeatherCityListViewController: UIViewController {
             present(weatherCitySearchViewController, animated: true)
         } else {
             setLocationManager()
+            requestWeatherData()
         }
     }
 
-    private func requestAllWeatherData() {
+    private func requestWeatherData() {
 //        let group = DispatchGroup()
         for index in CommonData.shared.weatherDataList.indices {
             requestWeatherData(index: index)
@@ -233,7 +237,7 @@ class WeatherCityListViewController: UIViewController {
 
     @objc private func refreshWeatherTableViewData(_: UIRefreshControl) {
         weatherDataRefreshControl.isHidden = false
-        requestAllWeatherData()
+        requestWeatherData()
         reloadWeatherCityListTableView()
     }
 
@@ -356,7 +360,7 @@ extension WeatherCityListViewController: CLLocationManagerDelegate {
         CommonData.shared.setMainCoordinate(latitude: latitude, longitude: longitude)
         CommonData.shared.setMainCityName(latitude: latitude, longitude: longitude, completion: { succeed in
             if succeed {
-                self.reloadCityRowCell(row: 0)
+                self.requestMainWeatherData()
             }
         })
     }
