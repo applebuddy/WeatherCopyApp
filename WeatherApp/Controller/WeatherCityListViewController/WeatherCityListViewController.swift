@@ -360,7 +360,7 @@ extension WeatherCityListViewController: CLLocationManagerDelegate {
         CommonData.shared.setMainCoordinate(latitude: latitude, longitude: longitude)
         CommonData.shared.setMainCityName(latitude: latitude, longitude: longitude, completion: { succeed in
             if succeed {
-                self.requestMainWeatherData()
+                self.requestWeatherData()
             }
         })
     }
