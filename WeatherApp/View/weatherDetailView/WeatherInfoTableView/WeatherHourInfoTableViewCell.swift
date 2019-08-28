@@ -63,13 +63,14 @@ extension WeatherHourInfoTableViewCell: UICollectionViewDelegate {
         guard let precipitation = weatherData?.hourly.data[indexPath.item].precipProbability,
             let imageType = weatherData?.hourly.data[indexPath.item].icon,
             let celsius = weatherData?.hourly.data[indexPath.item].temperature,
-            let timeStamp = weatherData?.hourly.data[indexPath.item].time else { return hourInfoCollectionCell }
+            let timeStamp = weatherData?.hourly.data[indexPath.item].time,
+            let timeZone = weatherData?.timezone else { return hourInfoCollectionCell }
 
         if indexPath.item == 0 {
             dateTitle = "지금"
         } else {
-            let date = Date(timeIntervalSince1970: Double(timeStamp))
-            dateTitle = CommonData.shared.hourInfoDateFormatter.string(from: date)
+            let dateFormatter = CommonData.shared.hourInfoDateFormatter
+            dateTitle = CommonData.shared.setDateFormatter(dateFormatter: dateFormatter, timeZone: timeZone, timeStamp: Double(timeStamp))
         }
 
         hourInfoCollectionCell.setDayInfoCollectionCellData(title: dateTitle, precipitation: precipitation, imageType: imageType, celsius: celsius)

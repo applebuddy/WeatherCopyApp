@@ -13,17 +13,13 @@ final class CommonData {
     static let shared = CommonData()
 
     var weatherURLString = "https://weather.com/ko-KR/weather/today/"
-    var mainCelsius: Double?
-
     var subCityNameList = [String]()
     var weatherDataList = [WeatherData]()
-    var subWeatherDataList = [WeatherData]()
     var weatherLocationDataList = [LocationData]()
 
     var temperatureType: TemperatureType = .celsius
 
     var isLocationAuthority = UserDefaults.standard.bool(forKey: DataIdentifier.isLocationAuthority)
-    var mainCoordinate = WeatherCoordinate(latitude: 0, longitude: 0)
     var selectedMainCellIndex = 0
 
     var isAppForeground = false
@@ -78,10 +74,6 @@ final class CommonData {
         return formattedDate
     }
 
-    func setMainCelsius(celsius: String) {
-        mainCelsius = Double(celsius)
-    }
-
     func setCityName(cityName: String, index: Int) {
         weatherDataList[index].subCityName = cityName
     }
@@ -92,11 +84,11 @@ final class CommonData {
     }
 
     func setMainCoordinate(latitude: Double, longitude: Double) {
-        mainCoordinate.latitude = latitude
-        mainCoordinate.longitude = longitude
+        weatherLocationDataList[0].latitude = latitude
+        weatherLocationDataList[0].longitude = longitude
     }
 
-    // MARK: Set SubWeatherDataList
+    // MARK: Set WeatherDataList
 
     func addSubWeatherData(coordinate: CLLocationCoordinate2D, defaultCityName _: String, completion: @escaping (Bool) -> Void) {
         let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
@@ -118,12 +110,16 @@ final class CommonData {
                 return
             }
 
-            WeatherAPI.shared.requestAPI(latitude: coordinate.latitude, longitude: coordinate.longitude) { weatherAPIData in
+            WeatherAPI.shared.requestAPI(latitude: coordinate.latitude, longitude: coordinate.longitude) { weatherAPIData, isSucceed in
 
-                let weatherData = WeatherData(subData: weatherAPIData, subCityName: cityNameString)
-                self.weatherDataList.append(weatherData)
-                self.weatherLocationDataList.append(subLocationData)
-                completion(true)
+                if isSucceed {
+                    let weatherData = WeatherData(subData: weatherAPIData, subCityName: cityNameString)
+                    self.weatherDataList.append(weatherData)
+                    self.weatherLocationDataList.append(subLocationData)
+                    completion(true)
+                } else {
+                    completion(false)
+                }
             }
         }
     }
@@ -188,7 +184,7 @@ final class CommonData {
         selectedMainCellIndex = index
     }
 
-    func initSubWeatherDataList() {
+    func initWeatherDataList() {
         weatherDataList = [WeatherData]()
     }
 
@@ -251,12 +247,4 @@ final class CommonData {
     }
 
     // MARK: - Get Method
-
-    func getSelectedMainCellIndex() -> Int {
-        return selectedMainCellIndex
-    }
-
-    func getIsAppForegroundValue() -> Bool {
-        return isAppForeground
-    }
 }

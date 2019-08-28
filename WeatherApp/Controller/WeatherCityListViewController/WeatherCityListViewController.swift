@@ -74,7 +74,6 @@ class WeatherCityListViewController: UIViewController {
 
     override func viewWillAppear(_: Bool) {
         super.viewWillAppear(true)
-        requestWeatherData()
         reloadWeatherCityListTableView()
     }
 
@@ -99,7 +98,7 @@ class WeatherCityListViewController: UIViewController {
         }
     }
 
-    private func reloadMainCityCell() {
+    private func reloadCityRowCell(row _: Int) {
         DispatchQueue.main.async {
             self.weatherCityListView.weatherCityListTableView.reloadRows(at: [IndexPath(row: 0, section: 0)], with: .none)
         }
@@ -115,35 +114,34 @@ class WeatherCityListViewController: UIViewController {
         weatherDataCheckTimer = Timer.scheduledTimer(timeInterval: weatherDataCheckInterval, target: self, selector: #selector(refreshWeatherDataTimeDidStarted(_:)), userInfo: nil, repeats: true)
     }
 
-    private func requestSubWeatherData() {
-        DispatchQueue.global().async {
-            let subWeatherLocationList = CommonData.shared.weatherLocationDataList
-            for (index, value) in subWeatherLocationList.enumerated() {
-                guard let latitude = value.latitude,
-                    let longitude = value.longitude else { return }
-                WeatherAPI.shared.requestAPI(latitude: latitude, longitude: longitude) { subWeatherAPIData in
-                    CommonData.shared.setWeatherData(subWeatherAPIData, index: index)
-                    DispatchQueue.main.async {
-                        self.reloadWeatherCityListTableView()
-                        // ✓ REVIEW: [Refactroing] 정중앙에 acitivityIndicator를 띄우는 것이라면
-                        // UITableView의 backgroundView 에서도 설정이 가능합니다.
-                        self.activityIndicatorContainerView.activityIndicatorView.stopCustomIndicatorAnimating(containerView: self.activityIndicatorContainerView)
-                    }
-                    // Review: [Refactoring] RaceCondition이 발생할 수 있습니다.
-//                    self.isTimeToCheckWeatherData = false
-                }
-            }
-        }
+    private func requestMainWeatherData() {
+        requestWeatherData(index: 0)
     }
 
-    private func requestWeatherData() {
-        let mainLatitude = CommonData.shared.mainCoordinate.latitude
-        let mainLongitude = CommonData.shared.mainCoordinate.longitude
+    private func requestWeatherData(index: Int) {
+        let weatherLocationList = CommonData.shared.weatherLocationDataList[index]
 
-        WeatherAPI.shared.requestAPI(latitude: mainLatitude, longitude: mainLongitude) { weatherAPIData in
-            CommonData.shared.setWeatherData(weatherAPIData, index: 0)
-            self.reloadMainCityCell()
-            self.requestSubWeatherData()
+        guard let latitude = weatherLocationList.latitude,
+            let longitude = weatherLocationList.longitude else { return }
+        WeatherAPI.shared.requestAPI(latitude: latitude, longitude: longitude) { weatherAPIData, isSucceed in
+
+            if isSucceed {
+                if let weatherData = weatherAPIData {
+                    CommonData.shared.setWeatherData(weatherData, index: index)
+                    CommonData.shared.saveWeatherDataList()
+                }
+
+                // I needs Concurrent Tasking for API Request
+
+                DispatchQueue.main.async {
+                    self.reloadCityRowCell(row: index)
+                    // ✓ REVIEW: [Refactroing] 정중앙에 acitivityIndicator를 띄우는 것이라면
+                    // UITableView의 backgroundView 에서도 설정이 가능합니다.
+                }
+
+            } else {
+                debugPrint("API Request Failed")
+            }
         }
     }
 
@@ -198,6 +196,14 @@ class WeatherCityListViewController: UIViewController {
             present(weatherCitySearchViewController, animated: true)
         } else {
             setLocationManager()
+            requestWeatherData()
+        }
+    }
+
+    private func requestWeatherData() {
+//        let group = DispatchGroup()
+        for index in CommonData.shared.weatherDataList.indices {
+            requestWeatherData(index: index)
         }
     }
 
@@ -222,8 +228,8 @@ class WeatherCityListViewController: UIViewController {
     }
 
     @objc private func weatherLinkButtonPressed(_: UIButton) {
-        let latitude = CommonData.shared.mainCoordinate.latitude
-        let longitude = CommonData.shared.mainCoordinate.longitude
+        guard let latitude = CommonData.shared.weatherLocationDataList[0].latitude,
+            let longitude = CommonData.shared.weatherLocationDataList[0].longitude else { return }
         CommonData.shared.openWeatherURL(latitude: latitude, longitude: longitude)
     }
 
@@ -231,8 +237,8 @@ class WeatherCityListViewController: UIViewController {
 
     @objc private func refreshWeatherTableViewData(_: UIRefreshControl) {
         weatherDataRefreshControl.isHidden = false
-        weatherDataRefreshControl.beginRefreshing()
         requestWeatherData()
+        reloadWeatherCityListTableView()
     }
 
     // MARK: - Timer Event
@@ -318,30 +324,23 @@ extension WeatherCityListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let weatherMainCell = tableView.dequeueReusableCell(withIdentifier: CellIdentifier.weatherCityListTableCell, for: indexPath) as? WeatherCityListTableViewCell else { return UITableViewCell() }
 
+        let weatherData = CommonData.shared.weatherDataList[indexPath.row]
+        guard let temperature = weatherData.subData?.hourly.data[indexPath.row].temperature,
+            let cityName = weatherData.subCityName,
+            let timeStamp = weatherData.subData?.currently.time,
+            let timeZone = weatherData.subData?.timezone else {
+            return weatherMainCell
+        }
+
         if indexPath.row == 0 {
             weatherMainCell.mainIndicatorImageView.image = UIImage(named: AssetIdentifier.Image.mainIndicator)
-
             // Review: [Refactoring] 공유하는 데이터는 다른 쪽에서 [0] 을 삭제했을 경우 접근 에러가 발생할 수 있습니다.
             // 데이터는 immutable 상태로 유지하는 것이 좋습니다.
-            let mainWeatherData = CommonData.shared.weatherDataList[indexPath.row].subData
-            guard let timeStamp = mainWeatherData?.currently.time,
-                let cityName = CommonData.shared.weatherDataList[indexPath.row].subCityName,
-                let temperature = mainWeatherData?.hourly.data[indexPath.row].temperature,
-                let timeZone = mainWeatherData?.timezone else {
-                return weatherMainCell
-            }
 
             weatherMainCell.setMainTableCellData(cityName: cityName, timeStamp: timeStamp, timeZone: timeZone, temperature: temperature)
             return weatherMainCell
-        } else {
-            let subWeatherData = CommonData.shared.weatherDataList[indexPath.row]
-            guard let temperature = CommonData.shared.weatherDataList[indexPath.row].subData?.currently.temperature,
-                let cityName = subWeatherData.subCityName,
-                let timeStamp = subWeatherData.subData?.currently.time,
-                let timeZone = subWeatherData.subData?.timezone else {
-                return weatherMainCell
-            }
 
+        } else {
             weatherMainCell.setMainTableCellData(cityName: cityName, timeStamp: timeStamp, timeZone: timeZone, temperature: temperature)
             weatherMainCell.mainIndicatorImageView.image = nil
 
@@ -358,16 +357,12 @@ extension WeatherCityListViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations _: [CLLocation]) {
         guard let latitude = manager.location?.coordinate.latitude,
             let longitude = manager.location?.coordinate.longitude else { return }
-        if isTimeToCheckWeatherData {
-            CommonData.shared.setMainCityName(latitude: latitude, longitude: longitude, completion: { succeed in
-                if succeed {
-                    self.reloadMainCityCell()
-                }
-            })
-            CommonData.shared.setMainCoordinate(latitude: latitude, longitude: longitude)
-            requestWeatherData()
-            isTimeToCheckWeatherData = false
-        }
+        CommonData.shared.setMainCoordinate(latitude: latitude, longitude: longitude)
+        CommonData.shared.setMainCityName(latitude: latitude, longitude: longitude, completion: { succeed in
+            if succeed {
+                self.requestWeatherData()
+            }
+        })
     }
 
     func locationManagerDidResumeLocationUpdates(_: CLLocationManager) {}
