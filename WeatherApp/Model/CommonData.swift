@@ -9,6 +9,7 @@
 import CoreLocation
 import UIKit
 
+// ✓ Review: 더 좋은 클래스명이 있을것 같습니다 ( Review By Milkyo )
 final class CommonData {
     static let shared = CommonData()
 
@@ -27,6 +28,7 @@ final class CommonData {
     let locationManager = CLLocationManager()
 
     // Review: [Refactoring] Date 관련 Utils 로 정리하는 게 좋지 않을까요?
+    // Review: 개인적으로 이렇게 하는것보다 DateFormatter.Style 을 쓰는게 범용성이 좋았습니다. ( Review By Milkyo )
     // https://github.com/ios-codereview/Daimo/blob/master/Daimo/Controller/DateFormatFactory.swift
     let mainDateFormatter: DateFormatter = {
         let mainDateFormatter = DateFormatter()
@@ -58,6 +60,7 @@ final class CommonData {
 
     // MARK: - Set Method
 
+    // Review: 사용하지 않는 함수라면 삭제하는게 좋다고 생각합니다. ( Review By Milkyo )
     func initWeatherDataListSize() {}
 
     func setUserDefaultsData() {

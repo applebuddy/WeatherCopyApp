@@ -9,7 +9,7 @@
 import UIKit
 
 // MARK: TableView Section Index
-
+ // Review: 하나의 파일에 하나의 구초제, 하나의 열거형이 좋을것 같습니다. ( Review By Milkyo )
 /// * WeatherMainTableView Section Index
 enum WeatherCityListTableViewSection: Int {
     case mainSection = 0

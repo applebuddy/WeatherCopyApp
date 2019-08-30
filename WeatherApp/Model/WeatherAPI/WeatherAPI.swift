@@ -16,6 +16,8 @@ final class WeatherAPI {
     private let urlSession = URLSession(configuration: .default)
     private var dataTask = URLSessionDataTask()
     private var baseURL = "https://api.darksky.net/forecast/"
+    
+    // Review: APIToken은 외부에 드러나지 않는게 좋을 것 같습니다. ( Review By Milkyo )
     private let APIToken = "447da2f0774b0e23418285c52c5ec67b/" // 자신의 날씨 API+'/'를 사용합니다.
 
     // 447da2f0774b0e23418285c52c5ec67b
@@ -33,8 +35,10 @@ final class WeatherAPI {
     // completion: @escaping weatherResult
     // Result<WeatherAPIData, Error> 로 정리하는 것이 어떨까요?
     // delegate 를 사용하면 다른 곳에서 사용하게 된다면 문제가 발생합니다.
+    // Review: completion에 Result 타입을 사용해보면 어떨까요? ( Review By Milkyo )
     func requestAPI(latitude: Double, longitude: Double, completion: @escaping (WeatherAPIData?, Bool) -> Void) {
         delegate?.weatherAPIDidRequested(self)
+        // ✓ Review: 이 부분은 URLCompent 를 알아보시면 더 좋은 코드가 될 것 같습니다. ( Review By Milkyo )
         let APIUrlString = "\(baseURL)\(latitude),\(longitude)\(APISubURL)"
         print("API URL : \(APIUrlString)")
         guard let APIUrl = URL(string: APIUrlString) else { return }

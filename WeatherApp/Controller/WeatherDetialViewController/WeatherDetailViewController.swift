@@ -55,6 +55,13 @@ class WeatherDetailViewController: UIViewController {
         return listBarButton
     }()
 
+    /*
+     Review: 왜 이렇게 하셨을까?
+     private let weatherDetailView: WeatherDetailView = {
+     return WeatherDetailView()
+     }()
+     
+     */
     private let weatherDetailView: WeatherDetailView = {
         let weatherDetailView = WeatherDetailView()
         return weatherDetailView

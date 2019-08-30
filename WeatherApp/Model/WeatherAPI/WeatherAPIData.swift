@@ -1,6 +1,8 @@
 
 import UIKit
 
+
+// Review: 전 하나하나 분리하는게 좋다고 생각합니디. ( Review By Milkyo )
 // MARK: - WeatherAPIData
 
 struct WeatherAPIData: Codable {

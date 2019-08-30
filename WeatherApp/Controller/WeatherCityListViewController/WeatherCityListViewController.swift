@@ -12,6 +12,26 @@ import UIKit
 class WeatherCityListViewController: UIViewController {
     // MARK: - Property
 
+    /*
+    Review
+     지극히 개인적인 생각입니다.
+     private let locationManager = CLLocationManager()
+     private let weatherDataRefreshControl: UIRefreshControl = UIRefreshControl()
+     
+     보다는
+     
+     private let locatinManger: CLLocationManager
+     private let weatherDataRefreshControl: UIRefreshControl
+     
+     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+     self.locatinManger =  CLLocationManager()
+     self. weatherDataRefreshControl =  UIRefreshControl() 가 어떨까요
+     super.init
+     }
+     */
+    
+
+
     private let locationManager = CLLocationManager()
     private let weatherDataRefreshControl: UIRefreshControl = UIRefreshControl()
     private var isTimeToCheckWeatherData: Bool = true
@@ -47,6 +67,10 @@ class WeatherCityListViewController: UIViewController {
 
     // MARK: - Life Cycle
 
+    override func loadView() {
+        view = weatherCityListView
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
@@ -57,10 +81,6 @@ class WeatherCityListViewController: UIViewController {
         setActivityIndicatorContainerView()
         setWeatherDataRefreshControl()
         registerCell()
-    }
-
-    override func loadView() {
-        view = weatherCityListView
     }
 
     override func viewDidAppear(_: Bool) {
@@ -145,6 +165,10 @@ class WeatherCityListViewController: UIViewController {
         }
     }
 
+    
+    /*
+     start 후 정보를 얻어온 뒤에는 stop읊 걸고 그 이후로 필요할 때마다 정보를 얻어오는 식이면 어떨까요?
+     */
     private func setLocationManager() {
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
@@ -175,7 +199,9 @@ class WeatherCityListViewController: UIViewController {
     }
 
     // MARK: Check Method
-
+    //Review
+    //func locationManager(_: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) 메서드를 활용해보세요.
+    // 도움이 될지 안될지 모르겠지만...
     private func checkLocationAuthStatus() -> Bool {
         let locationAuthStatus = CLLocationManager.authorizationStatus()
         switch locationAuthStatus {
@@ -253,6 +279,7 @@ class WeatherCityListViewController: UIViewController {
 // MARK: UITableView Delegate
 
 extension WeatherCityListViewController: UITableViewDelegate {
+    // REVIEW: 계속해서 안 쓰는 함수가 보이네요. 리팩중이라 그러겠지하고 넘어가겠습니다.
     func scrollViewDidScroll(_: UIScrollView) {}
 
     func tableView(_: UITableView, viewForHeaderInSection _: Int) -> UIView? {

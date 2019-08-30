@@ -9,6 +9,8 @@
 import CoreLocation
 import UIKit
 
+ // Review: 하나의 파일에 하나의 구초제, 하나의 열거형이 좋을것 같습니다. ( Review By Milkyo )
+
 struct WeatherData: Codable {
     var subData: WeatherAPIData?
     var subCityName: String?

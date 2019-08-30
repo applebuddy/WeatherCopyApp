@@ -35,6 +35,14 @@ class WeatherCitySearchViewController: UIViewController {
         return activityIndicatorContainerView
     }()
 
+    /*
+     Review: 굳이?
+     
+     private lazy var citySearchIndicatorView: UIActivityIndicatorView = {
+     return UIActivityIndicatorView()
+     }(
+     
+     */
     private lazy var citySearchIndicatorView: UIActivityIndicatorView = {
         let indicatorView = UIActivityIndicatorView()
         return indicatorView
