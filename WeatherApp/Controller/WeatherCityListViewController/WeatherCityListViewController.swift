@@ -368,12 +368,14 @@ extension WeatherCityListViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations _: [CLLocation]) {
         guard let latitude = manager.location?.coordinate.latitude,
             let longitude = manager.location?.coordinate.longitude else { return }
-        CommonData.shared.setMainCoordinate(latitude: latitude, longitude: longitude)
-        CommonData.shared.setMainCityName(latitude: latitude, longitude: longitude, completion: { succeed in
-            if succeed {
-                self.requestWeatherData()
-            }
-        })
+        if isTimeToCheckWeatherData {
+            CommonData.shared.setMainCoordinate(latitude: latitude, longitude: longitude)
+            CommonData.shared.setMainCityName(latitude: latitude, longitude: longitude, completion: { succeed in
+                if succeed {
+                    self.requestWeatherData(index: 0)
+                }
+            })
+        }
     }
 
     func locationManagerDidResumeLocationUpdates(_: CLLocationManager) {}
