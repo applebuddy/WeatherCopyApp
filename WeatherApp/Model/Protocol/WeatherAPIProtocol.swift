@@ -14,7 +14,7 @@ import UIKit
 // ✓ REVIEW: [Refactoring] Delegate는 class 에서만 사용해야 한다고 하네요.
 // protocol WeatherAPIDelegate: class
 protocol WeatherAPIDelegate: class {
-    func weatherAPIDidRequested(_ weatherApi: WeatherAPI)
-    func weatherAPIDidFinished(_ weatherApi: WeatherAPI)
-    func weatherAPIDidError(_ weatherApi: WeatherAPI)
+    func weatherAPIDidRequested(_ weatherApi: WeatherAPI, row requestedIndex: Int)
+    func weatherAPIDidFinished(_ weatherApi: WeatherAPI, row requestedIndex: Int)
+    func weatherAPIDidError(_ weatherApi: WeatherAPI, row requestedIndex: Int)
 }

@@ -16,6 +16,20 @@ class WeatherCityListViewController: UIViewController {
     private let weatherDataRefreshControl: UIRefreshControl = UIRefreshControl()
     private var isTimeToCheckWeatherData: Bool = true
     private let weatherDataCheckInterval: Double = 10
+    private var isWeatherAPIRequested = false {
+        willSet {
+            DispatchQueue.main.async {
+                if newValue {
+                    self.activityIndicatorContainerView.activityIndicatorView.startCustomIndicatorAnimating(containerView: self.activityIndicatorContainerView)
+
+                } else {
+                    self.weatherDataRefreshControl.endRefreshing()
+                    self.weatherDataRefreshControl.isHidden = true
+                    self.activityIndicatorContainerView.activityIndicatorView.stopCustomIndicatorAnimating(containerView: self.activityIndicatorContainerView)
+                }
+            }
+        }
+    }
 
     // ✓ REVIEW: [사용성] 해제를 하는 부분이 없습니다.
     // => 특정 시점에 타이머를 해제할 수 있도록 한다. invalidate()
@@ -41,7 +55,7 @@ class WeatherCityListViewController: UIViewController {
 
         // ✓ REVIEW: [사용성] UIScreen.main.bounds.size.width 보단 self.view.frame.size.width 를 참조하는 것이 어떨까요?
         // => lazy var 로 실제 실행 시 초기화 될 수 있도록 설정 + view.frame으로 접근하여 위치 설정
-        activityIndicatorContainerView.center = CGPoint(x: UIScreen.main.bounds.size.width / 2, y: UIScreen.main.bounds.size.height / 2)
+        activityIndicatorContainerView.activityIndicatorView.center = CGPoint(x: UIScreen.main.bounds.size.width / 2, y: UIScreen.main.bounds.size.height / 2)
         return activityIndicatorContainerView
     }()
 
@@ -123,7 +137,7 @@ class WeatherCityListViewController: UIViewController {
 
         guard let latitude = weatherLocationList.latitude,
             let longitude = weatherLocationList.longitude else { return }
-        WeatherAPI.shared.requestAPI(latitude: latitude, longitude: longitude) { weatherAPIData, isSucceed in
+        WeatherAPI.shared.requestAPI(latitude: latitude, longitude: longitude, row: index) { weatherAPIData, isSucceed in
 
             if isSucceed {
                 if let weatherData = weatherAPIData {
@@ -217,9 +231,6 @@ class WeatherCityListViewController: UIViewController {
             CommonData.shared.changeTemperatureType()
             sender.setImage(UIImage(named: AssetIdentifier.Image.toggleButtonC), for: .normal)
         }
-
-        // ✓ REVIEW: [Refactoring] 이미 Main 입니다. 불필요한 코드입니다.
-        activityIndicatorContainerView.activityIndicatorView.stopCustomIndicatorAnimating(containerView: activityIndicatorContainerView)
         reloadWeatherCityListTableView()
     }
 
@@ -357,41 +368,41 @@ extension WeatherCityListViewController: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations _: [CLLocation]) {
         guard let latitude = manager.location?.coordinate.latitude,
             let longitude = manager.location?.coordinate.longitude else { return }
-        CommonData.shared.setMainCoordinate(latitude: latitude, longitude: longitude)
-        CommonData.shared.setMainCityName(latitude: latitude, longitude: longitude, completion: { succeed in
-            if succeed {
-                self.requestWeatherData()
-            }
-        })
+        if isTimeToCheckWeatherData {
+            CommonData.shared.setMainCoordinate(latitude: latitude, longitude: longitude)
+            CommonData.shared.setMainCityName(latitude: latitude, longitude: longitude, completion: { succeed in
+                if succeed {
+                    self.requestWeatherData(index: 0)
+                }
+            })
+        }
     }
 
     func locationManagerDidResumeLocationUpdates(_: CLLocationManager) {}
 }
 
 extension WeatherCityListViewController: WeatherAPIDelegate {
-    func weatherAPIDidError(_: WeatherAPI) {
-        DispatchQueue.global().async {
-            self.isTimeToCheckWeatherData = false
-            DispatchQueue.main.async {
-                self.weatherDataRefreshControl.endRefreshing()
-                self.activityIndicatorContainerView.activityIndicatorView.stopCustomIndicatorAnimating(containerView: self.activityIndicatorContainerView)
-            }
-        }
-        reloadWeatherCityListTableView()
-    }
+    func weatherAPIDidError(_: WeatherAPI, row: Int) {
+        WeatherAPI.shared.requestSet.remove(row)
+        isTimeToCheckWeatherData = false
 
-    func weatherAPIDidFinished(_: WeatherAPI) {
-        DispatchQueue.main.async {
-            self.weatherDataRefreshControl.endRefreshing()
-            self.weatherDataRefreshControl.isHidden = true
-            self.activityIndicatorContainerView.activityIndicatorView.stopCustomIndicatorAnimating(containerView: self.activityIndicatorContainerView)
+        if WeatherAPI.shared.requestSet.isEmpty {
+            reloadWeatherCityListTableView()
+            isWeatherAPIRequested = false
         }
     }
 
-    func weatherAPIDidRequested(_: WeatherAPI) {
-        DispatchQueue.main.async {
-            self.activityIndicatorContainerView.activityIndicatorView.startCustomIndicatorAnimating(containerView: self.activityIndicatorContainerView)
+    func weatherAPIDidFinished(_: WeatherAPI, row: Int) {
+        WeatherAPI.shared.requestSet.remove(row)
+        if WeatherAPI.shared.requestSet.isEmpty {
+            reloadWeatherCityListTableView()
+            isWeatherAPIRequested = false
         }
+    }
+
+    func weatherAPIDidRequested(_: WeatherAPI, row: Int) {
+        WeatherAPI.shared.requestSet.insert(row)
+        isWeatherAPIRequested = true
     }
 }
 
